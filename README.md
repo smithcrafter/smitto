@@ -1,2 +1,2 @@
-# smitto
-Smitto - C++/Qt Classes
+# Smitto
+C++/Qt casual classes
