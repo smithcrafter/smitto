@@ -30,4 +30,5 @@ contains(QT, gui){
 	include(Gui.pri)
 	include(ProxyStyles.pri)
 	include(Widgets.pri)
+	include(ItemDelegate.pri)
 }

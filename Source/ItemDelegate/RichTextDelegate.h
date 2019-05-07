@@ -18,21 +18,20 @@
 #pragma once
 
 #include <smitto.h>
-#include <QtCore/QObject>
-class QCoreApplication;
+#include <QtWidgets/QStyledItemDelegate>
+
+// Usage: logWidget->setItemDelegateForColumn(0, new Smitto::RichTextDelegate(this));
 
 namespace Smitto {
 
-namespace Consts {
-extern SMITTO_LIB_EXPORT const int AppNormalExitCode;
-extern SMITTO_LIB_EXPORT const int AppRestartExitCode;
-extern SMITTO_LIB_EXPORT const int AppUpdateExitCode;
-} // Consts::
-
-class SMITTO_LIB_EXPORT ExitHelper : public QObject
+class SMITTO_LIB_EXPORT RichTextDelegate : public QStyledItemDelegate
 {
 public:
-	explicit ExitHelper(QCoreApplication& app);
+	explicit RichTextDelegate(QObject* parent = Q_NULLPTR) : QStyledItemDelegate(parent) {}
+
+protected:
+	void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+	QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 };
 
 } // Smitto::
