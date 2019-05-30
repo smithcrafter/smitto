@@ -18,10 +18,8 @@
 #pragma once
 
 #include <smitto.h>
-#include <QtWidgets/QWidget>
+#include <Gui/QtWidgetsDeclaration.h>
 #include <QtCore/QMap>
-class QVBoxLayout;
-class QStackedWidget;
 
 namespace Smitto {
 
