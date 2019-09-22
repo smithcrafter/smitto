@@ -67,6 +67,13 @@ void MenuStackedWidget::selectFirstMenuItem()
 		selectMenuItem(widgets_.firstKey());
 }
 
+void MenuStackedWidget::insertMenuWidget(const QString& menutext, QWidget* content)
+{
+	auto* menuLabel = new QLabel(menutext);
+	menuLabel->setMinimumSize(80, 40);
+	insertMenuWidget(menuLabel, content);
+}
+
 void MenuStackedWidget::insertMenuWidget(QWidget* menu, QWidget* content)
 {
 	widgets_.insert(menu, content);

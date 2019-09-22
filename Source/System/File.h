@@ -19,8 +19,9 @@
 
 #include <smitto.h>
 
-namespace Ui {
+namespace Smitto {
 
-QString clipboardText();
+QByteArray readAllFile(const QString& filepath);
+void writeToFile(const QString& filepath, const QByteArray& data);
 
-}
+} // Smitto::

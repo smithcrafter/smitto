@@ -34,7 +34,7 @@ LoginBaseWidget::LoginBaseWidget(const QString& title, QWidget* parent)
 	: QWidget(parent)
 {
 	this->setWindowTitle(title);
-	UI_CREATE_GLAUOUT(layout)
+	UI_CREATE_GLAYOUT(layout)
 	QLabel* label;
 	layout->addWidget(label = new QLabel, 0, 0, 3, 1);
 	layout->addWidget(label = new QLabel(H1(title)), 0, 1, 1, 3);

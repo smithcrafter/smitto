@@ -36,7 +36,9 @@ public:
 	void selectMenuItem(QObject* watched);
 	void selectFirstMenuItem();
 
-	void insertMenuWidget(QWidget*, QWidget*);
+	void insertMenuWidget(const QString& menutext, QWidget* content);
+	void insertMenuWidget(QWidget* menu, QWidget* content);
+
 	void insertMenuStretch();
 
 	QWidget* baseMenuWidget() {return baseMenuWidget_;}
