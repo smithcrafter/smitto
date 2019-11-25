@@ -32,6 +32,7 @@ HEADERS += \
 #	$$ROOT_DIR/Source/smitto.cpp \
 
 include (System.pri)
+include (BaseItems.pri)
 
 contains(QT, gui){
 	include(Gui.pri)
