@@ -22,17 +22,22 @@
 namespace Smitto {
 
 namespace Consts {
+
+const int AppRestartExitCode = 199;
 const int AppNormalExitCode = 200;
-const int AppRestartExitCode = 201;
-const int AppUpdateExitCode = 202;
+const int AppSigIntExitCode = 202;
+const int AppSigTermExitCode = 215;
+const int AppUpdateExitCode = 210;
 } // Consts::
 
 void signalHandler(int sig)
 {
 	int exitCode = 0;
 #ifdef Q_OS_LINUX
-	if (sig == SIGINT || sig == SIGTERM)
-		exitCode = Consts::AppNormalExitCode;
+	if (sig == SIGINT)
+		exitCode = Consts::AppSigIntExitCode;
+	if (sig == SIGTERM)
+		exitCode = Consts::AppSigTermExitCode;
 	else if (sig == SIGUSR1)
 		exitCode = Consts::AppUpdateExitCode;
 #endif

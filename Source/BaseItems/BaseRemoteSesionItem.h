@@ -17,24 +17,25 @@
 
 #pragma once
 
-#include <smitto.h>
-#include <QtCore/QObject>
-class QCoreApplication;
+#include <Items/MetaItems.h>
+#include <Network/NetGlobal.h>
 
 namespace Smitto {
 
-namespace Consts {
-extern SMITTO_LIB_EXPORT const int AppRestartExitCode;
-extern SMITTO_LIB_EXPORT const int AppNormalExitCode;
-extern SMITTO_LIB_EXPORT const int AppSigIntExitCode;
-extern SMITTO_LIB_EXPORT const int AppSigTermExitCode;
-extern SMITTO_LIB_EXPORT const int AppUpdateExitCode;
-} // Consts::
-
-class SMITTO_LIB_EXPORT ExitHelper : public QObject
+struct RemoteSesionRecord : Ramio::ItemData
 {
-public:
-	explicit ExitHelper(QCoreApplication& app);
+	Ramio::ConnectionInfo netInfo;
+	QString loginTime;
+	QString queryTime;
+	QString login;
+	RMetaPKey userId;
+
+	RemoteSesionRecord() = default;
+	RemoteSesionRecord(const RemoteSesionRecord& other) = default;
+	RemoteSesionRecord(const Ramio::ConnectionInfo& from) : netInfo(from) {}
 };
+
+GENERATE_CLASS(RemoteSesion, RemoteSesionRecord)
+GENERATE_CLASS_SET(RemoteSesionSet, RemoteSesion, RemoteSesionRecord)
 
 } // Smitto::

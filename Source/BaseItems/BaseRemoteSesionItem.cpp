@@ -15,26 +15,9 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
 
-#include <smitto.h>
-#include <QtCore/QObject>
-class QCoreApplication;
+#include "BaseRemoteSesionItem.h"
 
 namespace Smitto {
-
-namespace Consts {
-extern SMITTO_LIB_EXPORT const int AppRestartExitCode;
-extern SMITTO_LIB_EXPORT const int AppNormalExitCode;
-extern SMITTO_LIB_EXPORT const int AppSigIntExitCode;
-extern SMITTO_LIB_EXPORT const int AppSigTermExitCode;
-extern SMITTO_LIB_EXPORT const int AppUpdateExitCode;
-} // Consts::
-
-class SMITTO_LIB_EXPORT ExitHelper : public QObject
-{
-public:
-	explicit ExitHelper(QCoreApplication& app);
-};
 
 } // Smitto::
