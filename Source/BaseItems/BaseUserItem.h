@@ -17,11 +17,12 @@
 
 #pragma once
 
+#include <smitto.h>
 #include <Items/MetaItems.h>
 
 namespace Smitto {
 
-struct UserRecord : Ramio::MetaItemData
+struct SMITTO_LIB_EXPORT UserRecord : Ramio::MetaItemData
 {
 	QString login;
 	QString password;
@@ -30,7 +31,11 @@ struct UserRecord : Ramio::MetaItemData
 	RMETA_OBJECT_DECL(Ramio::MetaItemData)
 };
 
+class SMITTO_LIB_EXPORT User;
+
 GENERATE_HEADER_CLASS(User, UserRecord)
+
+class SMITTO_LIB_EXPORT MetaUserSet;
 
 GENERATE_HEADER_CLASS_METASET_START(MetaUserSet, User, UserRecord)
 
