@@ -22,13 +22,13 @@
 
 namespace Smitto {
 
-struct SMITTO_LIB_EXPORT UserRecord : Ramio::MetaItemData
+struct SMITTO_LIB_EXPORT UserRecord : Ramio::MetaBaseItemData
 {
 	QString login;
 	QString password;
 	QString name;
 
-	RMETA_OBJECT_DECL(Ramio::MetaItemData)
+	RMETA_OBJECT_DECL(Ramio::MetaBaseItemData)
 };
 
 class SMITTO_LIB_EXPORT User;

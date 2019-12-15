@@ -22,7 +22,7 @@
 
 namespace Smitto {
 
-struct RemoteSesionRecord : Ramio::ItemData
+struct RemoteSesionRecord : Ramio::MetaBaseItemData
 {
 	Ramio::ConnectionInfo netInfo;
 	QString loginTime;
