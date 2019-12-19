@@ -37,7 +37,7 @@ GENERATE_HEADER_CLASS(User, UserRecord)
 
 class SMITTO_LIB_EXPORT MetaUserSet;
 
-GENERATE_HEADER_CLASS_METASET_START(MetaUserSet, User, UserRecord)
+GENERATE_HEADER_METASET_START(MetaUserSet, User, UserRecord)
 
 	const User* findUser(const QString& login, const QString& password) const;
 };

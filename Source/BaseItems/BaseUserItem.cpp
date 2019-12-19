@@ -27,7 +27,7 @@ RMETA_OBJECT_END
 
 GENERATE_SOURCE_CLASS(User, UserRecord)
 
-GENERATE_SOURCE_CLASS_METASET(MetaUserSet, "Users", "User")
+GENERATE_SOURCE_METASET(MetaUserSet, "Users", "User")
 
 const User* MetaUserSet::findUser(const QString& login, const QString& password) const
 {
