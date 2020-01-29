@@ -33,11 +33,11 @@ class SMITTO_LIB_EXPORT MenuStackedWidget : public QWidget
 public:
 	MenuStackedWidget(const QString& activeStyleSheet, const QString& backgroundStyleSheet, QWidget* parent = Q_NULLPTR);
 
-	void selectMenuItem(QObject* watched);
+	void selectMenuItem(QWidget* watched);
 	void selectFirstMenuItem();
 
-	void insertMenuWidget(const QString& menutext, QWidget* content);
-	void insertMenuWidget(QWidget* menu, QWidget* content);
+	QWidget* insertMenuWidget(const QString& menutext, QWidget* content, int pos = -1);
+	void insertMenuWidget(QWidget* menu, QWidget* content, int pos = -1);
 
 	void insertMenuStretch();
 

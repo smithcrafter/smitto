@@ -22,6 +22,6 @@ class QString;
 
 namespace Smitto {
 
-extern const QString tmppath;
+extern const SMITTO_LIB_EXPORT QString tmppath;
 
 } // Smitto::

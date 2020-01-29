@@ -43,7 +43,7 @@ MenuStackedWidget::MenuStackedWidget(const QString& activeStyleSheet, const QStr
 	layout->addWidget(stackedWidget_ = new QStackedWidget(this));
 }
 
-void MenuStackedWidget::selectMenuItem(QObject* watched)
+void MenuStackedWidget::selectMenuItem(QWidget* watched)
 {
 	QWidget* content = widgets_[static_cast<QWidget*>(watched)];
 	int index = stackedWidget_->indexOf(content);
@@ -67,17 +67,21 @@ void MenuStackedWidget::selectFirstMenuItem()
 		selectMenuItem(widgets_.firstKey());
 }
 
-void MenuStackedWidget::insertMenuWidget(const QString& menutext, QWidget* content)
+QWidget* MenuStackedWidget::insertMenuWidget(const QString& menutext, QWidget* content, int pos)
 {
 	auto* menuLabel = new QLabel(menutext);
 	menuLabel->setMinimumSize(80, 40);
-	insertMenuWidget(menuLabel, content);
+	insertMenuWidget(menuLabel, content, pos);
+	return menuLabel;
 }
 
-void MenuStackedWidget::insertMenuWidget(QWidget* menu, QWidget* content)
+void MenuStackedWidget::insertMenuWidget(QWidget* menu, QWidget* content, int pos)
 {
 	widgets_.insert(menu, content);
-	menuLayout_->addWidget(menu);
+	if (pos == -1 || pos >= widgets_.count())
+		menuLayout_->addWidget(menu);
+	else
+		menuLayout_->insertWidget(pos, menu);
 	menu->installEventFilter(this);
 	content->setParent(this);
 	content->setHidden(true);
@@ -92,7 +96,7 @@ bool MenuStackedWidget::eventFilter(QObject* watched, QEvent* event)
 {
 	if (event->type() == QEvent::MouseButtonRelease)
 	{
-		selectMenuItem(watched);
+		selectMenuItem(static_cast<QWidget*>(watched));
 		return true;
 	}
 	return QWidget::eventFilter(watched, event);
