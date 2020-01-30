@@ -43,6 +43,8 @@ public:
 
 	QWidget* baseMenuWidget() {return baseMenuWidget_;}
 
+	const QMap<QWidget*, QWidget*>& widgets() const {return widgets_;}
+
 protected:
 	bool eventFilter(QObject* watched, QEvent* event) Q_DECL_OVERRIDE;
 
