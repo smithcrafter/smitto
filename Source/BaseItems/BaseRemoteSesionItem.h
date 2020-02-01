@@ -22,7 +22,7 @@
 
 namespace Smitto {
 
-struct RemoteSesionRecord : Ramio::MetaBaseItemData
+struct RemoteSesionRecord : Ramio::MetaStandardItemData
 {
 	Ramio::ConnectionInfo netInfo;
 	QString loginTime;
@@ -35,7 +35,7 @@ struct RemoteSesionRecord : Ramio::MetaBaseItemData
 	RemoteSesionRecord(const Ramio::ConnectionInfo& from) : netInfo(from) {}
 };
 
-GENERATE_CLASS(RemoteSesion, RemoteSesionRecord)
-GENERATE_CLASS_SET(RemoteSesionSet, RemoteSesion, RemoteSesionRecord)
+GENERATE_METACLASS(RemoteSesion, RemoteSesionRecord)
+GENERATE_ITEMSET(RemoteSesionSet, RemoteSesion, RemoteSesionRecord)
 
 } // Smitto::
