@@ -15,18 +15,27 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "InterfaceHelpers.h"
-// Qt5
-#include <QtGui/QClipboard>
-#include <QtGui/QGuiApplication>
+#pragma once
+
+#include <QtWidgets/QWidget>
 
 namespace Ui {
 
-QString clipboardText()
+class CustomTitleWidget : public QWidget
 {
-	QClipboard* clipboard = QGuiApplication::clipboard();
-	Q_ASSERT(clipboard);
-	return clipboard->text();
-}
+public:
+	CustomTitleWidget(QWidget* parent = Q_NULLPTR) : QWidget(parent) {}
+
+protected:
+	QWidget* maxParent();
+	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+	void mouseReleaseEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+	void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+
+private:
+	QPoint mouseClickPos_;
+	QPoint parentPos_;
+	bool move_ = false;
+};
 
 }

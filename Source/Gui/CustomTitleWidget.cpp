@@ -15,18 +15,43 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "InterfaceHelpers.h"
+#include "CustomTitleWidget.h"
 // Qt5
-#include <QtGui/QClipboard>
-#include <QtGui/QGuiApplication>
+#include <QtGui/QMouseEvent>
 
 namespace Ui {
 
-QString clipboardText()
+QWidget* CustomTitleWidget::maxParent()
 {
-	QClipboard* clipboard = QGuiApplication::clipboard();
-	Q_ASSERT(clipboard);
-	return clipboard->text();
+	QWidget* maxParent = this;
+	while (maxParent->parent()) {
+		maxParent = maxParent->parentWidget();
+	}
+	return maxParent;
+}
+
+void CustomTitleWidget::mousePressEvent(QMouseEvent *event)
+{
+	if(event->button()==Qt::LeftButton)
+	{
+		mouseClickPos_=event->globalPos();
+		parentPos_ = maxParent()->pos();
+		move_ = true;
+	}
+	QWidget::mousePressEvent(event);
+}
+
+void CustomTitleWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+	move_ = false;
+	QWidget::mouseReleaseEvent(event);
+}
+
+void CustomTitleWidget::mouseMoveEvent(QMouseEvent* event)
+{
+	if (move_ && (event->buttons() & Qt::LeftButton) )
+		maxParent()->move(parentPos_+event->globalPos()-mouseClickPos_);
+	QWidget::mouseMoveEvent(event);
 }
 
 }
