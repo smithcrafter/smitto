@@ -25,12 +25,15 @@ class CustomTitleWidget : public QWidget
 {
 public:
 	CustomTitleWidget(QWidget* parent = Q_NULLPTR) : QWidget(parent) {}
+	CustomTitleWidget(const QString& title, QWidget* parent = Q_NULLPTR);
 
 protected:
 	QWidget* maxParent();
 	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+	void mouseDoubleClickEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 	void mouseReleaseEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 	void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+	void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 
 private:
 	QPoint mouseClickPos_;
