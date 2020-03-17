@@ -17,21 +17,17 @@
 
 #pragma once
 
-#include <smitto.h>
+#include <Gui/SmittoStyleSheets.h>
 #include <Gui/QtWidgetsDeclaration.h>
 #include <QtCore/QMap>
 
 namespace Smitto {
 
-extern const QString SMITTO_LIB_EXPORT  l1StyleSheet;
-extern const QString SMITTO_LIB_EXPORT  l2StyleSheet;
-extern const QString SMITTO_LIB_EXPORT  l3StyleSheet;
-extern const QString SMITTO_LIB_EXPORT  l4StyleSheet;
-
 class SMITTO_LIB_EXPORT MenuStackedWidget : public QWidget
 {
 public:
 	MenuStackedWidget(const QString& activeStyleSheet, const QString& backgroundStyleSheet, QWidget* parent = Q_NULLPTR);
+	~MenuStackedWidget() Q_DECL_OVERRIDE;
 
 	void selectMenuItem(QWidget* watched);
 	void selectFirstMenuItem();

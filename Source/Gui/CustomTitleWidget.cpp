@@ -16,6 +16,7 @@
  */
 
 #include "CustomTitleWidget.h"
+#include "PlatformSpecification.h"
 // Qt5
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
@@ -38,18 +39,19 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, QWidget* parent)
 	layout->addWidget(tb = new QToolButton());
 	tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 	tb->setText("_");
-	tb->setFixedSize(32, 32);
+	tb->setFixedSize(iconSize());
 	connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->showMinimized();});
 	layout->addWidget(tb = new QToolButton());
 	tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 	tb->setText("☐");
-	tb->setFixedSize(32, 32);
+	tb->setFixedSize(iconSize());
 	connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->isMaximized() ? this->maxParent()->showNormal() : this->maxParent()->showMaximized();});
 	layout->addWidget(tb = new QToolButton());
 	tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 	tb->setText("X");
-	tb->setFixedSize(32, 32);
+	tb->setFixedSize(iconSize());
 	connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->close();});
+	this->setMinimumHeight(panelSize());
 }
 
 QWidget* CustomTitleWidget::maxParent()
@@ -61,9 +63,9 @@ QWidget* CustomTitleWidget::maxParent()
 	return maxParent;
 }
 
-void CustomTitleWidget::mousePressEvent(QMouseEvent *event)
+void CustomTitleWidget::mousePressEvent(QMouseEvent* event)
 {
-	if(event->button()==Qt::LeftButton)
+	if (event->button() == Qt::LeftButton)
 	{
 		mouseClickPos_ = event->globalPos();
 		parentPos_ = maxParent()->pos();
@@ -86,7 +88,7 @@ void CustomTitleWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void CustomTitleWidget::mouseMoveEvent(QMouseEvent* event)
 {
-	if (move_ && (event->buttons() & Qt::LeftButton) )
+	if (move_ && (event->buttons() & Qt::LeftButton))
 		maxParent()->move(parentPos_+event->globalPos()-mouseClickPos_);
 	QWidget::mouseMoveEvent(event);
 }

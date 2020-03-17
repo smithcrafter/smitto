@@ -17,11 +17,14 @@
 
 #pragma once
 
-class QSize;
+#include <smitto.h>
 
-namespace Ui {
+namespace Smitto {
 
-int panelSize();
-QSize iconSize();
+extern const QString SMITTO_LIB_EXPORT emptyStyleSheet;
+extern const QString SMITTO_LIB_EXPORT l1StyleSheet;
+extern const QString SMITTO_LIB_EXPORT l2StyleSheet;
+extern const QString SMITTO_LIB_EXPORT l3StyleSheet;
+extern const QString SMITTO_LIB_EXPORT l4StyleSheet;
 
-}
+} // Smitto::

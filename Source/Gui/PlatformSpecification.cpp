@@ -29,4 +29,12 @@ QSize iconSize()
 	return QSize(32, 32);
 }
 
+int panelSize()
+{
+#ifdef Q_OS_ANDROID
+	return 32;
+#endif
+	return 32;
+}
+
 }

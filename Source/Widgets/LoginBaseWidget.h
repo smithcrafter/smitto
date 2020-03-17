@@ -27,7 +27,7 @@ class SMITTO_LIB_EXPORT LoginBaseWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	LoginBaseWidget(const QString& title, QWidget* parent);
+	LoginBaseWidget(const QString& title, QWidget* parent = Q_NULLPTR);
 
 	void autoLogin();
 
