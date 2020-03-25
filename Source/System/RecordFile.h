@@ -16,8 +16,7 @@
  */
 
 #include <QtCore/QFile>
-// Ramio
-#include <Global/KeyValueRecord.h>
+#include <Data/KeyValueRecord.h>
 
 namespace Smitto {
 
@@ -34,7 +33,7 @@ QList<RecordClass> readRecordsFromFile(const QString& filepath)
 		while (!file.atEnd()) {
 			QString str(file.readLine(4096));
 			if (!str.isEmpty())
-				res.append(RecordClass(Ramio::KeyValueRecord(str)));
+				res.append(RecordClass(KeyValueRecord(str)));
 		}
 		file.close();
 	}
