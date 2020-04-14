@@ -21,10 +21,18 @@
 
 namespace Smitto {
 
-const QString emptyStyleSheet;
-const QString l1StyleSheet("QWidget {background: #C4CACA;}"); // C4CACA, текст D9D9D9
-const QString l2StyleSheet("QWidget {background: #E3E3E3;}"); // E3E3E3, текст EEEEEE
-const QString l3StyleSheet("QWidget {background: #F2F2F2;}"); // F2F2F2
-const QString l4StyleSheet("QWidget {background: #FEFEFE;}"); // FEFEFE
+const QString emptyss;
+const QString l01ss("QWidget {background: #151c2a; color: #e8ebf0;}");
+const QString l02ss("QWidget {background: #21293a; color: #f6f7f9;}");
+const QString l03ss("QWidget {background: #313a4c;}");
+const QString l04ss("QWidget {background: #414a5e;}");
+const QString l05ss("QWidget {background: #606d88;}");
+const QString l06ss("QWidget {background: #7281a0;}");
+const QString l07ss("QWidget {background: #8996b0;}");
+const QString l08ss("QWidget {background: #96a2b9;}");
+const QString l09ss("QWidget {background: #a0acc4;}"); // C4CACA, текст D9D9D9
+const QString l10ss("QWidget {background: #bfc7d9;}"); // E3E3E3, текст EEEEEE
+const QString l11ss("QWidget {background: #e8ebf0;}"); // F2F2F2
+const QString l12ss("QWidget {background: #f6f7f9;}"); // FEFEFE
 
 } // Smitto::

@@ -21,10 +21,18 @@
 
 namespace Smitto {
 
-extern const QString SMITTO_LIB_EXPORT emptyStyleSheet;
-extern const QString SMITTO_LIB_EXPORT l1StyleSheet;
-extern const QString SMITTO_LIB_EXPORT l2StyleSheet;
-extern const QString SMITTO_LIB_EXPORT l3StyleSheet;
-extern const QString SMITTO_LIB_EXPORT l4StyleSheet;
+extern const QString SMITTO_LIB_EXPORT emptyss;
+extern const QString SMITTO_LIB_EXPORT l01ss;
+extern const QString SMITTO_LIB_EXPORT l02ss;
+extern const QString SMITTO_LIB_EXPORT l03ss;
+extern const QString SMITTO_LIB_EXPORT l04ss;
+extern const QString SMITTO_LIB_EXPORT l05ss;
+extern const QString SMITTO_LIB_EXPORT l06ss;
+extern const QString SMITTO_LIB_EXPORT l07ss;
+extern const QString SMITTO_LIB_EXPORT l08ss;
+extern const QString SMITTO_LIB_EXPORT l09ss;
+extern const QString SMITTO_LIB_EXPORT l10ss;
+extern const QString SMITTO_LIB_EXPORT l11ss;
+extern const QString SMITTO_LIB_EXPORT l12ss;
 
 } // Smitto::

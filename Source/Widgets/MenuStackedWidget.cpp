@@ -53,7 +53,7 @@ void MenuStackedWidget::selectMenuItem(QWidget* watched)
 	stackedWidget_->setCurrentIndex(index);
 
 	if (lastActiveMenu_)
-		lastActiveMenu_->setStyleSheet(emptyStyleSheet);
+		lastActiveMenu_->setStyleSheet(emptyss);
 	lastActiveMenu_ = static_cast<QWidget*>(watched);
 	lastActiveMenu_ ->setStyleSheet(activeStyleSheet_);
 }
