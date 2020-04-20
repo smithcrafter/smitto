@@ -28,7 +28,7 @@ struct SMITTO_LIB_EXPORT UserRecord : Ramio::MetaStandardItemData
 	QString password;
 	QString name;
 
-	RMETA_OBJECT_DECL(Ramio::MetaStandardItemData)
+	RMETA_DATA_DECL(Ramio::MetaStandardItemData)
 };
 
 class SMITTO_LIB_EXPORT User;

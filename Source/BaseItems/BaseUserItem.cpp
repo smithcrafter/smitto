@@ -19,11 +19,11 @@
 
 namespace Smitto {
 
-RMETA_OBJECT_IMPL(UserRecord)
-RMETA_OBJECT_FIELD_C(login, String, "Пользователь")
-RMETA_OBJECT_FIELD_C(password, String, "Пароль")
-RMETA_OBJECT_FIELD_C(name, String, "Имя")
-RMETA_OBJECT_END
+RMETA_DATA_IMPL(UserRecord)
+RMETA_DATA_FIELD_C(login, String, "Пользователь")
+RMETA_DATA_FIELD_C(password, String, "Пароль")
+RMETA_DATA_FIELD_C(name, String, "Имя")
+RMETA_DATA_END
 
 GENERATE_SOURCE_METACLASS(User, UserRecord)
 

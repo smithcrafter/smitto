@@ -18,6 +18,7 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+class QHBoxLayout;
 
 namespace Ui {
 
