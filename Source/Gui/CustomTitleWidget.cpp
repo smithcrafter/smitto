@@ -27,7 +27,7 @@
 
 namespace Ui {
 
-CustomTitleWidget::CustomTitleWidget(const QString& title, QWidget* parent)
+CustomTitleWidget::CustomTitleWidget(const QString& title, bool onlyClose, QWidget* parent)
 	:QWidget(parent)
 {
 	auto layout = new QHBoxLayout(this);
@@ -35,17 +35,22 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, QWidget* parent)
 	layout->setSpacing(0);
 	layout->addWidget(new QLabel(title));
 	layout->addStretch();
+	layout->addLayout(cornLayout_ = new QHBoxLayout());
 	QToolButton* tb;
-	layout->addWidget(tb = new QToolButton());
-	tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
-	tb->setText("_");
-	tb->setFixedSize(iconSize());
-	connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->showMinimized();});
-	layout->addWidget(tb = new QToolButton());
-	tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
-	tb->setText("☐");
-	tb->setFixedSize(iconSize());
-	connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->isMaximized() ? this->maxParent()->showNormal() : this->maxParent()->showMaximized();});
+	if (!onlyClose)
+	{
+		layout->addWidget(tb = new QToolButton());
+		tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+		tb->setText("_");
+		tb->setFixedSize(iconSize());
+		connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->showMinimized();});
+		layout->addWidget(tb = new QToolButton());
+		tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+		tb->setText("☐");
+		tb->setFixedSize(iconSize());
+		connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->isMaximized() ? this->maxParent()->showNormal() : this->maxParent()->showMaximized();});
+	}
+
 	layout->addWidget(tb = new QToolButton());
 	tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 	tb->setText("X");

@@ -16,6 +16,8 @@
  */
 
 #include "SmittoColors.h"
+// Qt5
+#include <QtCore/QString>
 
 namespace Smitto {
 

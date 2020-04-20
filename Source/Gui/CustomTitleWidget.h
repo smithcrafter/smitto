@@ -25,7 +25,9 @@ class CustomTitleWidget : public QWidget
 {
 public:
 	CustomTitleWidget(QWidget* parent = Q_NULLPTR) : QWidget(parent) {}
-	CustomTitleWidget(const QString& title, QWidget* parent = Q_NULLPTR);
+	CustomTitleWidget(const QString& title, bool onlyClose = false, QWidget* parent = Q_NULLPTR);
+
+	QHBoxLayout* cornLayout() {return cornLayout_;}
 
 protected:
 	QWidget* maxParent();
@@ -36,6 +38,7 @@ protected:
 	void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 
 private:
+	QHBoxLayout* cornLayout_ = Q_NULLPTR;
 	QPoint mouseClickPos_;
 	QPoint parentPos_;
 	bool move_ = false;
