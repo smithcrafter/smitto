@@ -25,18 +25,18 @@ QString scolor(SmittoBaseColors color)
 {
 	switch (color) {
 	case SmittoBaseColors::Unset : return "#000000";
-	case SmittoBaseColors::lelev01 : return "#151c2a";
-	case SmittoBaseColors::lelev02 : return "#21293a";
-	case SmittoBaseColors::lelev03 : return "#313a4c";
-	case SmittoBaseColors::lelev04 : return "#414a5e";
-	case SmittoBaseColors::lelev05 : return "#606d88";
-	case SmittoBaseColors::lelev06 : return "#7281a0";
-	case SmittoBaseColors::lelev07 : return "#8996b0";
-	case SmittoBaseColors::lelev08 : return "#96a2b9";
-	case SmittoBaseColors::lelev09 : return "#a0acc4";
-	case SmittoBaseColors::lelev10 : return "#bfc7d9";
-	case SmittoBaseColors::lelev11 : return "#e8ebf0";
-	case SmittoBaseColors::lelev12 : return "#f6f7f9";
+	case SmittoBaseColors::level01 : return "#151c2a";
+	case SmittoBaseColors::level02 : return "#21293a";
+	case SmittoBaseColors::level03 : return "#313a4c";
+	case SmittoBaseColors::level04 : return "#414a5e";
+	case SmittoBaseColors::level05 : return "#606d88";
+	case SmittoBaseColors::level06 : return "#7281a0";
+	case SmittoBaseColors::level07 : return "#8996b0";
+	case SmittoBaseColors::level08 : return "#96a2b9";
+	case SmittoBaseColors::level09 : return "#a0acc4";
+	case SmittoBaseColors::level10 : return "#bfc7d9";
+	case SmittoBaseColors::level11 : return "#e8ebf0";
+	case SmittoBaseColors::level12 : return "#f6f7f9";
 	case SmittoBaseColors::Red : return "#CC0000";
 	case SmittoBaseColors::BoldRed : return "#EF2929";
 	case SmittoBaseColors::Green : return "#4E9A06";
