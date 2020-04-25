@@ -3,10 +3,12 @@
 HEADERS += \
 	$$ROOT_DIR/Source/Widgets/MenuStackedWidget.h \
 	$$ROOT_DIR/Source/Widgets/LoginBaseWidget.h \
+	$$ROOT_DIR/Source/Widgets/ServiceStatusWidget.h \
 
 SOURCES += \
 	$$ROOT_DIR/Source/Widgets/MenuStackedWidget.cpp \
 	$$ROOT_DIR/Source/Widgets/LoginBaseWidget.cpp \
+	$$ROOT_DIR/Source/Widgets/ServiceStatusWidget.cpp \
 
 # ItemDelegate
 
