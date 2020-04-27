@@ -29,7 +29,7 @@ class Service;
 class ServiceStatusWidget : public QWidget
 {
 public:
-	ServiceStatusWidget(Service& service, const QString& name, QWidget* parent = Q_NULLPTR);
+	ServiceStatusWidget(Service& service, QWidget* parent = Q_NULLPTR);
 
 private:
 	void onActiveChanged(bool value);

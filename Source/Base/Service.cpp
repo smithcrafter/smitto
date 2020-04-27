@@ -21,22 +21,22 @@
 
 namespace Smitto {
 
-Service::Service(QObject* parent)
+Service::Service(const QString& name, int timer, QObject* parent)
 	: QObject(parent),
+	  name_(name),
 	  timer_(new QTimer(this))
 {
-	timer_->setInterval(1000);
+	timer_->setInterval(timer);
 }
 
 Service::~Service()
 {
-	if (started())
-		stop();
+	stop();
 }
 
 void Service::start()
 {
-	if (prepareStart())
+	if (!started() && prepareStart())
 	{
 		timer_->start();
 		emit activeChanged(true);
@@ -45,9 +45,12 @@ void Service::start()
 
 void Service::stop()
 {
-	timer_->stop();
-	processStop();
-	emit activeChanged(false);
+	if (started())
+	{
+		timer_->stop();
+		processStop();
+		emit activeChanged(false);
+	}
 }
 
 bool Service::started() const

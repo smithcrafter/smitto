@@ -27,22 +27,25 @@ class Service: public QObject
 {
 	Q_OBJECT
 public:
-	Service(QObject* parent = Q_NULLPTR);
+	Service(const QString& name, int timer = 1000, QObject* parent = Q_NULLPTR);
 	~Service();
+
+	const QString& name() const {return name_;}
+	bool started() const;
 
 	void start();
 	void stop();
-	bool started() const;
 	void toogle() {started() ? stop() : start();}
 
 signals:
-	void activeChanged(bool);
+	void activeChanged(bool started);
 
 protected:
 	virtual bool prepareStart() {return true;}
 	virtual void processStop() {}
 
 protected:
+	QString name_;
 	QTimer* timer_;
 };
 

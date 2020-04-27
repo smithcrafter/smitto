@@ -26,19 +26,22 @@
 
 namespace Smitto {
 
-ServiceStatusWidget::ServiceStatusWidget(Service& service, const QString& name, QWidget* parent)
+ServiceStatusWidget::ServiceStatusWidget(Service& service, QWidget* parent)
 	: QWidget(parent),
 	  service_(service)
 {
 	UI_CREATE_HLAYOUT(layout);
-	layout->addWidget(stateLabel_ = new QLabel(this));
-	layout->addWidget(new QLabel(H3(name)));
+	layout->addWidget(new QLabel(H3(service.name())));
 	layout->addStretch();
+	layout->addWidget(stateLabel_ = new QLabel(this));
 	layout->addWidget(startButton_ = new QToolButton(this));
 	startButton_->setText(tr("Старт"));
 	layout->addWidget(stopButton_ = new QToolButton(this));
 	stopButton_->setText(tr("Стоп"));
 	connect(&service, &Service::activeChanged, this, &ServiceStatusWidget::onActiveChanged);
+	connect(startButton_, &QToolButton::clicked, &service, &Service::start);
+	connect(stopButton_, &QToolButton::clicked, &service, &Service::stop);
+
 	onActiveChanged(service.started());
 }
 
