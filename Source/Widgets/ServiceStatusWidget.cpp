@@ -50,7 +50,7 @@ void ServiceStatusWidget::onActiveChanged(bool value)
 	startButton_->setEnabled(!value);
 	stopButton_->setEnabled(value);
 	if (value)
-		stateLabel_->setText(GREENTEXT("Активен"));
+		stateLabel_->setText(GREENTEXT(BOLD("Активен")));
 	else
 		stateLabel_->setText(GRAYTEXT("Отключён"));
 }

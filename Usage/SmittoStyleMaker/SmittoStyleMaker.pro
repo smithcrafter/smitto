@@ -9,9 +9,11 @@ INCLUDEPATH += ../../Source/
 
 SOURCES += main.cpp \
 	../../Source/Gui/SmittoColors.cpp \
-    SmittoCSSMaker.cpp
+	SmittoCSSMaker.cpp \
+	SmittoTerminalTheme.cpp \
 
 HEADERS += \
 	../../Source/Gui/SmittoColors.h \
-    SmittoCSSMaker.h
+	SmittoCSSMaker.h \
+	SmittoTerminalTheme.h \
 

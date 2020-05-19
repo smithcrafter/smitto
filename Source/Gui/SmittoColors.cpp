@@ -37,18 +37,33 @@ QString scolor(SmittoBaseColors color)
 	case SmittoBaseColors::level10 : return "#bfc7d9";
 	case SmittoBaseColors::level11 : return "#e8ebf0";
 	case SmittoBaseColors::level12 : return "#f6f7f9";
-	case SmittoBaseColors::Red : return "#CC0000";
-	case SmittoBaseColors::BoldRed : return "#EF2929";
-	case SmittoBaseColors::Green : return "#4E9A06";
-	case SmittoBaseColors::BoldGreen : return "#9FD873";
-	case SmittoBaseColors::Yellow : return "#C4A000";
-	case SmittoBaseColors::BoldYellow : return "#FCE94F";
-	case SmittoBaseColors::Blue : return "#3465A4";
-	case SmittoBaseColors::BoldBlue : return "#739FCF";
-	case SmittoBaseColors::Purple : return "#75507B";
-	case SmittoBaseColors::BoldPurple : return "#AD7FA8";
-	case SmittoBaseColors::Cyan : return "#06989A";
-	case SmittoBaseColors::BoldCyan : return "#34E2E2";
+	case SmittoBaseColors::Red : return "#cc0000";
+	case SmittoBaseColors::BoldRed : return "#ef2929";
+	case SmittoBaseColors::Green : return "#4e9a06";
+	case SmittoBaseColors::BoldGreen : return "#8ae234";
+	case SmittoBaseColors::Yellow : return "#c4a000";
+	case SmittoBaseColors::BoldYellow : return "#fce94f";
+	case SmittoBaseColors::Blue : return "#3465a4";
+	case SmittoBaseColors::BoldBlue : return "#739fcf";
+	case SmittoBaseColors::Purple : return "#75507b";
+	case SmittoBaseColors::BoldPurple : return "#ad7fa8";
+	case SmittoBaseColors::Cyan : return "#06989a";
+	case SmittoBaseColors::BoldCyan : return "#34e2e2";
+	}
+	return "#000000";
+}
+
+QString ccolor(ConsoleColors color, bool bold)
+{
+	switch (color) {
+		case ConsoleColors::Black : return scolor(!bold ? SmittoBaseColors::level01: SmittoBaseColors::level03);
+		case ConsoleColors::Red : return scolor(!bold ? SmittoBaseColors::Red: SmittoBaseColors::BoldRed);
+		case ConsoleColors::Green : return scolor(!bold ? SmittoBaseColors::Green: SmittoBaseColors::BoldGreen);
+		case ConsoleColors::Yellow : return scolor(!bold ? SmittoBaseColors::Yellow: SmittoBaseColors::BoldYellow);
+		case ConsoleColors::Blue : return scolor(!bold ? SmittoBaseColors::Blue: SmittoBaseColors::BoldBlue);
+		case ConsoleColors::Purple : return scolor(!bold ? SmittoBaseColors::Purple: SmittoBaseColors::BoldPurple);
+		case ConsoleColors::Cyan : return scolor(!bold ? SmittoBaseColors::Cyan: SmittoBaseColors::BoldCyan);
+		case ConsoleColors::White : return scolor(!bold ? SmittoBaseColors::level12: SmittoBaseColors::level09);
 	}
 	return "#000000";
 }

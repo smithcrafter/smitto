@@ -64,4 +64,6 @@ enum class ConsoleColors : int
 	White
 };
 
+QString ccolor(ConsoleColors color, bool bold);
+
 } // Smitto::
