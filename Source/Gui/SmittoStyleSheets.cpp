@@ -16,23 +16,30 @@
  */
 
 #include "SmittoStyleSheets.h"
+#include "SmittoColors.h"
 // Qt5
 #include <QtCore/QString>
 
 namespace Smitto {
 
 const QString emptyss;
-const QString l01ss("QWidget {background: #151c2a; color: #e8ebf0;}");
-const QString l02ss("QWidget {background: #21293a; color: #f6f7f9;}");
-const QString l03ss("QWidget {background: #313a4c;}");
-const QString l04ss("QWidget {background: #414a5e;}");
-const QString l05ss("QWidget {background: #606d88;}");
-const QString l06ss("QWidget {background: #7281a0;}");
-const QString l07ss("QWidget {background: #8996b0;}");
-const QString l08ss("QWidget {background: #96a2b9;}");
-const QString l09ss("QWidget {background: #a0acc4;}"); // C4CACA, текст D9D9D9
-const QString l10ss("QWidget {background: #bfc7d9;}"); // E3E3E3, текст EEEEEE
-const QString l11ss("QWidget {background: #e8ebf0;}"); // F2F2F2
-const QString l12ss("QWidget {background: #f6f7f9;}"); // FEFEFE
+const QString l01ss = QString("QWidget {background: %1; color: %2;}")
+					  .arg(scolor(SmittoBaseColors::level01), scolor(SmittoBaseColors::level07));
+const QString l02ss = QString("QWidget {background: %1; color: %2;}")
+					  .arg(scolor(SmittoBaseColors::level02), scolor(SmittoBaseColors::level08));
+const QString l03ss = QString("QWidget {background: %1; color: %2;}")
+					  .arg(scolor(SmittoBaseColors::level03), scolor(SmittoBaseColors::level09));
+const QString l04ss = QString("QWidget {background: %1; color: %2;}")
+					  .arg(scolor(SmittoBaseColors::level04), scolor(SmittoBaseColors::level10));
+const QString l05ss = QString("QWidget {background: %1; color: %2;}")
+					  .arg(scolor(SmittoBaseColors::level05), scolor(SmittoBaseColors::level11));
+const QString l06ss = QString("QWidget {background: %1; color: %2;}")
+					  .arg(scolor(SmittoBaseColors::level06), scolor(SmittoBaseColors::level12));
+const QString l07ss = QString("QWidget {background: %1;}").arg(scolor(SmittoBaseColors::level07));
+const QString l08ss = QString("QWidget {background: %1;}").arg(scolor(SmittoBaseColors::level08));
+const QString l09ss = QString("QWidget {background: %1;}").arg(scolor(SmittoBaseColors::level09));
+const QString l10ss = QString("QWidget {background: %1;}").arg(scolor(SmittoBaseColors::level10));
+const QString l11ss = QString("QWidget {background: %1;}").arg(scolor(SmittoBaseColors::level11));
+const QString l12ss = QString("QWidget {background: %1;}").arg(scolor(SmittoBaseColors::level12));
 
 } // Smitto::
