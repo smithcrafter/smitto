@@ -41,4 +41,11 @@ private:
 	QLabel* stateLabel_;
 };
 
+class ServicesStatusWidget : public QWidget
+{
+public:
+	ServicesStatusWidget(QList<Service*> services, QWidget* parent = Q_NULLPTR);
+};
+
+
 } // Smitto::

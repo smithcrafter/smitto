@@ -55,4 +55,13 @@ void ServiceStatusWidget::onActiveChanged(bool value)
 		stateLabel_->setText(GRAYTEXT("Отключён"));
 }
 
+ServicesStatusWidget::ServicesStatusWidget(QList<Service*> services, QWidget* parent)
+	: QWidget(parent)
+{
+	UI_CREATE_VLAYOUT(layout);
+	for (auto service: services)
+		layout->addWidget(new ServiceStatusWidget(*service, this));
+	layout->addStretch();
+}
+
 } // Smitto::

@@ -48,7 +48,9 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, bool onlyClose, QWidg
 		tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 		tb->setText("☐");
 		tb->setFixedSize(iconSize());
-		connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->isMaximized() ? this->maxParent()->showNormal() : this->maxParent()->showMaximized();});
+		connect(tb, &QToolButton::clicked, this, [this](){
+			if (this->maxParent()->isMaximized()) {this->maxParent()->showMaximized();this->maxParent()->showNormal();}
+			else this->maxParent()->showMaximized();});
 	}
 
 	layout->addWidget(tb = new QToolButton());
