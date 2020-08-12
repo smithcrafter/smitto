@@ -33,7 +33,7 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, bool onlyClose, QWidg
 	auto layout = new QHBoxLayout(this);
 	layout->setMargin(0);
 	layout->setSpacing(0);
-	layout->addWidget(new QLabel(title));
+	layout->addWidget(titleLabel_ = new QLabel(title));
 	layout->addStretch();
 	layout->addLayout(cornLayout_ = new QHBoxLayout());
 	QToolButton* tb;

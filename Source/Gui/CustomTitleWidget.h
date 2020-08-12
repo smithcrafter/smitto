@@ -19,6 +19,7 @@
 
 #include <QtWidgets/QWidget>
 class QHBoxLayout;
+class QLabel;
 
 namespace Ui {
 
@@ -28,6 +29,7 @@ public:
 	CustomTitleWidget(QWidget* parent = Q_NULLPTR) : QWidget(parent) {}
 	CustomTitleWidget(const QString& title, bool onlyClose = false, QWidget* parent = Q_NULLPTR);
 
+	QLabel* titleLabel() {return titleLabel_;}
 	QHBoxLayout* cornLayout() {return cornLayout_;}
 
 protected:
@@ -39,6 +41,7 @@ protected:
 	void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 
 private:
+	QLabel* titleLabel_;
 	QHBoxLayout* cornLayout_ = Q_NULLPTR;
 	QPoint mouseClickPos_;
 	QPoint parentPos_;
