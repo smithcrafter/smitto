@@ -56,10 +56,14 @@ LoginBaseWidget::LoginBaseWidget(const QString& title, QWidget* parent)
 void LoginBaseWidget::autoLogin()
 {
 	QString login = Ramio::config().value("User/Login");
-	QString password = Ramio::config().value("User/Password");
-
+	if (login.isEmpty())
+		login = APP_ARG("Login");
 	if (login.isEmpty())
 		login = "user1";
+
+	QString password = Ramio::config().value("User/Password");
+	if (password.isEmpty())
+		password = APP_ARG("Password");
 	if (password.isEmpty())
 		password = "1";
 
