@@ -27,7 +27,7 @@
 
 namespace Ui {
 
-CustomTitleWidget::CustomTitleWidget(const QString& title, bool onlyClose, QWidget* parent)
+CustomTitleWidget::CustomTitleWidget(const QString& title, TiltleButtons butons, QWidget* parent)
 	:QWidget(parent)
 {
 	auto layout = new QHBoxLayout(this);
@@ -37,13 +37,25 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, bool onlyClose, QWidg
 	layout->addStretch();
 	layout->addLayout(cornLayout_ = new QHBoxLayout());
 	QToolButton* tb;
-	if (!onlyClose)
+	if (butons & TiltleButton::Collapce)
+	{
+		layout->addWidget(tb = new QToolButton());
+		tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+		tb->setText("^");
+		tb->setFixedSize(iconSize());
+		buttons_.insert(TiltleButton::Collapce, tb);
+	}
+	if (butons & TiltleButton::Min)
 	{
 		layout->addWidget(tb = new QToolButton());
 		tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 		tb->setText("_");
 		tb->setFixedSize(iconSize());
 		connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->showMinimized();});
+		buttons_.insert(TiltleButton::Min, tb);
+	}
+	if (butons & TiltleButton::NormMax)
+	{
 		layout->addWidget(tb = new QToolButton());
 		tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 		tb->setText("☐");
@@ -51,14 +63,22 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, bool onlyClose, QWidg
 		connect(tb, &QToolButton::clicked, this, [this](){
 			if (this->maxParent()->isMaximized()) {this->maxParent()->showMaximized();this->maxParent()->showNormal();}
 			else this->maxParent()->showMaximized();});
+		buttons_.insert(TiltleButton::NormMax, tb);
 	}
-
-	layout->addWidget(tb = new QToolButton());
-	tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
-	tb->setText("X");
-	tb->setFixedSize(iconSize());
-	connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->close();});
+	if (butons & TiltleButton::Close)
+	{
+		layout->addWidget(tb = new QToolButton());
+		tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+		tb->setText("X");
+		tb->setFixedSize(iconSize());
+		connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->close();});
+		buttons_.insert(TiltleButton::Close, tb);
+	}
 	this->setMinimumHeight(panelSize());
+}
+
+CustomTitleWidget::~CustomTitleWidget()
+{
 }
 
 QWidget* CustomTitleWidget::maxParent()
@@ -100,8 +120,9 @@ void CustomTitleWidget::mouseMoveEvent(QMouseEvent* event)
 	QWidget::mouseMoveEvent(event);
 }
 
-void CustomTitleWidget::paintEvent(QPaintEvent *)
+void CustomTitleWidget::paintEvent(QPaintEvent* event)
 {
+	Q_UNUSED(event);
 	QStyleOption opt;
 	opt.init(this);
 	QPainter p(this);
