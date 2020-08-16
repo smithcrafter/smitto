@@ -25,6 +25,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 
+namespace Smitto {
 namespace Ui {
 
 CustomTitleWidget::CustomTitleWidget(const QString& title, TiltleButtons butons, QWidget* parent)
@@ -129,4 +130,5 @@ void CustomTitleWidget::paintEvent(QPaintEvent* event)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-}
+} // Ui ::
+} // Smitto ::

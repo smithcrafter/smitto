@@ -16,8 +16,9 @@
  */
 
 #include "PlatformSpecification.h"
-#include <QtGui>
+#include <QtCore/QSize>
 
+namespace Smitto {
 namespace Ui {
 
 QSize iconSize()
@@ -37,4 +38,5 @@ int panelSize()
 	return 32;
 }
 
-}
+} // Ui ::
+} // Smitto ::

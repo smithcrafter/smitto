@@ -18,9 +18,12 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+#include <QtCore/QMap>
 class QHBoxLayout;
 class QLabel;
+class QToolButton;
 
+namespace Smitto {
 namespace Ui {
 
 enum class TiltleButton
@@ -65,4 +68,5 @@ private:
 	bool move_ = false;
 };
 
-}
+} // Ui ::
+} // Smitto ::

@@ -68,4 +68,4 @@ QString ccolor(ConsoleColors color, bool bold)
 	return "#000000";
 }
 
-} // Smitto::
+} // Smitto ::

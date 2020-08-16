@@ -19,9 +19,11 @@
 
 class QSize;
 
+namespace Smitto {
 namespace Ui {
 
 int panelSize();
 QSize iconSize();
 
-}
+} // Ui ::
+} // Smitto ::
