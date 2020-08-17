@@ -59,6 +59,8 @@ protected:
 	void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 	void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 
+	bool eventFilter(QObject *watched, QEvent *event);
+
 private:
 	QLabel* titleLabel_;
 	QMap<TiltleButton, QToolButton*> buttons_;

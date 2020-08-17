@@ -76,6 +76,8 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, TiltleButtons butons,
 		buttons_.insert(TiltleButton::Close, tb);
 	}
 	this->setMinimumHeight(panelSize());
+
+	titleLabel_->installEventFilter(this);
 }
 
 CustomTitleWidget::~CustomTitleWidget()
@@ -128,6 +130,23 @@ void CustomTitleWidget::paintEvent(QPaintEvent* event)
 	opt.init(this);
 	QPainter p(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+bool CustomTitleWidget::eventFilter(QObject* watched, QEvent* event)
+{
+	if (titleLabel_ == watched)
+	{
+		if (event->type() == QEvent::MouseButtonPress)
+			mousePressEvent(static_cast<QMouseEvent*>(event));
+		else if (event->type() == QEvent::MouseButtonRelease)
+			mouseReleaseEvent(static_cast<QMouseEvent*>(event));
+		else if (event->type() == QEvent::MouseMove)
+			mouseMoveEvent(static_cast<QMouseEvent*>(event));
+		else
+			return false;
+		return true;
+	}
+	return false;
 }
 
 } // Ui ::

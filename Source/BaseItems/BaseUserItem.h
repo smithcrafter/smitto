@@ -32,14 +32,14 @@ struct SMITTO_LIB_EXPORT UserRecord : Ramio::MetaStandardItemData
 };
 
 class SMITTO_LIB_EXPORT User;
-
 GENERATE_HEADER_METACLASS(User, UserRecord)
 
 class SMITTO_LIB_EXPORT MetaUserSet;
-
 GENERATE_HEADER_METASET_START(MetaUserSet, User, UserRecord)
 
-	const User* findUser(const QString& login, const QString& password) const;
+	User* findUser(const QString& login, const QString* password = Q_NULLPTR);
+	const User* findUser(const QString& login, const QString* password = Q_NULLPTR) const {
+		return const_cast<MetaUserSet*>(this)->findUser(login, password);}
 };
 
 } // Smitto::

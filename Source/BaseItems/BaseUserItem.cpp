@@ -29,10 +29,10 @@ GENERATE_SOURCE_METACLASS(User, UserRecord)
 
 GENERATE_SOURCE_METASET(MetaUserSet, "Users", "User")
 
-const User* MetaUserSet::findUser(const QString& login, const QString& password) const
+User* MetaUserSet::findUser(const QString& login, const QString* password)
 {
 	for (auto* user : *this)
-		if (user->data().login == login && user->data().password == password)
+		if (user->data().login == login && (!password || user->data().password == *password))
 			return user;
 	return Q_NULLPTR;
 }
