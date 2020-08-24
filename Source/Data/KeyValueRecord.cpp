@@ -75,6 +75,8 @@ KeyValueRecord::KeyValueRecord(const QString& str)
 	}
 }
 
+KeyValueRecord::~KeyValueRecord() = default;
+
 QString KeyValueRecord::value(const QString& key, const QString& defValue) const
 {
 	return values_.contains(key) ? values_[key] : defValue;

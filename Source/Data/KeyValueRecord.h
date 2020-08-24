@@ -17,16 +17,17 @@
 
 #pragma once
 
-#include <ramio.h>
+#include <smitto.h>
 #include <QtCore/QMap>
 #include <QStringList>
 
 namespace Smitto {
 
-struct RAMIO_LIB_EXPORT KeyValueRecord
+struct SMITTO_LIB_EXPORT KeyValueRecord
 {
 	KeyValueRecord() = default;
 	KeyValueRecord(const QString& str);
+	~KeyValueRecord();
 
 	const QMap<QString, QString>& values() const {return values_;}
 	const QStringList& keywords() const {return keywords_;}

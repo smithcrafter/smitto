@@ -17,12 +17,13 @@
 
 #pragma once
 
+#include <smitto.h>
 #include <Items/MetaItems.h>
 #include <Network/NetGlobal.h>
 
 namespace Smitto {
 
-struct RemoteSesionRecord : Ramio::MetaStandardItemData
+struct SMITTO_LIB_EXPORT RemoteSesionRecord : Ramio::MetaStandardItemData
 {
 	Ramio::ConnectionInfo netInfo;
 	QString loginTime;
@@ -35,7 +36,10 @@ struct RemoteSesionRecord : Ramio::MetaStandardItemData
 	RemoteSesionRecord(const Ramio::ConnectionInfo& from) : netInfo(from) {}
 };
 
+class SMITTO_LIB_EXPORT User;
 GENERATE_METACLASS(RemoteSesion, RemoteSesionRecord)
+
+class SMITTO_LIB_EXPORT RemoteSesionSet;
 GENERATE_ITEMSET(RemoteSesionSet, RemoteSesion, RemoteSesionRecord)
 
 } // Smitto::

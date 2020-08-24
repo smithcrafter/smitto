@@ -35,7 +35,12 @@ MenuStackedWidget::MenuStackedWidget(const QString& activeStyleSheet, const QStr
 	menuLayout_ = new QVBoxLayout(baseMenuWidget_);
 	UI_SET_ZERO_MARGINSPACING(menuLayout_);
 	layout->addWidget(baseMenuWidget_);
-	layout->addWidget(stackedWidget_ = new QStackedWidget(this));
+
+	auto* stackedLayout = new QVBoxLayout();
+	layout->addLayout(stackedLayout);
+	stackedLayout->addLayout(topStackedLayout_ = new QVBoxLayout);
+	stackedLayout->addWidget(stackedWidget_ = new QStackedWidget(this));
+	stackedLayout->addLayout(bottomStackedLayout_ = new QVBoxLayout);
 }
 
 MenuStackedWidget::~MenuStackedWidget() = default;
