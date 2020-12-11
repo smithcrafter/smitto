@@ -31,6 +31,7 @@ public:
 	~Service();
 
 	const QString& name() const {return name_;}
+
 	bool started() const;
 
 	void start();

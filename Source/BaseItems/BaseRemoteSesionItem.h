@@ -29,7 +29,7 @@ struct SMITTO_LIB_EXPORT RemoteSesionRecord : Ramio::MetaStandardItemData
 	QString loginTime;
 	QString queryTime;
 	QString login;
-	RMetaPKey userId;
+	RMPKey userId;
 
 	RemoteSesionRecord() = default;
 	RemoteSesionRecord(const RemoteSesionRecord& other) = default;
