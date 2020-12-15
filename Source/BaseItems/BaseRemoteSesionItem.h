@@ -26,9 +26,9 @@ namespace Smitto {
 struct SMITTO_LIB_EXPORT RemoteSesionRecord : Ramio::MetaStandardItemData
 {
 	Ramio::ConnectionInfo netInfo;
-	QString loginTime;
-	QString queryTime;
-	QString login;
+	RMString loginTime;
+	RMString queryTime;
+	RMString login;
 	RMPKey userId;
 
 	RemoteSesionRecord() = default;

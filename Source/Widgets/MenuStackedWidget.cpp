@@ -39,7 +39,10 @@ MenuStackedWidget::MenuStackedWidget(const QString& activeStyleSheet, const QStr
 	auto* stackedLayout = new QVBoxLayout();
 	layout->addLayout(stackedLayout);
 	stackedLayout->addLayout(topStackedLayout_ = new QVBoxLayout);
-	stackedLayout->addWidget(stackedWidget_ = new QStackedWidget(this));
+	auto hlayout = new QHBoxLayout();
+	stackedLayout->addLayout(hlayout);
+	hlayout->addWidget(stackedWidget_ = new QStackedWidget(this));
+	hlayout->addLayout(rigthStackedLayout_ = new QVBoxLayout);
 	stackedLayout->addLayout(bottomStackedLayout_ = new QVBoxLayout);
 }
 

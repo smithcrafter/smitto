@@ -24,9 +24,9 @@ namespace Smitto {
 
 struct SMITTO_LIB_EXPORT UserRecord : Ramio::MetaStandardItemData
 {
-	QString login;
-	QString password;
-	QString name;
+	RMString login;
+	RMString password;
+	RMString name;
 
 	RMETA_DATA_DECL(Ramio::MetaStandardItemData)
 };

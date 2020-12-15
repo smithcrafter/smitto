@@ -38,7 +38,9 @@ public:
 	void insertMenuStretch();
 
 	QWidget* baseMenuWidget() {return baseMenuWidget_;}
+
 	QVBoxLayout* topStackedLayout() {return topStackedLayout_;}
+	QVBoxLayout* rigthStackedLayout() {return rigthStackedLayout_;}
 	QVBoxLayout* bottomStackedLayout() {return bottomStackedLayout_;}
 
 	const QMap<QWidget*, QWidget*>& widgets() const {return widgets_;}
@@ -50,9 +52,10 @@ private:
 	const QString& activeStyleSheet_;
 	const QString& backgroundStyleSheet_;
 	QMap<QWidget*, QWidget*> widgets_;
+	QStackedWidget* stackedWidget_;
 	QVBoxLayout* menuLayout_;
 	QVBoxLayout* topStackedLayout_;
-	QStackedWidget* stackedWidget_;
+	QVBoxLayout* rigthStackedLayout_;
 	QVBoxLayout* bottomStackedLayout_;
 	//Corner
 	QWidget* baseMenuWidget_;

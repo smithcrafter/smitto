@@ -21,6 +21,7 @@
 #include <Sets/Arg.h>
 #include <Global/Text.h>
 #include <Gui/Global.h>
+#include <Log/Log.h>
 // Qt5
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QLabel>
@@ -70,6 +71,7 @@ void LoginBaseWidget::autoLogin()
 	loginEdit_->setText(login);
 	passEdit_->setText(password);
 
+	DLOG_POINT;
 	checkLogin();
 }
 
