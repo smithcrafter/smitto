@@ -21,7 +21,7 @@ void SmittoXFCE4TermThemeMaker()
 				   .arg(allcolors, allcolorsb, Smitto::scolor(Smitto::SmittoBaseColors::level11),
 						Smitto::scolor(Smitto::SmittoBaseColors::level02)).toLocal8Bit());
 		file.close();
-		qDebug()<<file.fileName()<<"move to"<<"/usr/share/xfce4/terminal/colorschemes";
+		qDebug()<<file.fileName()<<"move to"<<"	/usr/share/xfce4/terminal/colorschemes";
 	}
 
 }
