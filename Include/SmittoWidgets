@@ -1,0 +1,5 @@
+#include "./smitto/widgets/menustackedwidget.h"
+#include "./smitto/widgets/loginbasewidget.h"
+#include "./smitto/widgets/servicestatuswidget.h"
+#include "./smitto/widgets/richtextdelegate.h"
+#include "./smitto/widgets/horizontalwesttabstyle.h"
