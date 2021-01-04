@@ -2,4 +2,3 @@
 #include "./smitto/gui/smittostylesheets.h"
 #include "./smitto/gui/platformspecification.h"
 #include "./smitto/gui/interfacehelpers.h"
-#include "./smitto/gui/customtitlewidget.h"

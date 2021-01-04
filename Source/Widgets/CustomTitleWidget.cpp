@@ -16,7 +16,7 @@
  */
 
 #include "CustomTitleWidget.h"
-#include "PlatformSpecification.h"
+#include "../Gui/PlatformSpecification.h"
 // Qt5
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
@@ -29,7 +29,7 @@ namespace Smitto {
 namespace Ui {
 
 CustomTitleWidget::CustomTitleWidget(const QString& title, TiltleButtons butons, QWidget* parent)
-	:QWidget(parent)
+	: QWidget(parent)
 {
 	auto layout = new QHBoxLayout(this);
 	layout->setMargin(0);
