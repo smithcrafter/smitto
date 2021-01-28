@@ -16,8 +16,9 @@
  */
 
 #include "Exit.h"
-#include <signal.h>
+#include <Log/Log.h>
 #include <QtCore/QCoreApplication>
+#include <signal.h>
 
 namespace Smitto {
 
@@ -28,7 +29,18 @@ const int AppNormalExitCode = 200;
 const int AppSigIntExitCode = 202;
 const int AppSigTermExitCode = 215;
 const int AppUpdateExitCode = 210;
+
 } // Consts::
+
+QString siname(int sig)
+{
+	switch (sig) {
+		case SIGINT: return "SIGINT";
+		case SIGTERM: return "SIGTERM";
+		case SIGUSR1: return "SIGUSR1";
+		default: return QString::number(sig);
+	}
+}
 
 void signalHandler(int sig)
 {
@@ -41,9 +53,10 @@ void signalHandler(int sig)
 	else if (sig == SIGUSR1)
 		exitCode = Consts::AppUpdateExitCode;
 #endif
+	LOG("");
+	PLOG(QString("signal[%1]=%2").arg(sig).arg(siname(sig)));
 	qApp->exit(exitCode);
 }
-
 
 ExitHelper::ExitHelper(QCoreApplication& app)
 	: QObject(&app)
