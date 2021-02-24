@@ -48,7 +48,7 @@ void signalHandler(int sig)
 #ifdef Q_OS_LINUX
 	if (sig == SIGINT)
 		exitCode = Consts::AppSigIntExitCode;
-	if (sig == SIGTERM)
+	else if (sig == SIGTERM)
 		exitCode = Consts::AppSigTermExitCode;
 	else if (sig == SIGUSR1)
 		exitCode = Consts::AppUpdateExitCode;

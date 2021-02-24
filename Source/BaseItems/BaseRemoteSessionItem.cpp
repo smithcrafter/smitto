@@ -16,7 +16,7 @@
  */
 
 
-#include "BaseRemoteSesionItem.h"
+#include "BaseRemoteSessionItem.h"
 
 namespace Smitto {
 

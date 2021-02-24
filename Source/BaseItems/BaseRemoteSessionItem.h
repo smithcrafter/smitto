@@ -23,7 +23,7 @@
 
 namespace Smitto {
 
-struct SMITTO_LIB_EXPORT RemoteSesionRecord : Ramio::MetaStandardItemData
+struct SMITTO_LIB_EXPORT RemoteSessionRecord : Ramio::MetaStandardItemData
 {
 	Ramio::ConnectionInfo netInfo;
 	RMString loginTime;
@@ -31,15 +31,15 @@ struct SMITTO_LIB_EXPORT RemoteSesionRecord : Ramio::MetaStandardItemData
 	RMString login;
 	RMPKey userId;
 
-	RemoteSesionRecord() = default;
-	RemoteSesionRecord(const RemoteSesionRecord& other) = default;
-	RemoteSesionRecord(const Ramio::ConnectionInfo& from) : netInfo(from) {}
+	RemoteSessionRecord() = default;
+	RemoteSessionRecord(const RemoteSessionRecord& other) = default;
+	RemoteSessionRecord(const Ramio::ConnectionInfo& from) : netInfo(from) {}
 };
 
 class SMITTO_LIB_EXPORT User;
-GENERATE_METACLASS(RemoteSesion, RemoteSesionRecord)
+GENERATE_METACLASS(RemoteSession, RemoteSessionRecord)
 
-class SMITTO_LIB_EXPORT RemoteSesionSet;
-GENERATE_ITEMSET(RemoteSesionSet, RemoteSesion, RemoteSesionRecord)
+class SMITTO_LIB_EXPORT RemoteSessionSet;
+GENERATE_ITEMSET(RemoteSessionSet, RemoteSession, RemoteSessionRecord)
 
 } // Smitto::
