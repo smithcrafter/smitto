@@ -1,7 +1,9 @@
 #Data.pro.pri
 
 HEADERS += \
-	$$ROOT_DIR/Source/Base/Service.h \
+    $$PWD/../Source/Base/DatabaseConfig.h \
+    $$PWD/../Source/Base/Service.h \
 
 SOURCES += \
-	$$ROOT_DIR/Source/Base/Service.cpp \
+    $$PWD/../Source/Base/DatabaseConfig.cpp \
+    $$PWD/../Source/Base/Service.cpp \
