@@ -18,8 +18,8 @@
 #pragma once
 
 #include <smitto.h>
+#include <QtCore/QString>
 namespace Ramio { struct DatabaseConfig;}
-class QString;
 
 namespace Smitto {
 

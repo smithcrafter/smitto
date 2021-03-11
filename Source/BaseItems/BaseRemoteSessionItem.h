@@ -36,7 +36,7 @@ struct SMITTO_LIB_EXPORT RemoteSessionRecord : Ramio::MetaStandardItemData
 	RemoteSessionRecord(const Ramio::ConnectionInfo& from) : netInfo(from) {}
 };
 
-class SMITTO_LIB_EXPORT User;
+class SMITTO_LIB_EXPORT RemoteSession;
 GENERATE_METACLASS(RemoteSession, RemoteSessionRecord)
 
 class SMITTO_LIB_EXPORT RemoteSessionSet;
