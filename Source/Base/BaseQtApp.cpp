@@ -15,39 +15,35 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include <smitto.h>
-#include <QtCore/QObject>
-class QTimer;
+#include "BaseQtApp.h"
+#include <ramio/log/log.h>
+#include <exception>
 
 namespace Smitto {
 
-class SMITTO_LIB_EXPORT Service: public QObject
+BaseQtApp::BaseQtApp(int& argc, char** argv, int af)
+	: QApplication(argc, argv, af)
 {
-	Q_OBJECT
-public:
-	Service(const QString& name, int timer = 1000, QObject* parent = Q_NULLPTR);
-	~Service();
+}
 
-	const QString& name() const {return name_;}
+BaseQtApp::~BaseQtApp()
+{
+}
 
-	bool started() const;
-
-	void start();
-	void stop();
-	void toogle() {started() ? stop() : start();}
-
-signals:
-	void activeChanged(bool started);
-
-protected:
-	virtual bool prepareStart() {return true;}
-	virtual void processStop() {}
-
-protected:
-	QString name_;
-	QTimer* timer_;
-};
+bool BaseQtApp::notify(QObject* receiver, QEvent* event)
+{
+	try {
+		return QApplication::notify(receiver, event);
+	}
+	catch (std::exception& ex)
+	{
+		WLOG(QString("exception :") % ex.what());
+	}
+	catch (...)
+	{
+		WLOG("exception in notify");
+	}
+	return false;
+}
 
 } // Smitto::

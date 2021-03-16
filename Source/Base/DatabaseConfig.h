@@ -23,6 +23,6 @@ namespace Ramio { struct DatabaseConfig;}
 
 namespace Smitto {
 
-Ramio::DatabaseConfig dbconfig(const QString& groupname = "Database");
+Ramio::DatabaseConfig SMITTO_LIB_EXPORT dbconfig(const QString& groupname = "Database");
 
 } // Smitto::

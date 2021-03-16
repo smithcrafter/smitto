@@ -18,36 +18,18 @@
 #pragma once
 
 #include <smitto.h>
-#include <QtCore/QObject>
-class QTimer;
+#include <QtWidgets/QApplication>
 
 namespace Smitto {
 
-class SMITTO_LIB_EXPORT Service: public QObject
+class SMITTO_LIB_EXPORT BaseQtApp : public QApplication
 {
-	Q_OBJECT
 public:
-	Service(const QString& name, int timer = 1000, QObject* parent = Q_NULLPTR);
-	~Service();
-
-	const QString& name() const {return name_;}
-
-	bool started() const;
-
-	void start();
-	void stop();
-	void toogle() {started() ? stop() : start();}
-
-signals:
-	void activeChanged(bool started);
+	BaseQtApp(int& argc, char** argv, int af = ApplicationFlags);
+	~BaseQtApp() Q_DECL_OVERRIDE;
 
 protected:
-	virtual bool prepareStart() {return true;}
-	virtual void processStop() {}
-
-protected:
-	QString name_;
-	QTimer* timer_;
+	bool notify(QObject* receiver, QEvent* event) Q_DECL_OVERRIDE;
 };
 
 } // Smitto::
