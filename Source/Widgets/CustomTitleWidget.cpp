@@ -52,7 +52,9 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, TiltleButtons butons,
 		tb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 		tb->setText("_");
 		tb->setFixedSize(iconSize());
-		connect(tb, &QToolButton::clicked, this, [this](){this->maxParent()->showMinimized();});
+		connect(tb, &QToolButton::clicked, this, [this](){
+			this->maxParent()->showMinimized();
+		});
 		buttons_.insert(TiltleButton::Min, tb);
 	}
 	if (butons & TiltleButton::NormMax)
@@ -62,8 +64,13 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, TiltleButtons butons,
 		tb->setText("☐");
 		tb->setFixedSize(iconSize());
 		connect(tb, &QToolButton::clicked, this, [this](){
-			if (this->maxParent()->isMaximized()) {this->maxParent()->showMaximized();this->maxParent()->showNormal();}
-			else this->maxParent()->showMaximized();});
+			if (this->maxParent()->isMaximized()) {
+				this->maxParent()->showMinimized();
+				this->maxParent()->showNormal();
+			}
+			else
+				this->maxParent()->showMaximized();
+		});
 		buttons_.insert(TiltleButton::NormMax, tb);
 	}
 	if (butons & TiltleButton::Close)
@@ -106,7 +113,12 @@ void CustomTitleWidget::mousePressEvent(QMouseEvent* event)
 
 void CustomTitleWidget::mouseDoubleClickEvent(QMouseEvent* event)
 {
-	this->maxParent()->isMaximized() ? this->maxParent()->showNormal() : this->maxParent()->showMaximized();
+	if (this->maxParent()->isMaximized() ) {
+		this->maxParent()->showMinimized();
+		this->maxParent()->showNormal();
+	}
+	else
+		this->maxParent()->showMaximized();
 	QWidget::mouseDoubleClickEvent(event);
 }
 
