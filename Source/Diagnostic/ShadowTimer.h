@@ -15,34 +15,27 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
 
-#include "File.h"
-// Qt5
-#include <QtCore/QByteArray>
-#include <QtCore/QFile>
+#include <QtCore/QObject>
+#include <QtCore/QElapsedTimer>
+class QTimer;
 
 namespace Smitto {
 
-QByteArray readAllFile(const QString& filepath)
+class ShadowTimer : public QObject
 {
-	QByteArray result;
-	QFile file(filepath);
-	if (file.open(QIODevice::ReadOnly))
-	{
-		result = file.readAll();
-		file.close();
-	}
-	return result;
-}
+public:
+	ShadowTimer(int time = 10, QObject* parent = Q_NULLPTR);
+	~ShadowTimer() Q_DECL_OVERRIDE;
 
-void writeToFile(const QString& filepath, const QByteArray& data)
-{
-	QFile file(filepath);
-	if (file.open(QIODevice::WriteOnly))
-	{
-		file.write(data);
-		file.close();
-	}
-}
+private:
+	void onTimeOut();
+
+private:
+	QElapsedTimer elapsedTimer_;
+	QTimer* timer_;
+	int time_;
+};
 
 } // Smitto::

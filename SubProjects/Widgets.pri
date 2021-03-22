@@ -4,13 +4,13 @@ HEADERS += \
 	$$ROOT_DIR/Source/Widgets/MenuStackedWidget.h \
 	$$ROOT_DIR/Source/Widgets/LoginBaseWidget.h \
 	$$ROOT_DIR/Source/Widgets/ServiceStatusWidget.h \
-    $$ROOT_DIR/Source/Widgets/CustomTitleWidget.h \
+	$$ROOT_DIR/Source/Widgets/CustomTitleWidget.h \
 
 SOURCES += \
 	$$ROOT_DIR/Source/Widgets/MenuStackedWidget.cpp \
 	$$ROOT_DIR/Source/Widgets/LoginBaseWidget.cpp \
 	$$ROOT_DIR/Source/Widgets/ServiceStatusWidget.cpp \
-    $$ROOT_DIR/Source/Widgets/CustomTitleWidget.cpp \
+	$$ROOT_DIR/Source/Widgets/CustomTitleWidget.cpp \
 
 # ItemDelegate
 

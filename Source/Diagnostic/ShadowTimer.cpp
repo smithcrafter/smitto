@@ -15,34 +15,35 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#include "File.h"
+#include "ShadowTimer.h"
+#include <ramio/log/log.h>
 // Qt5
-#include <QtCore/QByteArray>
-#include <QtCore/QFile>
+#include <QtCore/QTimer>
 
 namespace Smitto {
 
-QByteArray readAllFile(const QString& filepath)
+ShadowTimer::ShadowTimer(int time, QObject* parent)
+	: QObject(parent),
+	  timer_(new QTimer(this)),
+	  time_(time)
 {
-	QByteArray result;
-	QFile file(filepath);
-	if (file.open(QIODevice::ReadOnly))
-	{
-		result = file.readAll();
-		file.close();
-	}
-	return result;
+	connect(timer_, &QTimer::timeout, this, &ShadowTimer::onTimeOut);
+	elapsedTimer_.start();
+	timer_->start(time);
 }
 
-void writeToFile(const QString& filepath, const QByteArray& data)
+ShadowTimer::~ShadowTimer()
 {
-	QFile file(filepath);
-	if (file.open(QIODevice::WriteOnly))
-	{
-		file.write(data);
-		file.close();
-	}
+	timer_->stop();
+	delete timer_;
+}
+
+void ShadowTimer::onTimeOut()
+{
+	auto elapsed = elapsedTimer_.elapsed();
+	if (elapsed > (time_+5))
+		DLOG(QString("[ShadowTimer] timeouted %1 (%2)").arg(elapsed).arg(elapsedTimer_.nsecsElapsed()));
+	elapsedTimer_.restart();
 }
 
 } // Smitto::
