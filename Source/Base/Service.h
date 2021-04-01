@@ -38,14 +38,17 @@ public:
 	void stop();
 	void toogle() {started() ? stop() : start();}
 
+	void work();
+
 signals:
 	void activeChanged(bool started);
 
 protected:
 	virtual bool prepareStart() {return true;}
+	virtual void processWork() = 0;
 	virtual void processStop() {}
 
-protected:
+private:
 	QString name_;
 	QTimer* timer_;
 };

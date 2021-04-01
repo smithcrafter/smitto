@@ -16,8 +16,10 @@
  */
 
 #include "Service.h"
+#include <ramio/log/log.h>
 // Qt5
 #include <QtCore/QTimer>
+#include <QtCore/QElapsedTimer>
 
 namespace Smitto {
 
@@ -27,6 +29,7 @@ Service::Service(const QString& name, int timer, QObject* parent)
 	  timer_(new QTimer(this))
 {
 	timer_->setInterval(timer);
+	connect(timer_, &QTimer::timeout, this, &Service::work);
 }
 
 Service::~Service()
@@ -34,12 +37,24 @@ Service::~Service()
 	stop();
 }
 
+bool Service::started() const
+{
+	return timer_->isActive();
+}
+
 void Service::start()
 {
-	if (!started() && prepareStart())
+	if (!started())
 	{
-		timer_->start();
-		emit activeChanged(true);
+		QElapsedTimer timer;
+		if (prepareStart())
+		{
+			timer_->start();
+			emit activeChanged(true);
+		}
+		auto elapsed = timer.nsecsElapsed();
+		if (elapsed > 200000)
+			DLOG(QString("[Service-%1] processStart - %2 ns").arg(name_).arg(elapsed));
 	}
 }
 
@@ -47,15 +62,25 @@ void Service::stop()
 {
 	if (started())
 	{
+		QElapsedTimer timer;
+		timer.start();
 		timer_->stop();
 		processStop();
 		emit activeChanged(false);
+		auto elapsed = timer.nsecsElapsed();
+		if (elapsed > 200000)
+			DLOG(QString("[Service-%1] processStop - %2 ns").arg(name_).arg(elapsed));
 	}
 }
 
-bool Service::started() const
+void Service::work()
 {
-	return timer_->isActive();
+	QElapsedTimer timer;
+	timer.start();
+	processWork();
+	auto elapsed = timer.nsecsElapsed();
+	if (elapsed > 100000)
+		DLOG(QString("[Service-%1] processWork - %2 ns").arg(name_).arg(elapsed));
 }
 
 } // Smitto::

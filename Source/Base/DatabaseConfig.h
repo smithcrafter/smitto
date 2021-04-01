@@ -18,6 +18,7 @@
 #pragma once
 
 #include <smitto.h>
+#include <ramio.h>
 #include <QtCore/QString>
 namespace Ramio { struct DatabaseConfig;}
 
