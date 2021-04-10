@@ -26,8 +26,8 @@ namespace Consts {
 
 const int AppRestartExitCode = 199;
 const int AppNormalExitCode = 200;
-const int AppSigIntExitCode = 202;
-const int AppSigTermExitCode = 215;
+const int AppSigIntExitCode = 201;
+const int AppSigTermExitCode = 202;
 const int AppUpdateExitCode = 210;
 
 } // Consts::

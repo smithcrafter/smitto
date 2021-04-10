@@ -27,8 +27,8 @@ namespace Consts {
 
 extern SMITTO_LIB_EXPORT const int AppRestartExitCode;
 extern SMITTO_LIB_EXPORT const int AppNormalExitCode;
-extern SMITTO_LIB_EXPORT const int AppSigIntExitCode;
-extern SMITTO_LIB_EXPORT const int AppSigTermExitCode;
+extern SMITTO_LIB_EXPORT const int AppSigIntExitCode;	// Ctrl+C
+extern SMITTO_LIB_EXPORT const int AppSigTermExitCode;	// kill
 extern SMITTO_LIB_EXPORT const int AppUpdateExitCode;
 
 } // Consts::
