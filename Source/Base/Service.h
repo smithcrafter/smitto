@@ -30,6 +30,8 @@ public:
 	Service(const QString& name, int timer = 1000, QObject* parent = Q_NULLPTR);
 	~Service();
 
+	void setNotyfyTimeout(qint64 value) {notyfyTimeout_ = value;}
+
 	const QString& name() const {return name_;}
 
 	bool started() const;
@@ -51,6 +53,7 @@ protected:
 private:
 	QString name_;
 	QTimer* timer_;
+	qint64 notyfyTimeout_ = 200000;
 };
 
 } // Smitto::
