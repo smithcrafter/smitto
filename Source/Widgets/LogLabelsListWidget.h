@@ -18,42 +18,30 @@
 #pragma once
 
 #include <smitto.h>
-#include <QtCore/QObject>
-class QTimer;
+#include <QtWidgets/QWidget>
+class QListWidget;
 
 namespace Smitto {
 
-class SMITTO_LIB_EXPORT Service: public QObject
+class LogLabelsListWidget: public QWidget
 {
 	Q_OBJECT
 public:
-	Service(const QString& name, int timer = 1000, QObject* parent = Q_NULLPTR);
-	~Service() Q_DECL_OVERRIDE;
+	LogLabelsListWidget(QWidget* parent = Q_NULLPTR);
+	~LogLabelsListWidget() Q_DECL_OVERRIDE;
 
-	void setNotyfyTimeout(qint64 value) {notyfyTimeout_ = value;}
-
-	const QString& name() const {return name_;}
-
-	bool started() const;
-
-	void start();
-	void stop();
-	void toogle() {started() ? stop() : start();}
-
-	void work();
+	QListWidget* listWidget() {return listWidget_;}
 
 signals:
-	void activeChanged(bool started);
+	void linkActivated(const QString& link);
 
-protected:
-	virtual bool prepareStart() {return true;}
-	virtual void processWork() = 0;
-	virtual void processStop() {}
+public slots:
+	void addMessage(const QString& msg);
 
 private:
-	QString name_;
-	QTimer* timer_;
-	qint64 notyfyTimeout_ = 200000;
+	QListWidget* listWidget_;
+	QPalette labelsPallete_;
+
 };
 
 } // Smitto::
