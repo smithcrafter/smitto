@@ -4,3 +4,4 @@
 #include "./smitto/widgets/richtextdelegate.h"
 #include "./smitto/widgets/horizontalwesttabstyle.h"
 #include "./smitto/widgets/customtitlewidget.h"
+#include "./smitto/widgets/loglabelslistwigtet.h"

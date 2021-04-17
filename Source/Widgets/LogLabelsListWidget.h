@@ -41,7 +41,6 @@ public slots:
 private:
 	QListWidget* listWidget_;
 	QPalette labelsPallete_;
-
 };
 
 } // Smitto::
