@@ -1,4 +1,4 @@
-#Ramio.pro
+#Ramio-core.pro
 
 DEFINES += SMITTO_LIB
 
@@ -16,7 +16,7 @@ GITRAMIO_DIR = $$PWD/../ramio
 INCLUDEPATH		+= . $$GITRAMIO_DIR/Include  $$GITRAMIO_DIR/Source
 
 unix {
-LIBS += "-L$$RAMIO_DIR/Lib" -lRamio
+LIBS += "-L$$RAMIO_DIR/Lib" -lRamio-core
 }
 win32 {
 LIBS += "-L$$RAMIO_DIR/Lib" -lRamio0
