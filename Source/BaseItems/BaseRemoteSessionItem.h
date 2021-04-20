@@ -37,7 +37,10 @@ struct SMITTO_LIB_EXPORT RemoteSessionRecord : Ramio::MetaStandardItemData
 };
 
 class SMITTO_LIB_EXPORT RemoteSession;
-GENERATE_METACLASS(RemoteSession, RemoteSessionRecord)
+GENERATE_METACLASS_START(RemoteSession, RemoteSessionRecord)
+
+	QList<const Ramio::AbstractMetaSet*> notificationSets;
+};
 
 class SMITTO_LIB_EXPORT RemoteSessionSet;
 GENERATE_ITEMSET(RemoteSessionSet, RemoteSession, RemoteSessionRecord)
