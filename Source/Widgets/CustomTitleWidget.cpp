@@ -91,6 +91,16 @@ CustomTitleWidget::~CustomTitleWidget()
 {
 }
 
+QToolButton* CustomTitleWidget::addButtonToCornLayout(const QString& text)
+{
+	auto* button = new QToolButton(this);
+	button->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+	button->setText(text);
+	button->setFixedSize(iconSize());
+	cornLayout_->addWidget(button);
+	return button;
+}
+
 QWidget* CustomTitleWidget::maxParent()
 {
 	QWidget* maxParent = this;

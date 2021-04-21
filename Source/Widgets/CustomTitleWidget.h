@@ -51,6 +51,8 @@ public:
 	const QMap<TiltleButton, QToolButton*>& buttons() const {return buttons_;}
 	QHBoxLayout* cornLayout() {return cornLayout_;}
 
+	QToolButton* addButtonToCornLayout(const QString& text);
+
 protected:
 	QWidget* maxParent();
 	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
