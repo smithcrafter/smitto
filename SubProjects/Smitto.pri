@@ -36,6 +36,8 @@ include (System.pri)
 include (Data.pri)
 include (BaseItems.pri)
 include (Diagnostic.pri)
+include (Services.pri)
+
 
 contains(QT, gui){
 	include(Gui.pri)
