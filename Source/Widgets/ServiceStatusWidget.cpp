@@ -16,7 +16,7 @@
  */
 
 #include "ServiceStatusWidget.h"
-#include <Base/Service.h>
+#include <Services/Service.h>
 // Ramio
 #include <Global/Text.h>
 #include <Gui/Global.h>

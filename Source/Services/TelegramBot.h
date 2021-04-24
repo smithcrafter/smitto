@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <Base/Service.h>
+#include "Service.h"
 class QNetworkAccessManager;
 class QNetworkReply;
 
