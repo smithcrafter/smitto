@@ -24,37 +24,40 @@ namespace Smitto {
 
 namespace Consts {
 
+const int AppUpdateExitCode = 198;
 const int AppRestartExitCode = 199;
 const int AppNormalExitCode = 200;
 const int AppSigIntExitCode = 201;
 const int AppSigTermExitCode = 202;
-const int AppUpdateExitCode = 210;
 
 } // Consts::
 
-QString siname(int sig)
+QString signalName(int sig)
 {
 	switch (sig) {
 		case SIGINT: return "SIGINT";
 		case SIGTERM: return "SIGTERM";
+#ifdef Q_OS_LINUX
 		case SIGUSR1: return "SIGUSR1";
-		default: return QString::number(sig);
+#endif
+		default: return "SIG-" % QString::number(sig);
 	}
 }
 
 void signalHandler(int sig)
 {
 	int exitCode = 0;
-#ifdef Q_OS_LINUX
+
 	if (sig == SIGINT)
 		exitCode = Consts::AppSigIntExitCode;
 	else if (sig == SIGTERM)
 		exitCode = Consts::AppSigTermExitCode;
+#ifdef Q_OS_LINUX
 	else if (sig == SIGUSR1)
 		exitCode = Consts::AppUpdateExitCode;
 #endif
 	LOG("");
-	PLOG(QString("signal[%1]=%2").arg(sig).arg(siname(sig)));
+	PLOG(QString("signal[%1]=%2").arg(sig).arg(signalName(sig)));
 	qApp->exit(exitCode);
 }
 
