@@ -21,14 +21,15 @@
 
 namespace Smitto {
 
-Ramio::DatabaseConfig dbconfig(const QString& groupname)
+Ramio::DatabaseConfig dbconfig(const QString& targetName, const QString& groupname)
 {
 	Ramio::DatabaseConfig res;
-	res.dbname = Ramio::config().value(groupname + "/Name");
-	res.username = Ramio::config().value(groupname + "/User");
-	res.password = Ramio::config().value(groupname + "/Password");
-	res.host = Ramio::config().value(groupname + "/Host");
-	res.port = Ramio::config().value(groupname + "/Port").toUShort();
+	const Ramio::Config& config = Ramio::config(targetName);
+	res.dbname = config.value(groupname + "/Name");
+	res.username = config.value(groupname + "/User");
+	res.password = config.value(groupname + "/Password");
+	res.host = config.value(groupname + "/Host");
+	res.port = config.value(groupname + "/Port").toUShort();
 	return res;
 }
 
