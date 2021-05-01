@@ -20,14 +20,15 @@
 #include <smitto.h>
 #include <Items/MetaItems.h>
 #include <Network/NetGlobal.h>
+#include <QtCore/QDateTime>
 
 namespace Smitto {
 
 struct SMITTO_LIB_EXPORT RemoteSessionRecord : Ramio::MetaStandardItemData
 {
 	Ramio::ConnectionInfo netInfo;
-	RMString loginTime;
-	RMString queryTime;
+	RMDateTime loginTime;
+	RMDateTime queryTime;
 	RMString login;
 	RMPKey userId;
 
@@ -37,12 +38,15 @@ struct SMITTO_LIB_EXPORT RemoteSessionRecord : Ramio::MetaStandardItemData
 };
 
 class SMITTO_LIB_EXPORT RemoteSession;
-GENERATE_METACLASS_START(RemoteSession, RemoteSessionRecord)
-
+GENERATE_HEADER_METACLASS_START(RemoteSession, RemoteSessionRecord)
+public:
 	QList<const Ramio::AbstractMetaSet*> notificationSets;
 };
 
 class SMITTO_LIB_EXPORT RemoteSessionSet;
-GENERATE_ITEMSET(RemoteSessionSet, RemoteSession, RemoteSessionRecord)
+GENERATE_ITEMSET_START(RemoteSessionSet, RemoteSession, RemoteSessionRecord)
+
+	RemoteSession* sessionByConnectionId(quint16 connectionId);
+};
 
 } // Smitto::

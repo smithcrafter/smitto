@@ -15,9 +15,18 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "BaseRemoteSessionItem.h"
 
 namespace Smitto {
+
+GENERATE_SOURCE_METACLASS(RemoteSession, RemoteSessionRecord)
+
+RemoteSession* RemoteSessionSet::sessionByConnectionId(quint16 connectionId)
+{
+	for (auto* session: items())
+		if (session->data().netInfo.connectionId == connectionId)
+			return session;
+	return Q_NULLPTR;
+}
 
 } // Smitto::
