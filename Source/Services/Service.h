@@ -50,8 +50,10 @@ protected:
 	virtual void processWork() = 0;
 	virtual void processStop() {}
 
-private:
+protected:
 	QString name_;
+
+private:
 	QTimer* timer_;
 	qint64 notyfyTimeout_ = 200000;
 };

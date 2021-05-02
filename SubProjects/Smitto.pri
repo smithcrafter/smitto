@@ -34,7 +34,7 @@ HEADERS += \
 include (Base.pri)
 include (System.pri)
 include (Data.pri)
-include (BaseItems.pri)
+include (RemoteSessions.pri)
 include (Diagnostic.pri)
 include (Services.pri)
 

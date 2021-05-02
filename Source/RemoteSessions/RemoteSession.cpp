@@ -15,7 +15,7 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "BaseRemoteSessionItem.h"
+#include "RemoteSession.h"
 
 namespace Smitto {
 

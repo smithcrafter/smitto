@@ -15,7 +15,7 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "BaseUserItem.h"
+#include "User.h"
 
 namespace Smitto {
 
