@@ -43,6 +43,7 @@ private:
 	void onQueryReceived(Ramio::Proto::Queries query, const Ramio::Proto::QueryPacket& packet, const Ramio::ConnectionInfo& from);
 	void onClientDisconnected(const Ramio::ConnectionInfo& client);
 
+protected:
 	void onItemCreated(const Ramio::AbstractMetaSet& set, const Ramio::Item& item);
 	void onItemChanged(const Ramio::AbstractMetaSet& set, const Ramio::Item& item);
 	void onItemDeleted(const Ramio::AbstractMetaSet& set, const Ramio::Item& item);
