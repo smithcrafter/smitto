@@ -1,11 +1,11 @@
 # RemoteSessions.pri
 
 HEADERS += \
-	$$ROOT_DIR/Source/RemoteSessions/User.h \
-	$$ROOT_DIR/Source/RemoteSessions/RemoteSession.h \
-	$$ROOT_DIR/Source/RemoteSessions/RemoteSessionManager.h \
+	$$PWD/../Source/RemoteSessions/User.h \
+	$$PWD/../Source/RemoteSessions/RemoteSession.h \
+	$$PWD/../Source/RemoteSessions/RemoteSessionManager.h \
 
 SOURCES += \
-	$$ROOT_DIR/Source/RemoteSessions/User.cpp \
-	$$ROOT_DIR/Source/RemoteSessions/RemoteSession.cpp \
-	$$ROOT_DIR/Source/RemoteSessions/RemoteSessionManager.cpp \
+	$$PWD/../Source/RemoteSessions/User.cpp \
+	$$PWD/../Source/RemoteSessions/RemoteSession.cpp \
+	$$PWD/../Source/RemoteSessions/RemoteSessionManager.cpp \

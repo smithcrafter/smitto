@@ -1,7 +1,7 @@
 # Diagnostic.pri
 
 HEADERS += \
-	$$ROOT_DIR/Source/Diagnostic/ShadowTimer.h \
+	$$PWD/../Source/Diagnostic/ShadowTimer.h \
 
 SOURCES += \
-	$$ROOT_DIR/Source/Diagnostic/ShadowTimer.cpp \
+	$$PWD/../Source/Diagnostic/ShadowTimer.cpp \

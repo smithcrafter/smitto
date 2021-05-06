@@ -1,14 +1,14 @@
 #Gui.pro.pri
 
 HEADERS += \
-	$$ROOT_DIR/Source/Gui/SmittoColors.h \
-	$$ROOT_DIR/Source/Gui/PlatformSpecification.h \
-	$$ROOT_DIR/Source/Gui/InterfaceHelpers.h \
-	$$ROOT_DIR/Source/Gui/SmittoStyleSheets.h \
+	$$PWD/../Source/Gui/SmittoColors.h \
+	$$PWD/../Source/Gui/PlatformSpecification.h \
+	$$PWD/../Source/Gui/InterfaceHelpers.h \
+	$$PWD/../Source/Gui/SmittoStyleSheets.h \
 
 SOURCES += \
-	$$ROOT_DIR/Source/Gui/SmittoColors.cpp \
-	$$ROOT_DIR/Source/Gui/PlatformSpecification.cpp \
-	$$ROOT_DIR/Source/Gui/InterfaceHelpers.cpp \
-	$$ROOT_DIR/Source/Gui/SmittoStyleSheets.cpp  \
+	$$PWD/../Source/Gui/SmittoColors.cpp \
+	$$PWD/../Source/Gui/PlatformSpecification.cpp \
+	$$PWD/../Source/Gui/InterfaceHelpers.cpp \
+	$$PWD/../Source/Gui/SmittoStyleSheets.cpp  \
 
