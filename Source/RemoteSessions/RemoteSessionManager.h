@@ -18,8 +18,11 @@
 #pragma once
 
 #include "RemoteSession.h"
-namespace Ramio {class ConnectionHandler; class Components; struct ConnectionInfo;}
-namespace Ramio {namespace Proto {struct QueryPacket; struct QPGetDataSet; struct APGetDataSet;enum class Queries;}}
+namespace Ramio {class ConnectionHandler; class Components; struct ConnectionInfo;
+namespace Proto { struct QueryPacket; enum class Queries;
+struct QPGetDataSet; struct APGetDataSet; struct QPCreateDataObject; struct APCreateDataObject;
+struct QPSaveDataObject; struct APSaveDataObject; struct QPDeleteDataObject; struct APDeleteDataObject;
+}}
 
 namespace Smitto {
 
@@ -38,6 +41,17 @@ protected:
 	virtual bool specialGetDataSet(const Ramio::Proto::QPGetDataSet& query, Ramio::Proto::APGetDataSet& answer,
 								   RemoteSession* session) {
 				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}
+	virtual bool specialCreateDataObjects(const Ramio::Proto::QPCreateDataObject& query, Ramio::Proto::APCreateDataObject& answer,
+								   RemoteSession* session) {
+				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}
+	virtual bool specialSaveDataObject(const Ramio::Proto::QPSaveDataObject& query, Ramio::Proto::APSaveDataObject& answer,
+								   RemoteSession* session) {
+				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}
+	virtual bool specialDeleteDataObject(const Ramio::Proto::QPDeleteDataObject& query, Ramio::Proto::APDeleteDataObject& answer,
+								   RemoteSession* session) {
+				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}
+
+
 
 private:
 	void onQueryReceived(Ramio::Proto::Queries query, const Ramio::Proto::QueryPacket& packet, const Ramio::ConnectionInfo& from);

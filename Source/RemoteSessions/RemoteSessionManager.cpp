@@ -112,6 +112,42 @@ void RemoteSessionManager::onQueryReceived(Ramio::Proto::Queries query, const Ra
 			answerPacket.setResDesc(RD_DATA_ERROR, tr("Данные не найдены"));
 		server_.sendAnswer(query, answerPacket, from);
 	}
+	else if (query == Ramio::Proto::Queries::CreateDataObject)
+	{
+		auto& queryPacket = reinterpret_cast<const Ramio::Proto::QPCreateDataObject&>(packet);
+		Ramio::Proto::APCreateDataObject answerPacket(packet.pid);
+		if (specialCreateDataObjects(queryPacket, answerPacket, session))
+		{
+			// empty block
+		}
+		else
+			answerPacket.setResDesc(RD_DATA_ERROR, tr("Обработчик не установлен"));
+		server_.sendAnswer(query, answerPacket, from);
+	}
+	else if (query == Ramio::Proto::Queries::SaveDataObject)
+	{
+		auto& queryPacket = reinterpret_cast<const Ramio::Proto::QPSaveDataObject&>(packet);
+		Ramio::Proto::APSaveDataObject answerPacket(packet.pid);
+		if (specialSaveDataObject(queryPacket, answerPacket, session))
+		{
+			// empty block
+		}
+		else
+			answerPacket.setResDesc(RD_DATA_ERROR, tr("Обработчик не установлен"));
+		server_.sendAnswer(query, answerPacket, from);
+	}
+	else if (query == Ramio::Proto::Queries::DeleteDataObject)
+	{
+		auto& queryPacket = reinterpret_cast<const Ramio::Proto::QPDeleteDataObject&>(packet);
+		Ramio::Proto::APDeleteDataObject answerPacket(packet.pid);
+		if (specialDeleteDataObject(queryPacket, answerPacket, session))
+		{
+			// empty block
+		}
+		else
+			answerPacket.setResDesc(RD_DATA_ERROR, tr("Обработчик не установлен"));
+		server_.sendAnswer(query, answerPacket, from);
+	}
 	else
 	{
 		Ramio::Proto::AnswerPacket answerPacket(Ramio::Proto::PacketType::Query, int(query), packet.pid);
