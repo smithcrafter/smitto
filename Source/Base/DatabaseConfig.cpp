@@ -21,7 +21,7 @@
 
 namespace Smitto {
 
-Ramio::DatabaseConfig dbconfig(const QString& targetName, const QString& groupname)
+Ramio::DatabaseConfig dbconfig(const QString& groupname, const QString& targetName)
 {
 	Ramio::DatabaseConfig res;
 	const Ramio::Config& config = Ramio::config(targetName);
