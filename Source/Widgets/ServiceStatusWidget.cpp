@@ -27,8 +27,7 @@
 namespace Smitto {
 
 ServiceStatusWidget::ServiceStatusWidget(Service& service, QWidget* parent)
-	: QWidget(parent),
-	  service_(service)
+	: QWidget(parent)
 {
 	UI_CREATE_HLAYOUT(layout);
 	layout->addWidget(new QLabel(H3(service.name())));

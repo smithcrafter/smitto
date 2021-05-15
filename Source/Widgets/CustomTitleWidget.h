@@ -61,7 +61,7 @@ protected:
 	void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 	void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 
-	bool eventFilter(QObject *watched, QEvent *event);
+	bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
 	QLabel* titleLabel_;

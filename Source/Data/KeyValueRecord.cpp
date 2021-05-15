@@ -21,6 +21,10 @@
 // Qt5
 #include <QStringBuilder>
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+#define QRegExp QRegularExpression
+#endif
+
 namespace Smitto {
 
 KeyValueRecord::KeyValueRecord(const QString& str)

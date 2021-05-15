@@ -17,6 +17,7 @@
 
 #include "CustomTitleWidget.h"
 #include "../Gui/PlatformSpecification.h"
+#include <ramio/gui/global.h>
 // Qt5
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
@@ -31,9 +32,7 @@ namespace Ui {
 CustomTitleWidget::CustomTitleWidget(const QString& title, TiltleButtons butons, QWidget* parent)
 	: QWidget(parent)
 {
-	auto layout = new QHBoxLayout(this);
-	layout->setMargin(0);
-	layout->setSpacing(0);
+	UI_CREATE_HLAYOUT_ZERO_MARGINSPACING(layout);
 	layout->addWidget(titleLabel_ = new QLabel(title));
 	layout->addStretch();
 	layout->addLayout(cornLayout_ = new QHBoxLayout());
@@ -149,7 +148,11 @@ void CustomTitleWidget::paintEvent(QPaintEvent* event)
 {
 	Q_UNUSED(event);
 	QStyleOption opt;
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+	opt.initFrom(this);
+#else
 	opt.init(this);
+#endif
 	QPainter p(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }

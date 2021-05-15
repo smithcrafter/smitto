@@ -29,7 +29,7 @@ LogLabelsListWidget::LogLabelsListWidget(QWidget* parent)
 	: QWidget(parent)
 {
 	auto layout = new QVBoxLayout(this);
-	layout->setMargin(0);
+	layout->setContentsMargins(0, 0, 0, 0);
 	layout->addWidget(listWidget_ = new QListWidget(this));
 	listWidget_->setStyleSheet("QListWidget{border:0px;}");
 

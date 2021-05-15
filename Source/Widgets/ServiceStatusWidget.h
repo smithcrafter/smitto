@@ -35,7 +35,6 @@ private:
 	void onActiveChanged(bool value);
 
 private:
-	Service& service_;
 	QToolButton* startButton_;
 	QToolButton* stopButton_;
 	QLabel* stateLabel_;
