@@ -99,7 +99,15 @@ void TelegramBot::onGetAuth()
 	}
 	QByteArray ba = reply->readAll();
 	QJsonDocument doc = QJsonDocument::fromJson(ba);
-	qDebug().noquote()<<doc.toJson();
+	if (doc.object().value("ok").toBool() == true)
+	{
+		QJsonObject joValue = doc.object().value("result").toObject();
+		MLOG("TelegramBot", QString("%1 {username:%2} id:%3").arg(joValue.value("first_name").toString(), joValue.value("username").toString())
+			 .arg(joValue.value("id").toInt()));
+		// is_bot can_join_groups can_read_all_group_messages supports_inline_queries
+	}
+	else
+		qDebug().noquote()<<doc.toJson();
 	reply->deleteLater();
 }
 
