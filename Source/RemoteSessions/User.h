@@ -19,6 +19,7 @@
 
 #include <smitto.h>
 #include <Items/MetaItems.h>
+#include <QtCore/QDateTime>
 
 namespace Smitto {
 
@@ -27,6 +28,7 @@ struct SMITTO_LIB_EXPORT UserRecord : Ramio::MetaStandardItemData
 	RMString login;
 	RMString password;
 	RMString name;
+    RMDateTime birthday;
 
 	RMETA_DATA_DECL(Ramio::MetaStandardItemData)
 };

@@ -23,6 +23,7 @@ RMETA_DATA_IMPL(UserRecord)
 RMETA_DATA_FIELD_C(login, String, "Пользователь")
 RMETA_DATA_FIELD_C(password, String, "Пароль")
 RMETA_DATA_FIELD_C(name, String, "Имя")
+RMETA_DATA_FIELD_C(birthday, DateTime, "День рождения")
 RMETA_DATA_END
 
 GENERATE_SOURCE_METACLASS(User, UserRecord)
