@@ -53,7 +53,7 @@ void Service::start()
 			emit activeChanged(true);
 		}
 		auto elapsed = timer.nsecsElapsed();
-		if (elapsed > 3*notyfyTimeout_)
+		if (dlog_ && elapsed > 3*notyfyTimeout_)
 			DLOG(QString("[Service-%1] processStart - %2 ns").arg(name_).arg(elapsed));
 	}
 }
@@ -68,7 +68,7 @@ void Service::stop()
 		processStop();
 		emit activeChanged(false);
 		auto elapsed = timer.nsecsElapsed();
-		if (elapsed > 2*notyfyTimeout_)
+		if (dlog_ && elapsed > 2*notyfyTimeout_)
 			DLOG(QString("[Service-%1] processStop - %2 ns").arg(name_).arg(elapsed));
 	}
 }
@@ -79,7 +79,7 @@ void Service::work()
 	timer.start();
 	processWork();
 	auto elapsed = timer.nsecsElapsed();
-	if (elapsed > notyfyTimeout_)
+	if (dlog_ && elapsed > notyfyTimeout_)
 		DLOG(QString("[Service-%1] processWork - %2 ns").arg(name_).arg(elapsed));
 }
 

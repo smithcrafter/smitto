@@ -42,6 +42,9 @@ public:
 
 	void work();
 
+	bool dlog() {return dlog_;}
+	void setDlog(bool value) {dlog_ = value;}
+
 signals:
 	void activeChanged(bool started);
 
@@ -52,6 +55,7 @@ protected:
 
 protected:
 	QString name_;
+	bool dlog_ = false;
 
 private:
 	QTimer* timer_;
