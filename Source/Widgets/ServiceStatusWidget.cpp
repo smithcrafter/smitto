@@ -21,8 +21,9 @@
 #include <Global/Text.h>
 #include <Gui/Global.h>
 // Qt5
-#include <QtWidgets/QToolButton>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QToolButton>
 
 namespace Smitto {
 
@@ -40,7 +41,9 @@ ServiceStatusWidget::ServiceStatusWidget(Service& service, QWidget* parent)
 	connect(&service, &Service::activeChanged, this, &ServiceStatusWidget::onActiveChanged);
 	connect(startButton_, &QToolButton::clicked, &service, &Service::start);
 	connect(stopButton_, &QToolButton::clicked, &service, &Service::stop);
-
+	auto checkbox = new QCheckBox("dlog", this);
+	layout->addWidget(checkbox);
+	connect(checkbox, &QCheckBox::toggled, &service, &Service::setDlog);
 	onActiveChanged(service.started());
 }
 
