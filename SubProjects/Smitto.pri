@@ -31,6 +31,7 @@ HEADERS += \
 #SOURCES += \
 #	$$ROOT_DIR/Source/smitto.cpp \
 
+include (Algo.pri)
 include (Base.pri)
 include (System.pri)
 include (Data.pri)
