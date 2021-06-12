@@ -17,11 +17,13 @@
 
 #pragma once
 
-#include <ramio/log/log.h>
+#ifndef DWLOG
+#define DWLOG(text)
+#define MYDWLOG
+#endif
+
 using qint64 = long long;
-
-//#define FIND2
-
+//#define FIND2 (alter find)
 #define BASESIZE 10000
 
 namespace Smitto {
@@ -36,7 +38,7 @@ class OrderedTimeMap
         TimePair(qint64 ptime, TYPE pvalue) : time(ptime), value(pvalue) {}
     };
 public:
-    // первая мысль была, что сбойный инетратор имеет позицию -1. но лишние действия, проще когда он оказывает на count
+    // первая мысль была, что сбойный инетратор имеет позицию -1. но лишние действия, проще когда он указывает на count
 	struct iterator
 	{
 		iterator(const OrderedTimeMap* cont = Q_NULLPTR, int ppos = -1) : container_(cont), pos_(ppos) {}
@@ -82,8 +84,12 @@ public:
 	inline qint64 size() const {return count_;}
 	inline bool isEmpty() const {return !count_;}
 
+#ifdef QLIST_H
     QList<qint64> keys() const;
+#endif
+#ifdef QPAIR_H
 	QPair<qint64, qint64> interval() const {return qMakePair(firstKey_, lastKey_);}
+#endif
 
 	inline iterator begin() const {return constBegin();}
 	inline iterator end() const {return constEnd();}
@@ -158,11 +164,6 @@ TYPE& OrderedTimeMap<TYPE>::insert(qint64 time, TYPE value)
 		return pair->value;
 	}
 	auto it = lowerBound(time);
-	if (it == constEnd())
-	{
-		DWLOG(QString("Вставка элемента %1 не произошла").arg(time));
-		return emptyVal;
-	}
 	if (it.key() == time)
     {
 		TimePair* pair = (TimePair*)((char*)data_+it.pos()*sizeof(TimePair));
@@ -174,21 +175,16 @@ TYPE& OrderedTimeMap<TYPE>::insert(qint64 time, TYPE value)
 		void *ldata = data_;
 		reserve(2*dataSize_);
 		if (it.pos() > 0)
-		{
-			DWLOG(QString("Вставка элемента %1 в середину с увеличением размера").arg(time));
 			memcpy((char*)data_, ldata, it.pos());
-		}
-		else
-			DWLOG(QString("Вставка элемента %1 в начало с увеличением размера").arg(time));
+		DWLOG(it.pos() > 0 ? QString("Вставка элемента %1 в середину с увеличением размера").arg(time) :
+							 QString("Вставка элемента %1 в начало с увеличением размера").arg(time));
 		memcpy((char*)data_+(it.pos()+1)*sizeof(TimePair), (char*)ldata+(it.pos())*sizeof(TimePair), count_ - it.pos());
 		free(ldata);
 	}
 	else
 	{
-		if (it.pos() > 0)
-			DWLOG(QString("Вставка элемента %1 в середину крайне нежелательно").arg(time));
-		else
-			DWLOG(QString("Вставка элемента %1 в начало крайне нежелательно").arg(time));
+		DWLOG(it.pos() > 0 ? QString("Вставка элемента %1 в середину крайне нежелательно").arg(time) :
+							 QString("Вставка элемента %1 в начало крайне нежелательно").arg(time));
 		memmove((char*)data_+(it.pos()+1)*sizeof(TimePair), (char*)data_+(it.pos())*sizeof(TimePair), count_-it.pos());
 	}
 	TimePair* pair = (TimePair*)((char*)data_+it.pos()*sizeof(TimePair));
@@ -325,6 +321,7 @@ typename OrderedTimeMap<TYPE>::iterator OrderedTimeMap<TYPE>::lowerBound(qint64 
     return constEnd();
 }
 
+#ifdef QLIST_H
 template <typename TYPE>
 QList<qint64> OrderedTimeMap<TYPE>::keys() const
 {
@@ -333,5 +330,11 @@ QList<qint64> OrderedTimeMap<TYPE>::keys() const
 		res.append(it.key());
     return res;
 }
+#endif
 
 } // Smitto::
+
+#ifdef MYDWLOG
+#undef DWLOG
+#undef MYDWLOG
+#endif
