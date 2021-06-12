@@ -98,6 +98,8 @@ public:
 	TYPE& insert(qint64 time, TYPE value);
 	void remove(qint64 key);
 
+	bool equal(const OrderedTimeMap& other) const;
+
 	OrderedTimeMap (int size = BASESIZE) {if (size > 0) reserve(size*sizeof(TimePair));}
 	OrderedTimeMap(const OrderedTimeMap& other) {
         reserve(other.dataSize_); memcpy(data_, other.data_, dataSize_); count_ = other.count_;
@@ -217,6 +219,14 @@ void OrderedTimeMap<TYPE>::remove(qint64 time)
 		return;
 	memmove((char*)data_+(it.pos()-1)*sizeof(TimePair), (char*)data_+(it.pos())*sizeof(TimePair), count_-it.pos());
 	count_--;
+}
+
+template <typename TYPE>
+bool OrderedTimeMap<TYPE>::equal(const OrderedTimeMap& other) const
+{
+	if (count_ != other.count() || firstKey_ != other.firstKey_ || lastKey_ != other.lastKey_)
+		return false;
+	return memcmp(data_, other.data_, other.count_*sizeof(TimePair)) == 0;
 }
 
 template <typename TYPE>
