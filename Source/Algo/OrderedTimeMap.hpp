@@ -83,6 +83,7 @@ public:
 	inline bool isEmpty() const {return !count_;}
 
     QList<qint64> keys() const;
+	QPair<qint64, qint64> interval() const {return qMakePair(firstKey_, lastKey_);}
 
 	inline iterator begin() const {return constBegin();}
 	inline iterator end() const {return constEnd();}
@@ -92,6 +93,7 @@ public:
 	inline iterator find (qint64 key) const {return const_cast<OrderedTimeMap*>(this)->find(key);}
 	inline iterator constFind (qint64 key) const {return find(key);}
     iterator lowerBound(qint64 key) const;
+	iterator upperBound(qint64 key) const {auto it = lowerBound(key); if (constEnd() == it) return it; return ++it;}
 
 	TYPE& insert(qint64 time, TYPE value);
 	void remove(qint64 key);
