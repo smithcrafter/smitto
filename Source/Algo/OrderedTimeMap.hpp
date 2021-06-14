@@ -105,6 +105,9 @@ public:
 	void remove(qint64 key);
 
 	bool equal(const OrderedTimeMap& other) const;
+#ifdef QMAP_H
+	bool equal(const QMap<qint64, TYPE>& other) const;
+#endif
 
 	OrderedTimeMap (int size = BASESIZE) {if (size > 0) reserve(size*sizeof(TimePair));}
 	OrderedTimeMap(const OrderedTimeMap& other) {
@@ -222,8 +225,28 @@ bool OrderedTimeMap<TYPE>::equal(const OrderedTimeMap& other) const
 {
 	if (count_ != other.count() || firstKey_ != other.firstKey_ || lastKey_ != other.lastKey_)
 		return false;
-	return memcmp(data_, other.data_, other.count_*sizeof(TimePair)) == 0;
+	if (sizeof(TYPE) % 8 == 0)
+		return memcmp(data_, other.data_, other.count_*sizeof(TimePair)) == 0;
+	auto itc = constBegin();
+	for (auto it = other.constBegin(); it != other.constEnd(); ++it, ++itc)
+		if (it.key() != itc.key() || it.value() != itc.value())
+			return false;
+	return true;
 }
+
+#ifdef QMAP_H
+template <typename TYPE>
+bool OrderedTimeMap<TYPE>::equal(const QMap<qint64, TYPE>& other) const
+{
+	if (count_ != other.count() || firstKey_ != other.firstKey() || lastKey_ != other.lastKey())
+		return false;
+	auto itc = constBegin();
+	for (auto it = other.constBegin(); it != other.constEnd(); ++it, ++itc)
+		if (it.key() != itc.key() || it.value() != itc.value())
+			return false;
+	return true;
+}
+#endif
 
 template <typename TYPE>
 TYPE& OrderedTimeMap<TYPE>::valueNearPos(qint64 key, int pos)
