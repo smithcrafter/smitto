@@ -22,20 +22,19 @@
 #define MYDWLOG
 #endif
 
-using qint64 = long long;
 //#define FIND2 (alter find)
 #define BASESIZE 10000
 
 namespace Smitto {
 
-template <typename TYPE>
+template <typename KTYPE, typename TYPE>
 class OrderedTimeMap
 {
     struct TimePair
     {
-        qint64 time;
+		KTYPE time;
         TYPE value;
-        TimePair(qint64 ptime, TYPE pvalue) : time(ptime), value(pvalue) {}
+		TimePair(KTYPE ptime, TYPE pvalue) : time(ptime), value(pvalue) {}
     };
 public:
     // первая мысль была, что сбойный инетратор имеет позицию -1. но лишние действия, проще когда он указывает на count
@@ -50,7 +49,7 @@ public:
 		inline iterator operator --(int) {iterator r = *this; pos_--; return r;}
 		inline iterator operator + (int n) const {return iterator(container_, pos_+n);}
 		inline iterator operator - (int n) const {return iterator(container_, pos_-n);}
-		inline qint64 key() const {if (pos_ >= container_->size() || pos_ < 0) return -1; return container_->dataAt(pos_).time;}
+		inline KTYPE key() const {if (pos_ >= container_->size() || pos_ < 0) return -1; return container_->dataAt(pos_).time;}
 		inline TYPE& value() {return container_->dataAt(pos_).value;}
 		inline TYPE value() const {return container_->dataAt(pos_).value;}
 		inline int pos() const {return pos_;}
@@ -63,50 +62,50 @@ public:
 	typedef iterator Iterator;
 	typedef iterator ConstIterator;
 
-	inline TYPE operator [](qint64 key) const {auto it = find(key); if (it != constEnd()) return it.value(); return emptyVal;}
-	TYPE& operator [](qint64 key);
+	inline TYPE operator [](KTYPE key) const {auto it = find(key); if (it != constEnd()) return it.value(); return emptyVal;}
+	TYPE& operator [](KTYPE key);
 
-	TYPE& valueNearPos(qint64 key, int pos);
-	TYPE valueNearPos(qint64 key, int pos) const {return const_cast<OrderedTimeMap*>(this)->valueNearPos(key, pos);}
+	TYPE& valueNearPos(KTYPE key, int pos);
+	TYPE valueNearPos(KTYPE key, int pos) const {return const_cast<OrderedTimeMap*>(this)->valueNearPos(key, pos);}
 
 	inline TimePair& dataAt(int pos) const {return *(TimePair*)((char*)data_+pos*sizeof(TimePair));}
 
-	inline TYPE value(qint64 key) const {return const_cast<OrderedTimeMap*>(this)->operator[] (key);}
+	inline TYPE value(KTYPE key) const {return const_cast<OrderedTimeMap*>(this)->operator[] (key);}
 	inline TYPE& first() {return (*(TimePair*)((char*)data_+(0)*sizeof(TimePair))).value;}
 	inline TYPE first() const {return const_cast<OrderedTimeMap*>(this)->first();}
 	inline TYPE& last() {return (*(TimePair*)((char*)data_+(count_-1)*sizeof(TimePair))).value;}
 	inline TYPE last() const {return const_cast<OrderedTimeMap*>(this)->last();}
-	inline qint64 lastKey() const {return lastKey_;}
-	inline qint64 firstKey() const {return firstKey_;}
+	inline KTYPE lastKey() const {return lastKey_;}
+	inline KTYPE firstKey() const {return firstKey_;}
 
-	inline bool contains(qint64 key) const { return constFind(key) != constEnd(); }
-	inline qint64 count() const {return count_;}
-	inline qint64 size() const {return count_;}
+	inline bool contains(KTYPE key) const { return constFind(key) != constEnd(); }
+	inline int count() const {return count_;}
+	inline int size() const {return count_;}
 	inline bool isEmpty() const {return !count_;}
 
 #ifdef QLIST_H
-    QList<qint64> keys() const;
+	QList<KTYPE> keys() const;
 #endif
 #ifdef QPAIR_H
-	QPair<qint64, qint64> interval() const {return qMakePair(firstKey_, lastKey_);}
+	QPair<KTYPE, KTYPE> interval() const {return qMakePair(firstKey_, lastKey_);}
 #endif
 
 	inline iterator begin() const {return constBegin();}
 	inline iterator end() const {return constEnd();}
 	inline iterator constBegin() const {return iterator(this, 0);}
 	inline iterator constEnd() const {return iterator(this, count_);}
-    iterator find(qint64 key);
-	inline iterator find (qint64 key) const {return const_cast<OrderedTimeMap*>(this)->find(key);}
-	inline iterator constFind (qint64 key) const {return find(key);}
-    iterator lowerBound(qint64 key) const;
-	iterator upperBound(qint64 key) const {auto it = lowerBound(key); if (constEnd() == it) return it; return ++it;}
+	iterator find(KTYPE key);
+	inline iterator find (KTYPE key) const {return const_cast<OrderedTimeMap*>(this)->find(key);}
+	inline iterator constFind (KTYPE key) const {return find(key);}
+	iterator lowerBound(KTYPE key) const;
+	iterator upperBound(KTYPE key) const {auto it = lowerBound(key); if (constEnd() == it) return it; return ++it;}
 
-	TYPE& insert(qint64 time, TYPE value);
-	void remove(qint64 key);
+	TYPE& insert(KTYPE time, TYPE value);
+	void remove(KTYPE key);
 
 	bool equal(const OrderedTimeMap& other) const;
 #ifdef QMAP_H
-	bool equal(const QMap<qint64, TYPE>& other) const;
+	bool equal(const QMap<KTYPE, TYPE>& other) const;
 #endif
 
 	OrderedTimeMap (int size = BASESIZE) {if (size > 0) reserve(size*sizeof(TimePair));}
@@ -127,14 +126,14 @@ public:
 	~OrderedTimeMap() {dealoc();}
 
 	inline void clear() {count_ = 0; lastKey_ = 0; firstKey_ = 0;}
-	void trimAfter(qint64 key) {auto it = lowerBound(key); if (it == constBegin()) return; count_ = it.pos()+1; lastKey_ = it.key();}
+	void trimAfter(KTYPE key) {auto it = lowerBound(key); if (it == constBegin()) return; count_ = it.pos()+1; lastKey_ = it.key();}
 
 private:
-	qint64 dataSize_ = 0;
+	KTYPE dataSize_ = 0;
 	void *data_ = Q_NULLPTR;
     int count_ = 0;
-	qint64 lastKey_ = 0;
-	qint64 firstKey_ = 0;
+	KTYPE lastKey_ = 0;
+	KTYPE firstKey_ = 0;
     TYPE emptyVal = TYPE(); //0
 
 	void reserve(int k) {if (k > 0) data_ = malloc(dataSize_ = k);}
@@ -142,8 +141,8 @@ private:
     void dealoc() {if (data_) free(data_); data_ = Q_NULLPTR; dataSize_ = 0; clear();}
 };
 
-template <typename TYPE>
-TYPE& OrderedTimeMap<TYPE>::insert(qint64 time, TYPE value)
+template <typename KTYPE, typename TYPE>
+TYPE& OrderedTimeMap<KTYPE, TYPE>::insert(KTYPE time, TYPE value)
 {
     if (!dataSize_)
 		reserve(BASESIZE*sizeof(TimePair));
@@ -158,7 +157,7 @@ TYPE& OrderedTimeMap<TYPE>::insert(qint64 time, TYPE value)
 	}
 	if (time > lastKey_)
 	{
-		if (qint64((count_+1)*sizeof(TimePair)) > dataSize_)
+		if (KTYPE((count_+1)*sizeof(TimePair)) > dataSize_)
 			realoc(dataSize_);
 		TimePair* pair = (TimePair*)((char*)data_+count_*sizeof(TimePair));
 		*pair = TimePair(time, value);
@@ -173,7 +172,7 @@ TYPE& OrderedTimeMap<TYPE>::insert(qint64 time, TYPE value)
 		pair->value = value;
 		return pair->value;
     }
-	if (qint64((count_+1)*sizeof(TimePair)) > dataSize_)
+	if (KTYPE((count_+1)*sizeof(TimePair)) > dataSize_)
 	{
 		void *ldata = data_;
 		reserve(2*dataSize_);
@@ -198,8 +197,8 @@ TYPE& OrderedTimeMap<TYPE>::insert(qint64 time, TYPE value)
 	return pair->value;
 }
 
-template<typename TYPE>
-void OrderedTimeMap<TYPE>::remove(qint64 time)
+template <typename KTYPE, typename TYPE>
+void OrderedTimeMap<KTYPE, TYPE>::remove(KTYPE time)
 {
 	if (time == lastKey_)
 	{
@@ -220,8 +219,8 @@ void OrderedTimeMap<TYPE>::remove(qint64 time)
 	count_--;
 }
 
-template <typename TYPE>
-bool OrderedTimeMap<TYPE>::equal(const OrderedTimeMap& other) const
+template <typename KTYPE, typename TYPE>
+bool OrderedTimeMap<KTYPE, TYPE>::equal(const OrderedTimeMap& other) const
 {
 	if (count_ != other.count() || firstKey_ != other.firstKey_ || lastKey_ != other.lastKey_)
 		return false;
@@ -235,8 +234,8 @@ bool OrderedTimeMap<TYPE>::equal(const OrderedTimeMap& other) const
 }
 
 #ifdef QMAP_H
-template <typename TYPE>
-bool OrderedTimeMap<TYPE>::equal(const QMap<qint64, TYPE>& other) const
+template <typename KTYPE, typename TYPE>
+bool OrderedTimeMap<KTYPE, TYPE>::equal(const QMap<KTYPE, TYPE>& other) const
 {
 	if (count_ != other.count() || firstKey_ != other.firstKey() || lastKey_ != other.lastKey())
 		return false;
@@ -248,8 +247,8 @@ bool OrderedTimeMap<TYPE>::equal(const QMap<qint64, TYPE>& other) const
 }
 #endif
 
-template <typename TYPE>
-TYPE& OrderedTimeMap<TYPE>::valueNearPos(qint64 key, int pos)
+template <typename KTYPE, typename TYPE>
+TYPE& OrderedTimeMap<KTYPE, TYPE>::valueNearPos(KTYPE key, int pos)
 {
 	if (pos < count_ && pos >= 0)
 	{
@@ -275,8 +274,8 @@ TYPE& OrderedTimeMap<TYPE>::valueNearPos(qint64 key, int pos)
 	return emptyVal;
 }
 
-template <typename TYPE>
-TYPE& OrderedTimeMap<TYPE>::operator [](qint64 key)
+template <typename KTYPE, typename TYPE>
+TYPE& OrderedTimeMap<KTYPE, TYPE>::operator [](KTYPE key)
 {
     if (key > lastKey_)
 		return this->insert(key, TYPE());
@@ -286,8 +285,8 @@ TYPE& OrderedTimeMap<TYPE>::operator [](qint64 key)
 	return it.value();
 }
 
-template <typename TYPE>
-typename OrderedTimeMap<TYPE>::iterator OrderedTimeMap<TYPE>::find(qint64 key)
+template <typename KTYPE, typename TYPE>
+typename OrderedTimeMap<KTYPE, TYPE>::iterator OrderedTimeMap<KTYPE, TYPE>::find(KTYPE key)
 {
     auto it = lowerBound(key);
     if (it == constEnd() || it.key() == key)
@@ -295,8 +294,8 @@ typename OrderedTimeMap<TYPE>::iterator OrderedTimeMap<TYPE>::find(qint64 key)
     return constEnd();
 }
 
-template <typename TYPE>
-typename OrderedTimeMap<TYPE>::iterator OrderedTimeMap<TYPE>::lowerBound(qint64 key) const
+template <typename KTYPE, typename TYPE>
+typename OrderedTimeMap<KTYPE, TYPE>::iterator OrderedTimeMap<KTYPE, TYPE>::lowerBound(KTYPE key) const
 {
     if (!count_ || key > lastKey_)
         return constEnd();
@@ -308,7 +307,7 @@ typename OrderedTimeMap<TYPE>::iterator OrderedTimeMap<TYPE>::lowerBound(qint64 
     int begin = 0;
     int end = count_-1;
 #ifdef FIND2
-    qint64 beginKey = firstKey_, endKey = lastKey_;
+	KTYPE beginKey = firstKey_, endKey = lastKey_;
 #endif
 	while (begin + 1 < end) // магия. 2 элемента - уже выход
     {
@@ -345,10 +344,10 @@ typename OrderedTimeMap<TYPE>::iterator OrderedTimeMap<TYPE>::lowerBound(qint64 
 }
 
 #ifdef QLIST_H
-template <typename TYPE>
-QList<qint64> OrderedTimeMap<TYPE>::keys() const
+template <typename KTYPE, typename TYPE>
+QList<KTYPE> OrderedTimeMap<KTYPE, TYPE>::keys() const
 {
-    QList<qint64> res;
+	QList<KTYPE> res;
     for (auto it = constBegin(); it != constEnd(); ++it)
 		res.append(it.key());
     return res;
