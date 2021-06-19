@@ -62,7 +62,7 @@ public:
 	typedef iterator Iterator;
 	typedef iterator ConstIterator;
 
-	inline TYPE operator [](KTYPE key) const {auto it = find(key); if (it != constEnd()) return it.value(); return emptyVal;}
+	inline TYPE operator [](KTYPE key) const {auto it = find(key); if (it != constEnd()) return it.value(); DWLOG("Промах key"); return emptyVal;}
 	TYPE& operator [](KTYPE key);
 
 	TYPE& valueNearPos(KTYPE key, int pos);
@@ -72,9 +72,9 @@ public:
 
 	inline TYPE value(KTYPE key) const {return const_cast<OrderedTimeMap*>(this)->operator[] (key);}
 	inline TYPE& first() {return (*(TimePair*)((char*)data_+(0)*sizeof(TimePair))).value;}
-	inline TYPE first() const {return const_cast<OrderedTimeMap*>(this)->first();}
+	inline TYPE first() const {DWLOG("Промах first"); return const_cast<OrderedTimeMap*>(this)->first();}
 	inline TYPE& last() {return (*(TimePair*)((char*)data_+(count_-1)*sizeof(TimePair))).value;}
-	inline TYPE last() const {return const_cast<OrderedTimeMap*>(this)->last();}
+	inline TYPE last() const {DWLOG("Промах last"); return const_cast<OrderedTimeMap*>(this)->last();}
 	inline KTYPE lastKey() const {return lastKey_;}
 	inline KTYPE firstKey() const {return firstKey_;}
 
@@ -177,17 +177,17 @@ TYPE& OrderedTimeMap<KTYPE, TYPE>::insert(KTYPE time, TYPE value)
 		void *ldata = data_;
 		reserve(2*dataSize_);
 		if (it.pos() > 0)
-			memcpy((char*)data_, ldata, it.pos());
+			memcpy((char*)data_, ldata, it.pos()*sizeof(TimePair));
 		DWLOG(it.pos() > 0 ? QString("Вставка элемента %1 в середину с увеличением размера").arg(time) :
 							 QString("Вставка элемента %1 в начало с увеличением размера").arg(time));
-		memcpy((char*)data_+(it.pos()+1)*sizeof(TimePair), (char*)ldata+(it.pos())*sizeof(TimePair), count_ - it.pos());
+		memcpy((char*)data_+(it.pos()+1)*sizeof(TimePair), (char*)ldata+(it.pos())*sizeof(TimePair), (count_ - it.pos())*sizeof(TimePair));
 		free(ldata);
 	}
 	else
 	{
-		DWLOG(it.pos() > 0 ? QString("Вставка элемента %1 в середину крайне нежелательно").arg(time) :
-							 QString("Вставка элемента %1 в начало крайне нежелательно").arg(time));
-		memmove((char*)data_+(it.pos()+1)*sizeof(TimePair), (char*)data_+(it.pos())*sizeof(TimePair), count_-it.pos());
+		DWLOG(it.pos() > 0 ? QString("Вставка элемента %1 в середину крайне нежелательна").arg(time) :
+							 QString("Вставка элемента %1 в начало крайне нежелательна").arg(time));
+		memmove((char*)data_+(it.pos()+1)*sizeof(TimePair), (char*)data_+(it.pos())*sizeof(TimePair), (count_-it.pos())*sizeof(TimePair));
 	}
 	TimePair* pair = (TimePair*)((char*)data_+it.pos()*sizeof(TimePair));
 	*pair = TimePair(time, value);
