@@ -62,7 +62,8 @@ public:
 	typedef iterator Iterator;
 	typedef iterator ConstIterator;
 
-	inline TYPE operator [](KTYPE key) const {auto it = find(key); if (it != constEnd()) return it.value(); DWLOG("Промах key"); return emptyVal;}
+	inline TYPE operator [](KTYPE key) const {auto it = find(key); if (it != constEnd()) return it.value();
+		DWLOG("Промах key"); return emptyVal;}
 	TYPE& operator [](KTYPE key);
 
 	TYPE& valueNearPos(KTYPE key, int pos);
@@ -71,10 +72,12 @@ public:
 	inline TimePair& dataAt(int pos) const {return *(TimePair*)((char*)data_+pos*sizeof(TimePair));}
 
 	inline TYPE value(KTYPE key) const {return const_cast<OrderedTimeMap*>(this)->operator[] (key);}
-	inline TYPE& first() {return (*(TimePair*)((char*)data_+(0)*sizeof(TimePair))).value;}
-	inline TYPE first() const {DWLOG("Промах first"); return const_cast<OrderedTimeMap*>(this)->first();}
-	inline TYPE& last() {return (*(TimePair*)((char*)data_+(count_-1)*sizeof(TimePair))).value;}
-	inline TYPE last() const {DWLOG("Промах last"); return const_cast<OrderedTimeMap*>(this)->last();}
+	inline TYPE& first() {if (count_) return (*(TimePair*)((char*)data_)).value;
+		DWLOG("Промах first"); return emptyVal;}
+	inline TYPE first() const {return const_cast<OrderedTimeMap*>(this)->first(); }
+	inline TYPE& last() {if (count_) return (*(TimePair*)((char*)data_+(count_-1)*sizeof(TimePair))).value;
+		DWLOG("Промах last"); return emptyVal;}
+	inline TYPE last() const {return const_cast<OrderedTimeMap*>(this)->last();}
 	inline KTYPE lastKey() const {return lastKey_;}
 	inline KTYPE firstKey() const {return firstKey_;}
 
@@ -271,6 +274,7 @@ TYPE& OrderedTimeMap<KTYPE, TYPE>::valueNearPos(KTYPE key, int pos)
 
 		} while(pos2 >=0 && pos2 < count_);
 	}
+	DWLOG("Промах valueNearPos");
 	return emptyVal;
 }
 
