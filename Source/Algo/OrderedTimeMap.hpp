@@ -30,14 +30,14 @@ namespace Smitto {
 template <typename KTYPE, typename TYPE>
 class OrderedTimeMap
 {
-    struct TimePair
-    {
+	struct TimePair
+	{
 		KTYPE time;
-        TYPE value;
+		TYPE value;
 		TimePair(KTYPE ptime, TYPE pvalue) : time(ptime), value(pvalue) {}
-    };
+	};
 public:
-    // первая мысль была, что сбойный инетратор имеет позицию -1. но лишние действия, проще когда он указывает на count
+	// первая мысль была, что сбойный инетратор имеет позицию -1. но лишние действия, проще когда он указывает на count
 	struct iterator
 	{
 		iterator(const OrderedTimeMap* cont = Q_NULLPTR, int ppos = -1) : container_(cont), pos_(ppos) {}
@@ -53,6 +53,8 @@ public:
 		inline TYPE& value() {return container_->dataAt(pos_).value;}
 		inline TYPE value() const {return container_->dataAt(pos_).value;}
 		inline int pos() const {return pos_;}
+		inline KTYPE operator*() {return key();}
+		inline TYPE*  operator->() {return &value();}
 
 	private:
 		const OrderedTimeMap* container_ = Q_NULLPTR;
@@ -88,6 +90,7 @@ public:
 
 #ifdef QLIST_H
 	QList<KTYPE> keys() const;
+	QList<KTYPE> keys(KTYPE min, KTYPE max) const;
 #endif
 #ifdef QPAIR_H
 	QPair<KTYPE, KTYPE> interval() const {return qMakePair(firstKey_, lastKey_);}
@@ -113,19 +116,19 @@ public:
 
 	OrderedTimeMap (int size = BASESIZE) {if (size > 0) reserve(size*sizeof(TimePair));}
 	OrderedTimeMap(const OrderedTimeMap& other) {
-        reserve(other.dataSize_); memcpy(data_, other.data_, dataSize_); count_ = other.count_;
-        lastKey_ = other.lastKey_; firstKey_ = other.firstKey_; }
+		reserve(other.dataSize_); memcpy(data_, other.data_, dataSize_); count_ = other.count_;
+		lastKey_ = other.lastKey_; firstKey_ = other.firstKey_; }
 	OrderedTimeMap(OrderedTimeMap&& other) {
-        dataSize_= other.dataSize_; data_ = other.data_; lastKey_ = other.lastKey_; firstKey_ = other.firstKey_; count_ = other.count_;
-        other.data_ = Q_NULLPTR; other.dataSize_ = 0; other.lastKey_ = 0; other.firstKey_ = 0; other.count_ = 0; }
+		dataSize_= other.dataSize_; data_ = other.data_; lastKey_ = other.lastKey_; firstKey_ = other.firstKey_; count_ = other.count_;
+		other.data_ = Q_NULLPTR; other.dataSize_ = 0; other.lastKey_ = 0; other.firstKey_ = 0; other.count_ = 0; }
 	OrderedTimeMap& operator = (OrderedTimeMap&& other) {
-        dealoc(); dataSize_= other.dataSize_; data_ = other.data_;
-        lastKey_ = other.lastKey_; firstKey_ = other.firstKey_;  count_ = other.count_;
-        other.data_ = Q_NULLPTR; other.dataSize_ = 0; other.lastKey_ = 0; other.firstKey_ = 0; other.count_ = 0; return *this;}
+		dealoc(); dataSize_= other.dataSize_; data_ = other.data_;
+		lastKey_ = other.lastKey_; firstKey_ = other.firstKey_;  count_ = other.count_;
+		other.data_ = Q_NULLPTR; other.dataSize_ = 0; other.lastKey_ = 0; other.firstKey_ = 0; other.count_ = 0; return *this;}
 	OrderedTimeMap& operator = (const OrderedTimeMap& other) {
-        if (dataSize_ < other.dataSize_)  {dealoc(); reserve(other.dataSize_); }
-        memcpy(data_, other.data_, other.dataSize_); count_ = other.count_;
-        lastKey_ = other.lastKey_; firstKey_ = other.firstKey_; return *this;}
+		if (dataSize_ < other.dataSize_)  {dealoc(); reserve(other.dataSize_); }
+		memcpy(data_, other.data_, other.dataSize_); count_ = other.count_;
+		lastKey_ = other.lastKey_; firstKey_ = other.firstKey_; return *this;}
 	~OrderedTimeMap() {dealoc();}
 
 	inline void clear() {count_ = 0; lastKey_ = 0; firstKey_ = 0;}
@@ -134,20 +137,20 @@ public:
 private:
 	KTYPE dataSize_ = 0;
 	void *data_ = Q_NULLPTR;
-    int count_ = 0;
+	int count_ = 0;
 	KTYPE lastKey_ = 0;
 	KTYPE firstKey_ = 0;
-    TYPE emptyVal = TYPE(); //0
+	TYPE emptyVal = TYPE(); //0
 
 	void reserve(int k) {if (k > 0) data_ = malloc(dataSize_ = k);}
 	void realoc(int addk) {void *ldata = data_; reserve(dataSize_+addk); memcpy(data_, ldata, dataSize_-addk); free(ldata);}
-    void dealoc() {if (data_) free(data_); data_ = Q_NULLPTR; dataSize_ = 0; clear();}
+	void dealoc() {if (data_) free(data_); data_ = Q_NULLPTR; dataSize_ = 0; clear();}
 };
 
 template <typename KTYPE, typename TYPE>
 TYPE& OrderedTimeMap<KTYPE, TYPE>::insert(KTYPE time, TYPE value)
 {
-    if (!dataSize_)
+	if (!dataSize_)
 		reserve(BASESIZE*sizeof(TimePair));
 	if (!count_)
 	{
@@ -170,11 +173,11 @@ TYPE& OrderedTimeMap<KTYPE, TYPE>::insert(KTYPE time, TYPE value)
 	}
 	auto it = lowerBound(time);
 	if (it.key() == time)
-    {
+	{
 		TimePair* pair = (TimePair*)((char*)data_+it.pos()*sizeof(TimePair));
 		pair->value = value;
 		return pair->value;
-    }
+	}
 	if (KTYPE((count_+1)*sizeof(TimePair)) > dataSize_)
 	{
 		void *ldata = data_;
@@ -281,7 +284,9 @@ TYPE& OrderedTimeMap<KTYPE, TYPE>::valueNearPos(KTYPE key, int pos)
 template <typename KTYPE, typename TYPE>
 TYPE& OrderedTimeMap<KTYPE, TYPE>::operator [](KTYPE key)
 {
-    if (key > lastKey_)
+	if (key == lastKey_)
+		return last();
+	if (key > lastKey_)
 		return this->insert(key, TYPE());
 	auto it = find(key);
 	if (it == constEnd())
@@ -292,59 +297,59 @@ TYPE& OrderedTimeMap<KTYPE, TYPE>::operator [](KTYPE key)
 template <typename KTYPE, typename TYPE>
 typename OrderedTimeMap<KTYPE, TYPE>::iterator OrderedTimeMap<KTYPE, TYPE>::find(KTYPE key)
 {
-    auto it = lowerBound(key);
-    if (it == constEnd() || it.key() == key)
-        return it;
-    return constEnd();
+	auto it = lowerBound(key);
+	if (it == constEnd() || it.key() == key)
+		return it;
+	return constEnd();
 }
 
 template <typename KTYPE, typename TYPE>
 typename OrderedTimeMap<KTYPE, TYPE>::iterator OrderedTimeMap<KTYPE, TYPE>::lowerBound(KTYPE key) const
 {
-    if (!count_ || key > lastKey_)
-        return constEnd();
-    if (key <= firstKey_)
-        return iterator(this, 0);
-    if (key == lastKey_)
-        return iterator(this, count_-1);
+	if (!count_ || key > lastKey_)
+		return constEnd();
+	if (key == lastKey_)
+		return iterator(this, count_-1);
+	if (key <= firstKey_)
+		return iterator(this, 0);
 
-    int begin = 0;
-    int end = count_-1;
+	int begin = 0;
+	int end = count_-1;
 #ifdef FIND2
 	KTYPE beginKey = firstKey_, endKey = lastKey_;
 #endif
 	while (begin + 1 < end) // магия. 2 элемента - уже выход
-    {
+	{
 #ifdef FIND2
-        int pos = begin + (end-begin)*float(key-beginKey)/(endKey-beginKey);
-        if (pos <= begin)
-            pos = begin+1;
-        else if (pos >= end)
-            pos = end-1;
+		int pos = begin + (end-begin)*float(key-beginKey)/(endKey-beginKey);
+		if (pos <= begin)
+			pos = begin+1;
+		else if (pos >= end)
+			pos = end-1;
 #else
 	auto pos = (end+begin)/2;
 #endif
-        auto& atval = dataAt(pos);
-        if (atval.time == key)
-            return iterator(this, pos);
+		auto& atval = dataAt(pos);
+		if (atval.time == key)
+			return iterator(this, pos);
 #ifdef FIND2
-        if (key > atval.time)
-        {
-            begin = pos;
-            beginKey = atval.time;
-        }
-        else
-        {
-            end = pos;
-            endKey = atval.time;
-        }
+		if (key > atval.time)
+		{
+			begin = pos;
+			beginKey = atval.time;
+		}
+		else
+		{
+			end = pos;
+			endKey = atval.time;
+		}
 #else
-        key > atval.time ? begin = pos : end = pos;
+		key > atval.time ? begin = pos : end = pos;
 #endif
-    }
-    if (end - begin == 1)
-        return iterator(this, end);
-    return constEnd();
+	}
+	if (end - begin == 1)
+		return iterator(this, end);
+	return constEnd();
 }
 
 #ifdef QLIST_H
@@ -352,9 +357,18 @@ template <typename KTYPE, typename TYPE>
 QList<KTYPE> OrderedTimeMap<KTYPE, TYPE>::keys() const
 {
 	QList<KTYPE> res;
-    for (auto it = constBegin(); it != constEnd(); ++it)
+	for (auto it = constBegin(); it != constEnd(); ++it)
 		res.append(it.key());
-    return res;
+	return res;
+}
+template <typename KTYPE, typename TYPE>
+QList<KTYPE> OrderedTimeMap<KTYPE, TYPE>::keys(KTYPE min, KTYPE max) const
+{
+	QList<KTYPE> res;
+	auto itEnd = max ? upperBound(max) : constEnd();
+	for (auto it = lowerBound(min); it != itEnd; ++it)
+		res.append(it.key());
+	return res;
 }
 #endif
 
