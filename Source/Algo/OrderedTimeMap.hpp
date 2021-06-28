@@ -109,6 +109,7 @@ public:
 	inline iterator constBegin() const {return iterator(this, 0);}
 	inline iterator constEnd() const {return iterator(this, count_);}
 	iterator find(KTYPE key);
+	iterator findAlt(KTYPE key);
 	inline iterator find (KTYPE key) const {return const_cast<OrderedTimeMap*>(this)->find(key);}
 	inline iterator constFind (KTYPE key) const {return find(key);}
 	iterator lowerBound(KTYPE key) const;
@@ -283,28 +284,6 @@ TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::valueNearPos(KTYPE key, int pos)
 	return emptyVal;
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::operator [](KTYPE key)
-{
-	if (key == lastKey_)
-		return last();
-	if (key > lastKey_)
-		return this->insert(key, TYPE());
-	auto it = find(key);
-	if (it == constEnd())
-		return this->insert(key, TYPE());
-	return it.value();
-}
-
-template <typename KTYPE, typename TYPE, int ALTFIND>
-typename OrderedTimeMap<KTYPE, TYPE, ALTFIND>::iterator OrderedTimeMap<KTYPE, TYPE, ALTFIND>::find(KTYPE key)
-{
-	auto it = lowerBound(key);
-	if (it == constEnd() || it.key() == key)
-		return it;
-	return constEnd();
-}
-
 enum class SearchType
 {
 	LowerBound,
@@ -395,6 +374,41 @@ typename OrderedTimeMap<KTYPE, TYPE, ALTFIND>::iterator OrderedTimeMap<KTYPE, TY
 	if (key <= firstKey_)
 		return iterator(this, 0);
 	return internalSearch<KTYPE, TYPE, ALTFIND>(*this, key, SearchType::UpperBound);
+}
+
+
+template <typename KTYPE, typename TYPE, int ALTFIND>
+TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::operator [](KTYPE key)
+{
+	if (key == lastKey_)
+		return last();
+	if (key > lastKey_)
+		return this->insert(key, TYPE());
+	auto it = find(key);
+	if (it == constEnd())
+		return this->insert(key, TYPE());
+	return it.value();
+}
+
+template <typename KTYPE, typename TYPE, int ALTFIND>
+typename OrderedTimeMap<KTYPE, TYPE, ALTFIND>::iterator OrderedTimeMap<KTYPE, TYPE, ALTFIND>::find(KTYPE key)
+{
+	auto it = lowerBound(key);
+	if (it == constEnd() || it.key() == key)
+		return it;
+	return constEnd();
+}
+
+template <typename KTYPE, typename TYPE, int ALTFIND>
+typename OrderedTimeMap<KTYPE, TYPE, ALTFIND>::iterator OrderedTimeMap<KTYPE, TYPE, ALTFIND>::findAlt(KTYPE key)
+{
+	if (!count_ || key > lastKey_ || key < firstKey_)
+		return constEnd();
+	if (key == lastKey_)
+		return iterator(this, count_-1);
+	if (key == firstKey_)
+		return iterator(this, 0);
+	return internalSearch<KTYPE, TYPE, ALTFIND>(*this, key, SearchType::Find);
 }
 
 #ifdef QLIST_H
