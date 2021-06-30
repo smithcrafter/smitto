@@ -137,10 +137,11 @@ public:
 private:
 	void reserve(int k) {if (k > 0) data_ = malloc(dataSize_ = k);}
 	void realoc(int addk) {void *ldata = data_; reserve(dataSize_+addk); memcpy(data_, ldata, dataSize_-addk); free(ldata);}
-	void dealoc() {if (data_) free(data_); data_ = nullptr; dataSize_ = 0; clear();}
+	void dealoc() {clear(); if (data_) free(data_); data_ = nullptr; dataSize_ = 0;}
+	TYPE& insertBefore(int pos, KTYPE key, TYPE&& value);
 
 private:
-	KTYPE dataSize_ = 0;
+	int dataSize_ = 0;
 	void* data_ = nullptr;
 	int count_ = 0;
 	KTYPE lastKey_ = 0;
@@ -164,7 +165,7 @@ TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::insert(KTYPE key, TYPE value)
 	}
 	if (key > lastKey_)
 	{
-		if (KTYPE((count_+1)*sizeof(TimePair)) > dataSize_)
+		if (int((count_+1)*sizeof(TimePair)) > dataSize_)
 			realoc(dataSize_);
 		TimePair* pair = (TimePair*)((char*)data_+count_*sizeof(TimePair));
 		*pair = TimePair(key, value);
@@ -179,28 +180,34 @@ TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::insert(KTYPE key, TYPE value)
 		pair->value = value;
 		return pair->value;
 	}
-	if (KTYPE((count_+1)*sizeof(TimePair)) > dataSize_)
+	return insertBefore(it.pos(), key, std::move(value));
+}
+
+template <typename KTYPE, typename TYPE, int ALTFIND>
+TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::insertBefore(int pos, KTYPE key, TYPE&& value)
+{
+	if (int((count_+1)*sizeof(TimePair)) > dataSize_)
 	{
 		void *ldata = data_;
 		reserve(2*dataSize_);
-		if (it.pos() > 0)
-			memcpy((char*)data_, ldata, it.pos()*sizeof(TimePair));
-		DWLOG(it.pos() > 0 ? QString("Inserting element %1 in the middle and increasing the size").arg(key) :
+		if (pos > 0)
+			memcpy((char*)data_, ldata, pos*sizeof(TimePair));
+		DWLOG(pos > 0 ? QString("Inserting element %1 in the middle and increasing the size").arg(key) :
 							 QString("Inserting element %1 at the beginning and increasing the size").arg(key));
-		memcpy((char*)data_+(it.pos()+1)*sizeof(TimePair), (char*)ldata+(it.pos())*sizeof(TimePair),
-			   (count_ - it.pos())*sizeof(TimePair));
+		memcpy((char*)data_+(pos+1)*sizeof(TimePair), (char*)ldata+(pos)*sizeof(TimePair),
+			   (count_ - pos)*sizeof(TimePair));
 		free(ldata);
 	}
 	else
 	{
-		DWLOG(it.pos() > 0 ? QString("Inserting element %1 in the middle is highly discouraged").arg(key) :
+		DWLOG(pos > 0 ? QString("Inserting element %1 in the middle is highly discouraged").arg(key) :
 							 QString("Inserting element %1 at the beginning is highly discouraged").arg(key));
-		memmove((char*)data_+(it.pos()+1)*sizeof(TimePair), (char*)data_+(it.pos())*sizeof(TimePair),
-				(count_-it.pos())*sizeof(TimePair));
+		memmove((char*)data_+(pos+1)*sizeof(TimePair), (char*)data_+(pos)*sizeof(TimePair),
+				(count_-pos)*sizeof(TimePair));
 	}
-	TimePair* pair = (TimePair*)((char*)data_+it.pos()*sizeof(TimePair));
+	TimePair* pair = (TimePair*)((char*)data_+pos*sizeof(TimePair));
 	*pair = TimePair(key, value);
-	if (it.pos() == 0)
+	if (pos == 0)
 		firstKey_ = key;
 	count_++;
 	return pair->value;
@@ -288,8 +295,7 @@ enum class SearchType
 {
 	LowerBound,
 	UpperBound,
-	Find,
-	Value
+	Find
 };
 
 template <typename KTYPE, typename TYPE, int ALTFIND = 0>
@@ -384,9 +390,9 @@ TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::operator [](KTYPE key)
 		return last();
 	if (key > lastKey_)
 		return this->insert(key, TYPE());
-	auto it = find(key);
-	if (it == constEnd())
-		return this->insert(key, TYPE());
+	auto it = lowerBound(key);
+	if (it.key() != key)
+		return this->insertBefore(it.pos(), key, TYPE());
 	return it.value();
 }
 
