@@ -80,7 +80,7 @@ public:
 	inline int size() const {return count_;}
 	inline bool isEmpty() const {return !count_;}
 	inline bool empty() const {return isEmpty();}
-	TYPE& insert(KTYPE key, TYPE value);
+	iterator insert(KTYPE key, TYPE value);
 	void remove(KTYPE key);
 	inline void clear() {count_ = 0; lastKey_ = 0; firstKey_ = 0;}
 
@@ -150,7 +150,7 @@ private:
 };
 
 template <typename KTYPE, typename TYPE, int ALTFIND>
-TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::insert(KTYPE key, TYPE value)
+typename OrderedTimeMap<KTYPE, TYPE, ALTFIND>::iterator OrderedTimeMap<KTYPE, TYPE, ALTFIND>::insert(KTYPE key, TYPE value)
 {
 	if (!dataSize_)
 		reserve(BASESIZE*sizeof(TimePair));
@@ -161,7 +161,7 @@ TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::insert(KTYPE key, TYPE value)
 		count_++;
 		firstKey_ = key;
 		lastKey_ = key;
-		return pair->value;
+		return constBegin();
 	}
 	if (key > lastKey_)
 	{
@@ -171,16 +171,17 @@ TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::insert(KTYPE key, TYPE value)
 		*pair = TimePair(key, value);
 		count_++;
 		lastKey_ = key;
-		return pair->value;
+		return iterator(this, count_-1);
 	}
 	auto it = lowerBound(key);
 	if (it.key() == key)
 	{
 		TimePair* pair = (TimePair*)((char*)data_+it.pos()*sizeof(TimePair));
 		pair->value = value;
-		return pair->value;
+		return it;
 	}
-	return insertBefore(it.pos(), key, std::move(value));
+	insertBefore(it.pos(), key, std::move(value));
+	return it;
 }
 
 template <typename KTYPE, typename TYPE, int ALTFIND>
@@ -389,7 +390,7 @@ TYPE& OrderedTimeMap<KTYPE, TYPE, ALTFIND>::operator [](KTYPE key)
 	if (key == lastKey_)
 		return last();
 	if (key > lastKey_)
-		return this->insert(key, TYPE());
+		return this->insert(key, TYPE()).value();
 	auto it = lowerBound(key);
 	if (it.key() != key)
 		return this->insertBefore(it.pos(), key, TYPE());
