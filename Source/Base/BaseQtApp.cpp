@@ -16,7 +16,9 @@
  */
 
 #include "BaseQtApp.h"
+#include <smitto/system/exit.h>
 #include <ramio/log/log.h>
+#include <ramio/settings/arg.h>
 #include <exception>
 
 namespace Smitto {
@@ -24,6 +26,8 @@ namespace Smitto {
 BaseQtApp::BaseQtApp(int& argc, char** argv, int af)
 	: QApplication(argc, argv, af)
 {
+	Ramio::initLogFromArguments();
+	new Smitto::ExitHelper(*this);
 }
 
 BaseQtApp::~BaseQtApp()
