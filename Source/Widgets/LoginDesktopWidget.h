@@ -15,33 +15,31 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Paths.h"
-// Qt5
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QStandardPaths>
+#pragma once
+
+#include <smitto.h>
+#include <QtWidgets/QWidget>
+class QLineEdit;
 
 namespace Smitto {
 
-#ifdef Q_OS_LINUX
-	const QString tmppath = "/tmp/";
-#elif defined Q_OS_WIN
-	const  QString tmppath = "C:/tmp/";
-#endif
-
-
-QString appDataPath()
+class SMITTO_LIB_EXPORT LoginDesktopWidget : public QWidget
 {
-	QString path = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation).first();
-	QDir(path).mkpath(path);
-	return path;
-}
+	Q_OBJECT
+public:
+	LoginDesktopWidget(const QString& title, QWidget* parent = Q_NULLPTR);
 
-QString appObjectsPath()
-{
-	QString path = QCoreApplication::applicationDirPath() + "/Objects";
-	QDir(path).mkpath(path);
-	return path;
-}
+	void autoLogin();
+
+signals:
+	void accepted(const QString& login, const QString& password);
+
+private:
+	void checkLogin();
+
+private:
+	QLineEdit* loginEdit_;
+	QLineEdit* passEdit_;
+};
 
 } // Smitto::

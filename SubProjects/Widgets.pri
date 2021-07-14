@@ -2,17 +2,19 @@
 
 HEADERS += \
 	$$PWD/../Source/Widgets/LogLabelsListWidget.h \
+	$$PWD/../Source/Widgets/LoginDesktopWidget.h \
 	$$PWD/../Source/Widgets/MenuStackedWidget.h \
-	$$PWD/../Source/Widgets/LoginBaseWidget.h \
 	$$PWD/../Source/Widgets/ServiceStatusWidget.h \
 	$$PWD/../Source/Widgets/CustomTitleWidget.h \
+	$$PWD/../Source/Widgets/AuthorizationMobileWidgets.h \
 
 SOURCES += \
 	$$PWD/../Source/Widgets/LogLabelsListWidget.cpp \
+	$$PWD/../Source/Widgets/LoginDesktopWidget.cpp \
 	$$PWD/../Source/Widgets/MenuStackedWidget.cpp \
-	$$PWD/../Source/Widgets/LoginBaseWidget.cpp \
 	$$PWD/../Source/Widgets/ServiceStatusWidget.cpp \
 	$$PWD/../Source/Widgets/CustomTitleWidget.cpp \
+	$$PWD/../Source/Widgets/AuthorizationMobileWidgets.cpp \
 
 # ItemDelegate
 

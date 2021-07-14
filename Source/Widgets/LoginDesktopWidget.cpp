@@ -15,7 +15,7 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "LoginBaseWidget.h"
+#include "LoginDesktopWidget.h"
 #include <Sets/Config.h>
 #include <Sets/UISets.h>
 #include <Sets/Arg.h>
@@ -31,7 +31,7 @@
 
 namespace Smitto {
 
-LoginBaseWidget::LoginBaseWidget(const QString& title, QWidget* parent)
+LoginDesktopWidget::LoginDesktopWidget(const QString& title, QWidget* parent)
 	: QWidget(parent)
 {
 	this->setWindowTitle(title);
@@ -46,15 +46,15 @@ LoginBaseWidget::LoginBaseWidget(const QString& title, QWidget* parent)
 	passEdit_->setEchoMode(QLineEdit::PasswordEchoOnEdit);
 	QPushButton* button;
 	layout->addWidget(button = new QPushButton(tr("Вход")), 1, 3, 2, 1);
-	connect(button, &QPushButton::clicked, this, &LoginBaseWidget::checkLogin);
+	connect(button, &QPushButton::clicked, this, &LoginDesktopWidget::checkLogin);
 	button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 	if (APP_ARG_CONTAINS(APP_ARGUMENT("AUTOLOGIN")))
-		QTimer::singleShot(200, this, &LoginBaseWidget::autoLogin);
+		QTimer::singleShot(200, this, &LoginDesktopWidget::autoLogin);
 	loginEdit_->setFocus();
 }
 
-void LoginBaseWidget::autoLogin()
+void LoginDesktopWidget::autoLogin()
 {
 	QString login = Ramio::config().value("User/Login");
 	if (login.isEmpty())
@@ -75,7 +75,7 @@ void LoginBaseWidget::autoLogin()
 	checkLogin();
 }
 
-void LoginBaseWidget::checkLogin()
+void LoginDesktopWidget::checkLogin()
 {
 	if (loginEdit_->text().isEmpty())
 		loginEdit_->setFocus();

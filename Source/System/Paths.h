@@ -24,4 +24,7 @@ namespace Smitto {
 
 extern const SMITTO_LIB_EXPORT QString tmppath;
 
+QString SMITTO_LIB_EXPORT appDataPath();
+QString SMITTO_LIB_EXPORT appObjectsPath();
+
 } // Smitto::

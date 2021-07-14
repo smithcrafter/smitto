@@ -20,26 +20,43 @@
 #include <smitto.h>
 #include <QtWidgets/QWidget>
 class QLineEdit;
+class QSpinBox;
+#include <ramio.h>
+namespace Ramio {struct ConnectionParameters;}
 
 namespace Smitto {
 
-class SMITTO_LIB_EXPORT LoginBaseWidget : public QWidget
+class LoginMobileWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	LoginBaseWidget(const QString& title, QWidget* parent = Q_NULLPTR);
+	LoginMobileWidget(const Ramio::ConnectionParameters& params, QWidget* parent = Q_NULLPTR, bool requestPort = false);
+	~LoginMobileWidget();
 
-	void autoLogin();
+	void checkAndPress();
 
 signals:
-	void accepted(const QString& login, const QString& password);
+	void acepted(const Ramio::ConnectionParameters& params);
 
 private:
-	void checkLogin();
+	void onButtonClicked();
 
 private:
+	QLineEdit* hostEdit_;
 	QLineEdit* loginEdit_;
-	QLineEdit* passEdit_;
+	QLineEdit* passwordEdit_;
+	QSpinBox* portEdit_ = Q_NULLPTR;
+};
+
+class ConnectingWidget : public QWidget
+{
+	Q_OBJECT
+public:
+	ConnectingWidget(QWidget* parent = Q_NULLPTR);
+	~ConnectingWidget();
+
+signals:
+	void canceled();
 };
 
 } // Smitto::
