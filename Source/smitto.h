@@ -9,4 +9,3 @@
 #else
 	# define SMITTO_LIB_EXPORT Q_DECL_IMPORT
 #endif
-

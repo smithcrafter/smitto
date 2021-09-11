@@ -66,6 +66,7 @@ void RemoteSessionManager::onQueryReceived(Ramio::Proto::Queries query, const Ra
 			sesion->data().login = qlp.username;
 			sesion->data().userId = user->id();
 			answerPacket.res = 0;
+			answerPacket.userId = QString::number(user->id());
 			answerPacket.name = user->data().name;
 			answerPacket.uuid = user->uuidStr();
 			answerPacket.sessionKey = sesion->uuidStr();

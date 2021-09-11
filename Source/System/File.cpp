@@ -15,8 +15,8 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "File.h"
+#include <ramio/log/log.h>
 // Qt5
 #include <QtCore/QByteArray>
 #include <QtCore/QFile>
@@ -32,6 +32,8 @@ QByteArray readAllFile(const QString& filepath)
 		result = file.readAll();
 		file.close();
 	}
+	else
+		WLOG(QString("File %1 not opened").arg(filepath));
 	return result;
 }
 
