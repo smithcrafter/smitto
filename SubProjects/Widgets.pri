@@ -7,6 +7,7 @@ HEADERS += \
 	$$PWD/../Source/Widgets/ServiceStatusWidget.h \
 	$$PWD/../Source/Widgets/CustomTitleWidget.h \
 	$$PWD/../Source/Widgets/AuthorizationMobileWidgets.h \
+	$$PWD/../Source/Widgets/MobileScrollArea.h \
 
 SOURCES += \
 	$$PWD/../Source/Widgets/LogLabelsListWidget.cpp \
@@ -15,6 +16,7 @@ SOURCES += \
 	$$PWD/../Source/Widgets/ServiceStatusWidget.cpp \
 	$$PWD/../Source/Widgets/CustomTitleWidget.cpp \
 	$$PWD/../Source/Widgets/AuthorizationMobileWidgets.cpp \
+	$$PWD/../Source/Widgets/MobileScrollArea.cpp \
 
 # ItemDelegate
 
