@@ -20,6 +20,7 @@
 #include "RemoteSession.h"
 namespace Ramio {class ConnectionHandler; class Components; struct ConnectionInfo;
 namespace Proto { struct QueryPacket; enum class Queries;
+struct QPGetDataObject; struct APGetDataObject;
 struct QPGetDataSet; struct APGetDataSet; struct QPCreateDataObject; struct APCreateDataObject;
 struct QPSaveDataObject; struct APSaveDataObject; struct QPDeleteDataObject; struct APDeleteDataObject;
 }}
@@ -38,6 +39,9 @@ public:
 	RemoteSessionSet& sessions() {return sessions_;}
 
 protected:
+	virtual bool specialGetDataObject(const Ramio::Proto::QPGetDataObject& query, Ramio::Proto::APGetDataObject& answer,
+							  Smitto::RemoteSession* session) {
+				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}
 	virtual bool specialGetDataSet(const Ramio::Proto::QPGetDataSet& query, Ramio::Proto::APGetDataSet& answer,
 								   RemoteSession* session) {
 				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}

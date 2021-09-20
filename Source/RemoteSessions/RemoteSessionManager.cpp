@@ -94,7 +94,18 @@ void RemoteSessionManager::onQueryReceived(Ramio::Proto::Queries query, const Ra
 
 	session->changer().data().queryTime = QDateTime::currentDateTime();
 
-	if (query == Ramio::Proto::Queries::GetDataSet)
+	if (query == Ramio::Proto::Queries::GetDataObject)
+	{
+		auto& queryPacket = reinterpret_cast<const Ramio::Proto::QPGetDataObject&>(packet);
+		Ramio::Proto::APGetDataObject answerPacket(packet.pid);
+		if (specialGetDataObject(queryPacket, answerPacket, session))
+		{
+			// empty block
+		}
+		else
+			answerPacket.setResDesc(RD_DATA_ERROR, tr("Данные не найдены"));
+	}
+	else if (query == Ramio::Proto::Queries::GetDataSet)
 	{
 		auto& queryPacket = reinterpret_cast<const Ramio::Proto::QPGetDataSet&>(packet);
 		Ramio::Proto::APGetDataSet answerPacket(packet.pid);
