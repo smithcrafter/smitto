@@ -27,15 +27,15 @@ namespace Smitto {
  * @brief The TelegramBot class
  * Справочник по Bot API https://tlgrm.ru/docs/bots/api
  */
-class TelegramBot : public Service
+class TelegramService : public Service
 {
 	Q_OBJECT
 public:
-	TelegramBot(QObject* parent = Q_NULLPTR);
-	~TelegramBot() Q_DECL_OVERRIDE;
+	TelegramService(QObject* parent = Q_NULLPTR);
+	~TelegramService() Q_DECL_OVERRIDE;
 
-	int chatId() {return chatid_;}
-	void setChatId(int chatid) {chatid_ = chatid;}
+	int chatId() {return chatId_;}
+	void setChatId(int chatid) {chatId_ = chatid;}
 
 	void auth();
 	void getUpdates();
@@ -59,8 +59,8 @@ private:
 	QString token_;
 	QNetworkAccessManager& manager_;
 	QNetworkReply *getUpdatesReply_ = Q_NULLPTR;
-	int chatid_;
-	int update_id_ = 0;
+	int chatId_ = 0;
+	int updateId_ = 0;
 };
 
 } // Smitto::

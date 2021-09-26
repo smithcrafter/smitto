@@ -2,8 +2,8 @@
 
 HEADERS += \
 	$$PWD/../Source/Services/Service.h \
-	$$PWD/../Source/Services/TelegramBot.h \
+	$$PWD/../Source/Services/TelegramService.h \
 
 SOURCES += \
 	$$PWD/../Source/Services/Service.cpp \
-	$$PWD/../Source/Services/TelegramBot.cpp \
+	$$PWD/../Source/Services/TelegramService.cpp \

@@ -15,7 +15,7 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "TelegramBot.h"
+#include "TelegramService.h"
 #include <ramio/settings/settings.h>
 #include <ramio/settings/config.h>
 #include <ramio/log/log.h>
@@ -33,42 +33,42 @@
 
 namespace Smitto {
 
-TelegramBot::TelegramBot(QObject* parent)
-	: Smitto::Service("TelegramBot", 1000, parent),
+TelegramService::TelegramService(QObject* parent)
+	: Smitto::Service("TelegramService", 1000, parent),
 	  login_(Ramio::config().value("Telegram/Botname")),
 	  token_(Smitto::readAllFile(qApp->applicationDirPath() % QString("/Confidentially/tgbot.key")).trimmed()),
 	  manager_(*new QNetworkAccessManager(this))
 {
 }
 
-TelegramBot::~TelegramBot()
+TelegramService::~TelegramService()
 {
 }
 
-void TelegramBot::auth()
+void TelegramService::auth()
 {
 	QNetworkRequest request;
 	QString url = QString("https://api.telegram.org/bot%1/getMe").arg(token_);
 	request.setUrl(QUrl(url));
 	auto reply = manager_.get(request);
-	connect(reply, &QNetworkReply::finished, this, &TelegramBot::onGetAuth);
+	connect(reply, &QNetworkReply::finished, this, &TelegramService::onGetAuth);
 }
 
-void TelegramBot::getUpdates()
+void TelegramService::getUpdates()
 {
 	if (getUpdatesReply_)
 		return;
 	QNetworkRequest request;
-	QString url = QString("https://api.telegram.org/bot%1/getUpdates?offset=%2").arg(token_).arg(update_id_+1);
+	QString url = QString("https://api.telegram.org/bot%1/getUpdates?offset=%2").arg(token_).arg(updateId_+1);
 	request.setUrl(QUrl(url));
 	getUpdatesReply_ = manager_.get(request);
-	connect(getUpdatesReply_, &QNetworkReply::finished, this, &TelegramBot::onGetUpdates);
+	connect(getUpdatesReply_, &QNetworkReply::finished, this, &TelegramService::onGetUpdates);
 }
 
-void TelegramBot::sendMessage(const QString& text, int chatid)
+void TelegramService::sendMessage(const QString& text, int chatid)
 {
 	if (!chatid)
-		chatid = chatid_;
+		chatid = chatId_;
 	if (!chatid || token_.isEmpty())
 		return;
 
@@ -85,10 +85,10 @@ void TelegramBot::sendMessage(const QString& text, int chatid)
 	jsdoc.setObject(jsObject);
 
 	auto reply = manager_.post(request, jsdoc.toJson());
-	connect(reply, &QNetworkReply::finished, this, &TelegramBot::onSendMessage);
+	connect(reply, &QNetworkReply::finished, this, &TelegramService::onSendMessage);
 }
 
-void TelegramBot::onGetAuth()
+void TelegramService::onGetAuth()
 {
 	auto* reply = reinterpret_cast<QNetworkReply*>(sender());
 	if (reply->error() != QNetworkReply::NetworkError::NoError)
@@ -111,7 +111,7 @@ void TelegramBot::onGetAuth()
 	reply->deleteLater();
 }
 
-void TelegramBot::onGetUpdates()
+void TelegramService::onGetUpdates()
 {
 	auto* reply = reinterpret_cast<QNetworkReply *>(sender());
 	if (reply->error() != QNetworkReply::NetworkError::NoError)
@@ -130,14 +130,14 @@ void TelegramBot::onGetUpdates()
 		for (const QJsonValue& value: updateArray)
 		{
 			int update_id = value.toObject().value("update_id").toInt();
-			if (update_id > update_id_)
+			if (update_id > updateId_)
 			{
-				update_id_ = update_id;
+				updateId_ = update_id;
 				QJsonValue valMessage = value.toObject().value("message");
 				if (valMessage.isObject())
 				{
 					QJsonObject joMessage = valMessage.toObject();
-					if (joMessage.value("from").toObject().value("id").toInt() == chatid_)
+					if (joMessage.value("from").toObject().value("id").toInt() == chatId_)
 					{
 						emit messageReceived(joMessage.value("text").toString());
 					}
@@ -151,7 +151,7 @@ void TelegramBot::onGetUpdates()
 	getUpdatesReply_ = Q_NULLPTR;
 }
 
-void TelegramBot::onSendMessage()
+void TelegramService::onSendMessage()
 {
 	auto* reply = reinterpret_cast<QNetworkReply *>(sender());
 	if (reply->error() != QNetworkReply::NetworkError::NoError)
@@ -172,7 +172,7 @@ void TelegramBot::onSendMessage()
 	reply->deleteLater();
 }
 
-bool TelegramBot::prepareStart()
+bool TelegramService::prepareStart()
 {
 	if (token_.isEmpty())
 	{
@@ -180,20 +180,20 @@ bool TelegramBot::prepareStart()
 		return false;
 	}
 
-	update_id_ = Sets.get("TelegramBot/update_id").toInt();
-	MLOG("TelegramBot", QString("Подготовка сервиса, update_id=%1").arg(update_id_));
+	updateId_ = Sets.get("TelegramBot/update_id").toInt();
+	MLOG("TelegramBot", QString("Подготовка сервиса, update_id=%1").arg(updateId_));
 	auth();
 	return true;
 }
 
-void TelegramBot::processWork()
+void TelegramService::processWork()
 {
 	getUpdates();
 }
 
-void TelegramBot::processStop()
+void TelegramService::processStop()
 {
-	Sets.set("TelegramBot/update_id", QString::number(update_id_));
+	Sets.set("TelegramBot/update_id", QString::number(updateId_));
 }
 
 } // Smitto::
