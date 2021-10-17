@@ -64,14 +64,14 @@ public:
 
 // standard
 	inline TYPE operator [](KTYPE key) const {auto it = find(key); if (it != constEnd()) return it.value();
-		DWLOG("OKM: Miss - key"); return emptyVal;}
+		DWLOG(name + " OKM: Miss - key"); return emptyVal;}
 	TYPE& operator [](KTYPE key);
 	inline TYPE value(KTYPE key) const {return const_cast<OrderedKeyMap*>(this)->operator[] (key);}
 	inline TYPE& first() {if (count_) return (*(TimePair*)((char*)data_)).value;
-		DWLOG("OKM: Miss - first"); return emptyVal;}
+		DWLOG(name + " OKM: Miss - first"); return emptyVal;}
 	inline TYPE first() const {return const_cast<OrderedKeyMap*>(this)->first(); }
 	inline TYPE& last() {if (count_) return (*(TimePair*)((char*)data_+(count_-1)*sizeof(TimePair))).value;
-		DWLOG("OKM: Miss - last"); return emptyVal;}
+		DWLOG(name + " OKM: Miss - last"); return emptyVal;}
 	inline TYPE last() const {return const_cast<OrderedKeyMap*>(this)->last();}
 	inline KTYPE lastKey() const {return lastKey_;}
 	inline KTYPE firstKey() const {return firstKey_;}
@@ -116,7 +116,6 @@ public:
 	iterator upperBound(KTYPE key) const {auto it = lowerBound(key); if (constEnd() == it || key < it.key()) return it; return ++it;}
 	iterator upperBoundAlt(KTYPE key) const;
 
-
 // constructors
 	OrderedKeyMap(int size = BASESIZE) {if (size > 0) reserve(size*sizeof(TimePair));}
 	OrderedKeyMap(const OrderedKeyMap& o) {
@@ -139,6 +138,10 @@ public:
 	inline bool operator == (const OrderedKeyMap& o) const {return count_ == o.count_ && firstKey_ == o.firstKey_ && lastKey_ == o.lastKey_
 				&& memcmp(data_, o.data_, count_*sizeof(TimePair)) == 0;}
 
+
+#ifdef QSTRING_H
+	QString name;
+#endif
 
 private:
 	void reserve(int k) {if (k > 0) data_ = malloc(dataSize_ = k);}
@@ -184,7 +187,7 @@ typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE
 	{
 		if (it.pos() != count_-1)
 		{
-			DWLOG(QString("OKM: Вставка в середину %1 из %2").arg(it.pos()).arg(count_));
+			DWLOG(name + QString(" OKM: Вставка в середину %1 из %2").arg(it.pos()).arg(count_));
 		}
 		TimePair* pair = (TimePair*)((char*)data_+it.pos()*sizeof(TimePair));
 		pair->value = value;
@@ -203,16 +206,16 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertBefore(int pos, KTYPE key, TYPE
 		reserve(2*dataSize_);
 		if (pos > 0)
 			memcpy((char*)data_, ldata, pos*sizeof(TimePair));
-		DWLOG(pos > 0 ? QString("OKM: Inserting element %1 in the middle and increasing the size").arg(key) :
-							 QString("Inserting element %1 at the beginning and increasing the size").arg(key));
+		DWLOG(name + (pos > 0 ? QString("OKM: Inserting element %1 in the middle and increasing the size").arg(key) :
+							 QString("Inserting element %1 at the beginning and increasing the size").arg(key)));
 		memcpy((char*)data_+(pos+1)*sizeof(TimePair), (char*)ldata+(pos)*sizeof(TimePair),
 			   (count_ - pos)*sizeof(TimePair));
 		free(ldata);
 	}
 	else
 	{
-		DWLOG(pos > 0 ? QString("OKM: Inserting element %1 in the middle is highly discouraged").arg(key) :
-							 QString("Inserting element %1 at the beginning is highly discouraged").arg(key));
+		DWLOG(name + (pos > 0 ? QString("OKM: Inserting element %1 in the middle is highly discouraged").arg(key) :
+							 QString("Inserting element %1 at the beginning is highly discouraged").arg(key)));
 		memmove((char*)data_+(pos+1)*sizeof(TimePair), (char*)data_+(pos)*sizeof(TimePair),
 				(count_-pos)*sizeof(TimePair));
 	}
@@ -238,7 +241,7 @@ void OrderedKeyMap<KTYPE, TYPE, ALTFIND>::remove(KTYPE key)
 		}
 		return;
 	}
-	DWLOG(QString("OKM: Removing element of element %1 from the middle is highly discouraged").arg(key));
+	DWLOG(name + QString("OKM: Removing element of element %1 from the middle is highly discouraged").arg(key));
 	auto it = lowerBound(key);
 	if (it == constEnd())
 		return;
@@ -290,7 +293,7 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::valueNearPos(KTYPE key, int pos)
 			auto& data2 = dataAt(pos2);
 			if (data.key == key)
 			{
-				DWLOG(QString("OKM: Miss - key %1 pos %2 pos2 %3").arg(key).arg(pos).arg(pos2));
+				DWLOG(name + QString("OKM: Miss - key %1 pos %2 pos2 %3").arg(key).arg(pos).arg(pos2));
 				return data2.value;
 			}
 			else if (p*(data2.key - key) > 0)
@@ -298,7 +301,7 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::valueNearPos(KTYPE key, int pos)
 
 		} while(pos2 >=0 && pos2 < count_);
 	}
-	DWLOG("OKM: Miss - valueNearPos");
+	DWLOG(name + "OKM: Miss - valueNearPos");
 	return emptyVal;
 }
 
