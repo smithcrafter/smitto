@@ -59,7 +59,8 @@ ToogleWidget::ToogleWidget(const QString& text, bool checked, QWidget* parent)
 
 void ToogleWidget::mousePressEvent(QMouseEvent* event)
 {
-	setChecked(!isChecked());
+	click();
+	emit toggled(isChecked());
 	update();
 	timer_->start(100/10);
 	event->accept();
