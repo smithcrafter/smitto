@@ -99,6 +99,7 @@ public:
 #ifdef QPAIR_H
 	QPair<KTYPE, KTYPE> interval() const {return qMakePair(firstKey_, lastKey_);}
 #endif
+
 	void trimAfter(KTYPE key) {auto it = lowerBound(key); if (it == constBegin()) return; count_ = it.pos()+1; lastKey_ = it.key();}
 
 // iterators
@@ -138,6 +139,22 @@ public:
 	inline bool operator == (const OrderedKeyMap& o) const {return count_ == o.count_ && firstKey_ == o.firstKey_ && lastKey_ == o.lastKey_
 				&& memcmp(data_, o.data_, count_*sizeof(TimePair)) == 0;}
 
+
+	OrderedKeyMap mid(KTYPE from, KTYPE to) const {
+		auto itStart = lowerBound(from);
+		auto itEnd = lowerBound(to);
+		if (itStart == end() || itEnd.pos() < itStart.pos())
+			return OrderedKeyMap(0);
+		if (itEnd == end())
+			--itEnd;
+		int count = itEnd.pos() - itStart.pos()+1;
+		OrderedKeyMap res(count);
+		memcpy(res.data_, data_, count*sizeof(TimePair));
+		res.firstKey_ = itStart.key();
+		res.lastKey_ = itEnd.key();
+		res.count_ = count;
+		return res;
+	}
 
 #ifdef QSTRING_H
 	QString name;
