@@ -140,7 +140,7 @@ public:
 				&& memcmp(data_, o.data_, count_*sizeof(TimePair)) == 0;}
 
 
-	OrderedKeyMap mid(KTYPE from, KTYPE to) const {
+	OrderedKeyMap mid(KTYPE from, KTYPE to, int reserve = 0) const {
 		auto itStart = lowerBound(from);
 		auto itEnd = lowerBound(to);
 		if (itStart == end() || itEnd.pos() < itStart.pos())
@@ -148,7 +148,7 @@ public:
 		if (itEnd == end())
 			--itEnd;
 		int count = itEnd.pos() - itStart.pos()+1;
-		OrderedKeyMap res(count);
+		OrderedKeyMap res(count+reserve);
 		memcpy(res.data_, data_, count*sizeof(TimePair));
 		res.firstKey_ = itStart.key();
 		res.lastKey_ = itEnd.key();
