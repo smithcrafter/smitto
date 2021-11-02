@@ -149,7 +149,7 @@ public:
 			--itEnd;
 		int count = itEnd.pos() - itStart.pos()+1;
 		OrderedKeyMap res(count+reserve);
-		memcpy(res.data_, data_, count*sizeof(TimePair));
+		memcpy(res.data_, (char*)data_+itStart.pos()*sizeof(TimePair), count*sizeof(TimePair));
 		res.firstKey_ = itStart.key();
 		res.lastKey_ = itEnd.key();
 		res.count_ = count;
