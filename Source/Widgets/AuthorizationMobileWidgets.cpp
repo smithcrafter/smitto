@@ -64,8 +64,8 @@ void LoginMobileWidget::onButtonClicked()
 {
 	Ramio::ConnectionParameters params;
 	params.host = hostEdit_->text();
-	params.login = loginEdit_->text();
-	params.password = passwordEdit_->text();
+	params.login = loginEdit_->text().trimmed();
+	params.password = passwordEdit_->text().trimmed();
 	emit acepted(params);
 }
 
