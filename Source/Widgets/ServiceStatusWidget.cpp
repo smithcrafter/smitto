@@ -17,14 +17,12 @@
 
 #include "ServiceStatusWidget.h"
 #include <Services/Service.h>
-// Ramio
-#include <Global/Text.h>
-#include <Gui/Global.h>
-// Qt5
-#include <QtWidgets/QCheckBox>
+#include "ToogleWidget.h"
+#include <ramio/gui/global.h>
+#include <ramio/settings/config.h>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QToolButton>
-
+#include <QDebug>
 namespace Smitto {
 
 ServiceStatusWidget::ServiceStatusWidget(Service& service, QWidget* parent)
@@ -41,10 +39,14 @@ ServiceStatusWidget::ServiceStatusWidget(Service& service, QWidget* parent)
 	connect(&service, &Service::activeChanged, this, &ServiceStatusWidget::onActiveChanged);
 	connect(startButton_, &QToolButton::clicked, &service, &Service::start);
 	connect(stopButton_, &QToolButton::clicked, &service, &Service::stop);
-	auto checkbox = new QCheckBox("dlog", this);
-	layout->addWidget(checkbox);
-	connect(checkbox, &QCheckBox::toggled, &service, &Service::setDlog);
+	layout->addWidget(dlogBox_ = new ToogleWidget("dlog", false, this));
+	connect(dlogBox_, &QAbstractButton::toggled, &service, &Service::setDlog);
 	onActiveChanged(service.started());
+}
+
+void ServiceStatusWidget::setDlogBoxHidden()
+{
+	dlogBox_->setHidden(true);
 }
 
 void ServiceStatusWidget::onActiveChanged(bool value)
@@ -64,6 +66,13 @@ ServicesStatusWidget::ServicesStatusWidget(QList<Service*> services, QWidget* pa
 	for (auto service: services)
 		layout->addWidget(new ServiceStatusWidget(*service, this));
 	layout->addStretch();
+	layout->addWidget(checkbox_ = new ToogleWidget(
+				tr("Сохранять статусы сервисов"), Ramio::config().value("Application/SaveServicesStatus").toInt(), this));
+}
+
+ServicesStatusWidget::~ServicesStatusWidget()
+{
+	 Ramio::changeConfig().setValue("Application/SaveServicesStatus", int(checkbox_->isChecked()));
 }
 
 } // Smitto::

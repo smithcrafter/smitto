@@ -21,6 +21,7 @@
 #include <QtWidgets/QWidget>
 class QLabel;
 class QToolButton;
+class QAbstractButton;
 
 namespace Smitto {
 
@@ -31,12 +32,15 @@ class ServiceStatusWidget : public QWidget
 public:
 	ServiceStatusWidget(Service& service, QWidget* parent = Q_NULLPTR);
 
+	void setDlogBoxHidden();
+
 private:
 	void onActiveChanged(bool value);
 
 private:
 	QToolButton* startButton_;
 	QToolButton* stopButton_;
+	QAbstractButton* dlogBox_;
 	QLabel* stateLabel_;
 };
 
@@ -44,7 +48,10 @@ class ServicesStatusWidget : public QWidget
 {
 public:
 	ServicesStatusWidget(QList<Service*> services, QWidget* parent = Q_NULLPTR);
-};
+	~ServicesStatusWidget() Q_DECL_OVERRIDE;
 
+private:
+	QAbstractButton* checkbox_;
+};
 
 } // Smitto::
