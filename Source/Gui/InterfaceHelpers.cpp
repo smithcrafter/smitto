@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2022 Vladimir Kuznetsov <smithcoder@yandex.ru> https://smithcoder.ru/
+ * Copyright (C) 2019-2022 Vladimir Kuznetsov <smithcoder@yandex.ru> https://smithcoder.ru/
  *
  * This file is part of the Smitto.
  *
@@ -20,13 +20,15 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QGuiApplication>
 
+namespace Smitto {
 namespace Ui {
 
 QString clipboardText()
 {
-	QClipboard* clipboard = QGuiApplication::clipboard();
-	Q_ASSERT(clipboard);
-	return clipboard->text();
+	if (auto* clipboard = QGuiApplication::clipboard())
+		return clipboard->text();
+	return QString();
 }
 
-}
+} // Ui ::
+} // Smitto ::

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2022 Vladimir Kuznetsov <smithcoder@yandex.ru> https://smithcoder.ru/
+ * Copyright (C) 2019-2022 Vladimir Kuznetsov <smithcoder@yandex.ru> https://smithcoder.ru/
  *
  * This file is part of the Smitto.
  *
@@ -19,8 +19,10 @@
 
 #include <smitto.h>
 
+namespace Smitto {
 namespace Ui {
 
 QString clipboardText();
 
-}
+} // Ui ::
+} // Smitto ::
