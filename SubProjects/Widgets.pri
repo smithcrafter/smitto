@@ -9,6 +9,7 @@ HEADERS += \
 	$$PWD/../Source/Widgets/AuthorizationMobileWidgets.h \
 	$$PWD/../Source/Widgets/MobileScrollArea.h \
 	$$PWD/../Source/Widgets/ToogleWidget.h \
+    $$PWD/../Source/Widgets/PinWidget.h \
 
 SOURCES += \
 	$$PWD/../Source/Widgets/LogLabelsListWidget.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 	$$PWD/../Source/Widgets/AuthorizationMobileWidgets.cpp \
 	$$PWD/../Source/Widgets/MobileScrollArea.cpp \
 	$$PWD/../Source/Widgets/ToogleWidget.cpp \
+    $$PWD/../Source/Widgets/PinWidget.cpp \
 
 # ItemDelegate
 
