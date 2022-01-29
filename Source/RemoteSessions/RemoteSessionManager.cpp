@@ -104,6 +104,7 @@ void RemoteSessionManager::onQueryReceived(Ramio::Proto::Queries query, const Ra
 		}
 		else
 			answerPacket.setResDesc(RD_DATA_ERROR, tr("Данные не найдены"));
+		server_.sendAnswer(query, answerPacket, from);
 	}
 	else if (query == Ramio::Proto::Queries::GetDataSet)
 	{
