@@ -23,16 +23,17 @@
 
 namespace Smitto {
 
-MenuStackedWidget::MenuStackedWidget(const QString& activeStyleSheet, const QString& backgroundStyleSheet, QWidget* parent)
+MenuStackedWidget::MenuStackedWidget(const QString& activeStyleSheet, const QString& backgroundStyleSheet,
+									 Qt::Orientation orientation, QWidget* parent)
 	: QWidget(parent),
 	  activeStyleSheet_(activeStyleSheet),
 	  backgroundStyleSheet_(backgroundStyleSheet)
 {
-	auto* layout = new QHBoxLayout(this);
+	QBoxLayout* layout = orientation == Qt::Horizontal ? static_cast<QBoxLayout*>(new QHBoxLayout(this)) :  static_cast<QBoxLayout*>(new QVBoxLayout(this));
 	UI_SET_ZERO_MARGINSPACING(layout);
 	baseMenuWidget_ = new QWidget(this);
 	baseMenuWidget_->setStyleSheet(backgroundStyleSheet_);
-	menuLayout_ = new QVBoxLayout(baseMenuWidget_);
+	menuLayout_ = orientation == Qt::Horizontal ? static_cast<QBoxLayout*>(new QVBoxLayout(baseMenuWidget_)) : static_cast<QBoxLayout*>(new QHBoxLayout(baseMenuWidget_));
 	UI_SET_ZERO_MARGINSPACING(menuLayout_);
 	layout->addWidget(baseMenuWidget_);
 

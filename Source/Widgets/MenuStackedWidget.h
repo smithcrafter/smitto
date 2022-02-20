@@ -20,13 +20,15 @@
 #include <Gui/SmittoStyleSheets.h>
 #include <Gui/QtWidgetsDeclaration.h>
 #include <QtCore/QMap>
+class QBoxLayout;
 
 namespace Smitto {
 
 class SMITTO_LIB_EXPORT MenuStackedWidget : public QWidget
 {
 public:
-	MenuStackedWidget(const QString& activeStyleSheet, const QString& backgroundStyleSheet, QWidget* parent = Q_NULLPTR);
+	MenuStackedWidget(const QString& activeStyleSheet, const QString& backgroundStyleSheet, Qt::Orientation orientation,
+					  QWidget* parent = Q_NULLPTR);
 	~MenuStackedWidget() Q_DECL_OVERRIDE;
 
 	void selectMenuItem(QWidget* watched);
@@ -53,7 +55,7 @@ private:
 	const QString& backgroundStyleSheet_;
 	QMap<QWidget*, QWidget*> widgets_;
 	QStackedWidget* stackedWidget_;
-	QVBoxLayout* menuLayout_;
+	QBoxLayout* menuLayout_;
 	QVBoxLayout* topStackedLayout_;
 	QVBoxLayout* rigthStackedLayout_;
 	QVBoxLayout* bottomStackedLayout_;
