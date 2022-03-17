@@ -49,7 +49,7 @@ C++/Qt casual classes
 
 **Service** - класс обёртка над таймером с возможностью задания задачи и штатными интерфейсами запуска и останова.
 
-**TelegramBot** - сервис взаимодейтвия с api.telegram.org для общения в конкретном чате.
+**TelegramService** - сервис взаимодейтвия с api.telegram.org для общения в конкретном чате.
 
 
 ### Gui
@@ -66,10 +66,20 @@ C++/Qt casual classes
 ### Widgets
 Самостоятельные виджеты
 
-**LoginBaseWidget** - базовый виджет логина.
+**LoginDesktopWidget** - базовый виджет логина.
+
+**AuthorizationMobileWidgets** - базовые виджеты аворизации.
+
+**LogLabelsListWidget** - видет лога через QLabel.
 
 **ServiceStatusWidget** - видет отображения состояния класса сервиса.
 
 **MenuStackedWidget** - стилизованный табвидежт.
 
 **CustomTitleWidget** - стилизованный заголовок окна.
+
+**MobileScrollArea** - виджет контейнер с возможностью прокрутки пальцем.
+
+**ToogleWidget** - аналог QCheckBox.
+
+**PinWidget** - виджет ввода pin кода.
