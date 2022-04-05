@@ -19,6 +19,7 @@
 
 #include <cstdlib>
 #include <memory.h>
+#include <utility>
 
 #ifndef DWLOG
 #define DWLOG(text)
@@ -32,11 +33,11 @@ namespace Smitto {
 template <typename KTYPE, typename TYPE, int ALTFIND = 0>
 class OrderedKeyMap
 {
-	struct TimePair
+	struct Pair
 	{
 		KTYPE key;
 		TYPE value;
-		TimePair(KTYPE pkey, TYPE pvalue) : key(pkey), value(pvalue) {}
+		Pair(KTYPE pkey, TYPE pvalue) : key(pkey), value(std::move(pvalue)) {}
 	};
 public:
 	struct iterator
@@ -67,10 +68,10 @@ public:
 		DWLOG(name + " OKM: Miss - key"); return emptyVal;}
 	TYPE& operator [](KTYPE key);
 	inline TYPE value(KTYPE key) const {return const_cast<OrderedKeyMap*>(this)->operator[] (key);}
-	inline TYPE& first() {if (count_) return (*(TimePair*)((char*)data_)).value;
+	inline TYPE& first() {if (count_) return (*(Pair*)((char*)data_)).value;
 		DWLOG(name + " OKM: Miss - first"); return emptyVal;}
 	inline TYPE first() const {return const_cast<OrderedKeyMap*>(this)->first(); }
-	inline TYPE& last() {if (count_) return (*(TimePair*)((char*)data_+(count_-1)*sizeof(TimePair))).value;
+	inline TYPE& last() {if (count_) return (*(Pair*)((char*)data_+(count_-1)*sizeof(Pair))).value;
 		DWLOG(name + " OKM: Miss - last"); return emptyVal;}
 	inline TYPE last() const {return const_cast<OrderedKeyMap*>(this)->last();}
 	inline KTYPE lastKey() const {return lastKey_;}
@@ -87,7 +88,7 @@ public:
 // additional
 	TYPE& valueNearPos(KTYPE key, int pos);
 	TYPE valueNearPos(KTYPE key, int pos) const {return const_cast<OrderedKeyMap*>(this)->valueNearPos(key, pos);}
-	inline TimePair& dataAt(int pos) const {return *(TimePair*)((char*)data_+pos*sizeof(TimePair));}
+	inline Pair& dataAt(int pos) const {return *(Pair*)((char*)data_+pos*sizeof(Pair));}
 	bool equal(const OrderedKeyMap& other) const;
 #ifdef QMAP_H
 	bool equal(const QMap<KTYPE, TYPE>& other) const;
@@ -118,7 +119,7 @@ public:
 	iterator upperBoundAlt(KTYPE key) const;
 
 // constructors
-	OrderedKeyMap(int size = BASESIZE) {if (size > 0) reserve(size*sizeof(TimePair));}
+	OrderedKeyMap(int size = BASESIZE) {if (size > 0) reserve(size*sizeof(Pair));}
 	OrderedKeyMap(const OrderedKeyMap& o) {
 		reserve(o.dataSize_); memcpy(data_, o.data_, dataSize_); count_ = o.count_;
 		lastKey_ = o.lastKey_; firstKey_ = o.firstKey_; }
@@ -137,7 +138,7 @@ public:
 		memcpy(data_, o.data_, o.dataSize_); count_ = o.count_;
 		lastKey_ = o.lastKey_; firstKey_ = o.firstKey_; return *this;}
 	inline bool operator == (const OrderedKeyMap& o) const {return count_ == o.count_ && firstKey_ == o.firstKey_ && lastKey_ == o.lastKey_
-				&& memcmp(data_, o.data_, count_*sizeof(TimePair)) == 0;}
+				&& memcmp(data_, o.data_, count_*sizeof(Pair)) == 0;}
 
 
 	OrderedKeyMap mid(KTYPE from, KTYPE to, int reserve = 0) const {
@@ -149,7 +150,7 @@ public:
 			--itEnd;
 		int count = itEnd.pos() - itStart.pos()+1;
 		OrderedKeyMap res(count+reserve);
-		memcpy(res.data_, (char*)data_+itStart.pos()*sizeof(TimePair), count*sizeof(TimePair));
+		memcpy(res.data_, (char*)data_+itStart.pos()*sizeof(Pair), count*sizeof(Pair));
 		res.firstKey_ = itStart.key();
 		res.lastKey_ = itEnd.key();
 		res.count_ = count;
@@ -179,11 +180,11 @@ template <typename KTYPE, typename TYPE, int ALTFIND>
 typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insert(KTYPE key, TYPE value)
 {
 	if (!dataSize_)
-		reserve(BASESIZE*sizeof(TimePair));
+		reserve(BASESIZE*sizeof(Pair));
 	if (!count_)
 	{
-		TimePair* pair = (TimePair*)((char*)data_);
-		*pair = TimePair(key, value);
+		Pair* pair = (Pair*)((char*)data_);
+		*pair = Pair(key, std::move(value));
 		count_++;
 		firstKey_ = key;
 		lastKey_ = key;
@@ -191,10 +192,10 @@ typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE
 	}
 	if (key > lastKey_)
 	{
-		if (int((count_+1)*sizeof(TimePair)) > dataSize_)
+		if (int((count_+1)*sizeof(Pair)) > dataSize_)
 			realoc(dataSize_);
-		TimePair* pair = (TimePair*)((char*)data_+count_*sizeof(TimePair));
-		*pair = TimePair(key, value);
+		Pair* pair = (Pair*)((char*)data_+count_*sizeof(Pair));
+		*pair = Pair(key, std::move(value));
 		count_++;
 		lastKey_ = key;
 		return iterator(this, count_-1);
@@ -206,7 +207,7 @@ typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE
 		{
 			DWLOG(name + QString(" OKM: Вставка в середину %1 из %2").arg(it.pos()).arg(count_));
 		}
-		TimePair* pair = (TimePair*)((char*)data_+it.pos()*sizeof(TimePair));
+		Pair* pair = (Pair*)((char*)data_+it.pos()*sizeof(Pair));
 		pair->value = value;
 		return it;
 	}
@@ -217,27 +218,27 @@ typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE
 template <typename KTYPE, typename TYPE, int ALTFIND>
 TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertBefore(int pos, KTYPE key, TYPE&& value)
 {
-	if (int((count_+1)*sizeof(TimePair)) > dataSize_)
+	if (int((count_+1)*sizeof(Pair)) > dataSize_)
 	{
 		void *ldata = data_;
 		reserve(2*dataSize_);
 		if (pos > 0)
-			memcpy((char*)data_, ldata, pos*sizeof(TimePair));
+			memcpy((char*)data_, ldata, pos*sizeof(Pair));
 		DWLOG(name + (pos > 0 ? QString("OKM: Inserting element %1 in the middle and increasing the size").arg(key) :
 							 QString("Inserting element %1 at the beginning and increasing the size").arg(key)));
-		memcpy((char*)data_+(pos+1)*sizeof(TimePair), (char*)ldata+(pos)*sizeof(TimePair),
-			   (count_ - pos)*sizeof(TimePair));
+		memcpy((char*)data_+(pos+1)*sizeof(Pair), (char*)ldata+(pos)*sizeof(Pair),
+			   (count_ - pos)*sizeof(Pair));
 		free(ldata);
 	}
 	else
 	{
 		DWLOG(name + (pos > 0 ? QString("OKM: Inserting element %1 in the middle is highly discouraged").arg(key) :
 							 QString("Inserting element %1 at the beginning is highly discouraged").arg(key)));
-		memmove((char*)data_+(pos+1)*sizeof(TimePair), (char*)data_+(pos)*sizeof(TimePair),
-				(count_-pos)*sizeof(TimePair));
+		memmove((char*)data_+(pos+1)*sizeof(Pair), (char*)data_+(pos)*sizeof(Pair),
+				(count_-pos)*sizeof(Pair));
 	}
-	TimePair* pair = (TimePair*)((char*)data_+pos*sizeof(TimePair));
-	*pair = TimePair(key, value);
+	Pair* pair = (Pair*)((char*)data_+pos*sizeof(Pair));
+	*pair = Pair(key, std::move(value));
 	if (pos == 0)
 		firstKey_ = key;
 	count_++;
@@ -262,7 +263,7 @@ void OrderedKeyMap<KTYPE, TYPE, ALTFIND>::remove(KTYPE key)
 	auto it = lowerBound(key);
 	if (it == constEnd())
 		return;
-	memmove((char*)data_+(it.pos()-1)*sizeof(TimePair), (char*)data_+(it.pos())*sizeof(TimePair), count_-it.pos());
+	memmove((char*)data_+(it.pos()-1)*sizeof(Pair), (char*)data_+(it.pos())*sizeof(Pair), count_-it.pos());
 	count_--;
 }
 
@@ -272,7 +273,7 @@ bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::equal(const OrderedKeyMap& o) const
 	if (count_ != o.count() || firstKey_ != o.firstKey_ || lastKey_ != o.lastKey_)
 		return false;
 	if (sizeof(TYPE) % 8 == 0)
-		return memcmp(data_, o.data_, o.count_*sizeof(TimePair)) == 0;
+		return memcmp(data_, o.data_, o.count_*sizeof(Pair)) == 0;
 	auto itc = constBegin();
 	for (auto it = o.constBegin(); it != o.constEnd(); ++it, ++itc)
 		if (it.key() != itc.key() || it.value() != itc.value())
