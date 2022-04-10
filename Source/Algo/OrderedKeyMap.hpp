@@ -56,7 +56,7 @@ public:
 		inline TYPE& value() {return container_->dataAt(pos_).value;}
 		inline TYPE value() const {return container_->dataAt(pos_).value;}
 		inline int pos() const {return pos_;}
-		inline KTYPE operator*() {return key();}
+		inline TYPE& operator*() {return value();}
 		inline TYPE* operator->() {return &value();}
 	private:
 		const OrderedKeyMap* container_ = nullptr;
@@ -96,6 +96,7 @@ public:
 #ifdef QLIST_H
 	QList<KTYPE> keys() const;
 	QList<KTYPE> keys(KTYPE min, KTYPE max) const;
+	QList<TYPE> values() const;
 #endif
 #ifdef QPAIR_H
 	QPair<KTYPE, KTYPE> interval() const {return qMakePair(firstKey_, lastKey_);}
@@ -465,6 +466,14 @@ QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, ALTFIND>::keys(KTYPE min, KTYPE max) con
 	auto itEnd = max ? upperBound(max) : constEnd();
 	for (auto it = lowerBound(min); it != itEnd; ++it)
 		res.append(it.key());
+	return res;
+}
+template <typename KTYPE, typename TYPE, int ALTFIND>
+QList<TYPE> OrderedKeyMap<KTYPE, TYPE, ALTFIND>::values() const
+{
+	QList<TYPE> res;
+	for (auto it = constBegin(); it != constEnd(); ++it)
+		res.append(it.value());
 	return res;
 }
 #endif
