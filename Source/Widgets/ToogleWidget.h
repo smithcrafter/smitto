@@ -23,6 +23,12 @@ class QLabel;
 
 namespace Smitto {
 
+enum class Theme : quint8
+{
+	Light,
+	Dark
+};
+
 class ToogleWidget : public QAbstractButton
 {
 public:
@@ -31,14 +37,17 @@ public:
 	ToogleWidget(const QString& text, bool checked, QWidget* parent = Q_NULLPTR);
 	ToogleWidget(const QString& text, QWidget* parent = Q_NULLPTR) : ToogleWidget (text, false, parent) {}
 
+	void setTheme(Theme theme) {theme_ = theme; update();}
+
 protected:
 	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 	void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 	QSize sizeHint() const Q_DECL_OVERRIDE;
 
 private:
-	QTimer* timer_;
+	Theme theme_ = Theme::Light;
 	quint8 pos = 0;
+	QTimer* timer_;
 	QLabel* label_ = Q_NULLPTR;
 };
 

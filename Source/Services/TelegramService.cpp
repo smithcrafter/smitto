@@ -23,7 +23,6 @@
 // Qt5
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QJsonDocument>

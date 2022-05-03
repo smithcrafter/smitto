@@ -89,14 +89,26 @@ void ToogleWidget::paintEvent(QPaintEvent* event)
 		dx = size().width()-96;
 	QRect rect(event->rect().x()+4+dx, event->rect().y()+4, size().width()-8-dx, size().height()-8);
 
-	pen.setColor(QColor(127*(10-pos)/10,127*(10-pos)/10,127*(10-pos)/10));
-	p.setBrush(QBrush(QColor(127*pos/10,127*pos/10,127*pos/10)));
+	if (theme_ == Theme::Light)
+	{
+		pen.setColor(QColor(250*pos/10,250*pos/10,250*pos/10));
+		p.setBrush(QBrush(QColor(127+127*(10-pos)/10,127+127*(10-pos)/10,127+127*(10-pos)/10)));
+	}
+	else
+	{
+		pen.setColor(QColor(127*(10-pos)/10,127*(10-pos)/10,127*(10-pos)/10));
+		p.setBrush(QBrush(QColor(127*pos/10,127*pos/10,127*pos/10)));
+	}
+
 	p.setPen(pen);
 	p.setRenderHint(QPainter::Antialiasing, true);
 
 	p.drawRoundedRect(rect, rect.height()/2-1, rect.height()/2-1);
 
-	p.setBrush(QBrush(QColor(255*pos/10,255*pos/10,255*pos/10)));
+	if (theme_ == Theme::Light)
+		p.setBrush(QBrush(QColor(127+127*pos/10,127+127*pos/10,127+127*pos/10)));
+	else
+		p.setBrush(QBrush(QColor(255*pos/10,255*pos/10,255*pos/10)));
 	p.drawEllipse(QPoint(rect.x()+1+rect.height()/2+pos*(rect.width()-rect.height()-2)/10,
 						 rect.y()+rect.height()/2), rect.height()/2-3, rect.height()/2-3);
 	event->accept();
