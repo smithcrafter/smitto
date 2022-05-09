@@ -24,26 +24,32 @@
 
 namespace Smitto {
 
+#ifdef Q_OS_ANDROID
+#define POINTSIZE 20
+#else
+#define POINTSIZE 8
+#endif
+
 PinWidget::PinWidget(QWidget* parent)
 	: QWidget(parent)
 {
 	UI_CREATE_VLAYOUT(layout);
-	layout->setMargin(0);
+	layout->setContentsMargins(0, 0 , 0, 0);
 	layout->setSpacing(0);
 	layout->addStretch(1);
 
 	QWidget* pointsWidget = new QWidget(this);
 	auto* pointsLayout = new QHBoxLayout(pointsWidget);
-	pointsLayout->setMargin(5);
+	pointsLayout->setContentsMargins(5, 5 , 5, 5);
 	pointsLayout->setSpacing(5);
 	pointsLayout->addStretch(1);
-	pointsLayout->addWidget(points_[0] = new PointCircleWidget(Qt::lightGray, 8, pointsWidget), 2);
+	pointsLayout->addWidget(points_[0] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
 	pointsLayout->addStretch(2);
-	pointsLayout->addWidget(points_[1] = new PointCircleWidget(Qt::lightGray, 8, pointsWidget), 2);
+	pointsLayout->addWidget(points_[1] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
 	pointsLayout->addStretch(2);
-	pointsLayout->addWidget(points_[2] = new PointCircleWidget(Qt::lightGray, 8, pointsWidget), 2);
+	pointsLayout->addWidget(points_[2] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
 	pointsLayout->addStretch(2);
-	pointsLayout->addWidget(points_[3] = new PointCircleWidget(Qt::lightGray, 8, pointsWidget), 2);
+	pointsLayout->addWidget(points_[3] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
 	pointsLayout->addStretch(1);
 	layout->addWidget(pointsWidget);
 
@@ -72,7 +78,7 @@ PinWidget::PinWidget(QWidget* parent)
 	glayout->setColumnStretch(0, 1);
 	glayout->setColumnStretch(1, 1);
 	glayout->setColumnStretch(2, 1);
-	glayout->setMargin(0);
+	glayout->setContentsMargins(0, 0 , 0, 0);
 	glayout->setSpacing(2);
 
 	layout->addLayout(glayout, 4);
@@ -90,12 +96,12 @@ void PinWidget::onButtonPressed(PinButtons button)
 	if (count < 4 && button >= PinButtons::B0 && button <= PinButtons::B9)
 	{
 		numbers_.append(quint8(button));
-		points_[count]->change(Qt::darkGray, 8+4);
+		points_[count]->change(Qt::darkGray, POINTSIZE*2);
 	}
 	else if(count > 0 && button == PinButtons::Clear)
 	{
 		numbers_.removeLast();
-		points_[count-1]->change(Qt::lightGray, 8);
+		points_[count-1]->change(Qt::lightGray, POINTSIZE);
 	}
 
 	if (numbers_.count() == 4)

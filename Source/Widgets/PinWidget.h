@@ -32,7 +32,7 @@ enum class PinButtons
 class PointCircleWidget : public QWidget
 {
 public:
-	explicit PointCircleWidget(const QColor& color, qint8 size, QWidget* parent = Q_NULLPTR);
+	PointCircleWidget(const QColor& color, qint8 size, QWidget* parent = Q_NULLPTR);
 
 	void change(const QColor& color, qint8 size);
 
