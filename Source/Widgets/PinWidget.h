@@ -50,15 +50,18 @@ class PinWidget : public QWidget
 	Q_OBJECT
 public:
 	explicit PinWidget(QWidget* parent = Q_NULLPTR);
+	~PinWidget() Q_DECL_OVERRIDE;
 
+	void clear();
 	void onButtonPressed(PinButtons button);
 
 signals:
 	void pinEntered(const QList<quint8>& numbers);
 
 private:
-	void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
+	void showEvent(QShowEvent*event) Q_DECL_OVERRIDE {updatePinButtonSize(); QWidget::showEvent(event);}
 	void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
+	void updatePinButtonSize();
 
 private:
 	PointCircleWidget* points_[4];

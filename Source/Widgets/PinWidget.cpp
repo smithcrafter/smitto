@@ -25,7 +25,7 @@
 namespace Smitto {
 
 #ifdef Q_OS_ANDROID
-#define POINTSIZE 20
+#define POINTSIZE 16
 #else
 #define POINTSIZE 8
 #endif
@@ -36,23 +36,25 @@ PinWidget::PinWidget(QWidget* parent)
 	UI_CREATE_VLAYOUT(layout);
 	layout->setContentsMargins(0, 0 , 0, 0);
 	layout->setSpacing(0);
+	layout->addSpacing(20);
 	layout->addStretch(1);
 
 	QWidget* pointsWidget = new QWidget(this);
 	auto* pointsLayout = new QHBoxLayout(pointsWidget);
 	pointsLayout->setContentsMargins(5, 5 , 5, 5);
 	pointsLayout->setSpacing(5);
-	pointsLayout->addStretch(1);
+	pointsLayout->addStretch(100);
 	pointsLayout->addWidget(points_[0] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
-	pointsLayout->addStretch(2);
-	pointsLayout->addWidget(points_[1] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
-	pointsLayout->addStretch(2);
-	pointsLayout->addWidget(points_[2] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
-	pointsLayout->addStretch(2);
-	pointsLayout->addWidget(points_[3] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
 	pointsLayout->addStretch(1);
-	layout->addWidget(pointsWidget);
+	pointsLayout->addWidget(points_[1] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
+	pointsLayout->addStretch(1);
+	pointsLayout->addWidget(points_[2] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
+	pointsLayout->addStretch(1);
+	pointsLayout->addWidget(points_[3] = new PointCircleWidget(Qt::lightGray, POINTSIZE, pointsWidget), 2);
+	pointsLayout->addStretch(100);
 
+	layout->addWidget(pointsWidget);
+	layout->addStretch(2);
 	layout->addSpacing(20);
 
 	QFont font = this->font();
@@ -83,10 +85,19 @@ PinWidget::PinWidget(QWidget* parent)
 
 	layout->addLayout(glayout, 4);
 	glayout->setAlignment(Qt::AlignCenter);
-	layout->addStretch(1);
 
-	for (quint8 i = 0; i <= 10; i++)
-		numbuttons_[i]->setMinimumSize(this->width()/3.14, this->width()/3.14);
+	updatePinButtonSize();
+}
+
+PinWidget::~PinWidget()
+{
+}
+
+void PinWidget::clear()
+{
+	while (numbers_.count()) {
+		onButtonPressed(PinButtons::Clear);
+	}
 }
 
 void PinWidget::onButtonPressed(PinButtons button)
@@ -96,7 +107,7 @@ void PinWidget::onButtonPressed(PinButtons button)
 	if (count < 4 && button >= PinButtons::B0 && button <= PinButtons::B9)
 	{
 		numbers_.append(quint8(button));
-		points_[count]->change(Qt::darkGray, POINTSIZE*2);
+		points_[count]->change(Qt::darkGray, POINTSIZE*1.5);
 	}
 	else if(count > 0 && button == PinButtons::Clear)
 	{
@@ -108,20 +119,27 @@ void PinWidget::onButtonPressed(PinButtons button)
 		emit pinEntered(numbers_);
 }
 
-void PinWidget::showEvent(QShowEvent* event)
-{
-	for (quint8 i = 0; i <= 10; i++)
-		numbuttons_[i]->setFixedSize(this->width()/3.14, this->width()/3.14);
-	QWidget::showEvent(event);
-}
-
 void PinWidget::keyPressEvent(QKeyEvent* event)
 {
 	if (event->key() >= Qt::Key_0 && event->key() <= Qt::Key_9)
 		onButtonPressed(PinButtons(event->key() - Qt::Key_0));
 	else if (event->key() == Qt::Key_Backspace)
 		onButtonPressed(PinButtons::Clear);
-	QWidget::keyPressEvent(event);
+	else if (event->key() == Qt::Key_Back)
+		clear();
+	else
+	{
+		QWidget::keyPressEvent(event);
+		return;
+	}
+	event->accept();
+}
+
+void PinWidget::updatePinButtonSize()
+{
+	int size = this->width()/3.14;
+	for (quint8 i = 0; i <= 10; ++i)
+		numbuttons_[i]->setMinimumSize(size, size);
 }
 
 PointCircleWidget::PointCircleWidget(const QColor& color, qint8 size, QWidget* parent)
