@@ -10,6 +10,7 @@ HEADERS += \
 	$$PWD/../Source/Widgets/MobileScrollArea.h \
 	$$PWD/../Source/Widgets/ToogleWidget.h \
     $$PWD/../Source/Widgets/PinWidget.h \
+    $$PWD/../Source/Widgets/ControlPanelWidget.h \
 
 SOURCES += \
 	$$PWD/../Source/Widgets/LogLabelsListWidget.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
 	$$PWD/../Source/Widgets/MobileScrollArea.cpp \
 	$$PWD/../Source/Widgets/ToogleWidget.cpp \
     $$PWD/../Source/Widgets/PinWidget.cpp \
+    $$PWD/../Source/Widgets/ControlPanelWidget.cpp \
 
 # ItemDelegate
 
