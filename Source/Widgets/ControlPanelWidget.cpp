@@ -31,9 +31,12 @@ namespace Ui {
 ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	: QWidget(parent), basename_(basename)
 {
+	this->setObjectName("ControlPanelWidget");
 	auto* layout = new QHBoxLayout(this);
-	layout->setMargin(5);
-	layout->setSpacing(5);
+	int m = Smitto::Ui::panelMargin();
+	layout->setContentsMargins(m, m, m, m);
+	layout->setSpacing(Smitto::Ui::panelSpacing());
+	this->setFixedHeight(Smitto::Ui::panelSize());
 	this->setMinimumWidth(100);
 
 	layout->addWidget(mainButton_ = new QPushButton(QIcon(":/files/icons/menu-button.png"), QString()));
@@ -42,16 +45,15 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 
 	layout->addWidget(label_ = new QLabel(this));
 	label_->setStyleSheet("QLabel {font-weight: bold;font-size: 120%;}");
+	label_->installEventFilter(this);
 	layout->addStretch();
+
 	layout->addWidget(addButton_ = new QPushButton(QIcon(":/files/icons/add-button.png"), QString()));
 	addButton_->setStyleSheet("border:0px;");
 	addButton_->setIconSize(Smitto::Ui::iconSize());
-	label_->installEventFilter(this);
 
 	connect(mainButton_, &QPushButton::clicked, this, &ControlPanelWidget::menuRequested);
 	connect(addButton_, &QPushButton::clicked, this, &ControlPanelWidget::addButtonClicked);
-
-	this->setFixedHeight(Smitto::Ui::panelSize());
 
 	home();
 }

@@ -24,7 +24,7 @@ namespace Ui {
 QSize iconSize()
 {
 #ifdef Q_OS_ANDROID
-	return QSize(64, 64);
+	return QSize(128, 128);
 #endif
 
 	return QSize(32, 32);
@@ -33,9 +33,25 @@ QSize iconSize()
 int panelSize()
 {
 #ifdef Q_OS_ANDROID
-	return 32;
+	return 128+10;
 #endif
-	return 32;
+	return 32+10;
+}
+
+int panelMargin()
+{
+#ifdef Q_OS_ANDROID
+	return 8;
+#endif
+	return 4;
+}
+
+int panelSpacing()
+{
+#ifdef Q_OS_ANDROID
+	return 8;
+#endif
+	return 6;
 }
 
 } // Ui ::

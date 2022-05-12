@@ -53,7 +53,7 @@ ToogleWidget::ToogleWidget(const QString& text, bool checked, QWidget* parent)
 	: ToogleWidget (checked, parent)
 {
 	auto layout = new QHBoxLayout(this);
-	layout->setMargin(0);
+	layout->setContentsMargins(0, 0 , 0, 0);
 	layout->addWidget(label_ = new QLabel(text));
 }
 
@@ -69,7 +69,12 @@ void ToogleWidget::mousePressEvent(QMouseEvent* event)
 void ToogleWidget::paintEvent(QPaintEvent* event)
 {
 	QStyleOption opt;
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+	opt.initFrom(this);
+#else
 	opt.init(this);
+#endif
+
 	QPainter p(this);
 	QPen pen;
 
