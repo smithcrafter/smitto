@@ -69,8 +69,8 @@ DrawerMenuWidget::DrawerMenuWidget(QWidget* parent)
 {
 	UI_CREATE_HLAYOUT_ZERO_MARGINSPACING(layout)
 
-	layout->addWidget(menuWidget_ = new QWidget(this), 3);
-	layout->addWidget(blowWidget_ = new BlowWidget(1, this), 1);
+	layout->addWidget(menuWidget_ = new QWidget(), 3);
+	layout->addWidget(blowWidget_ = new BlowWidget(1), 1);
 	connect(blowWidget_, &BlowWidget::clicked, this, &DrawerMenuWidget::hideDrawlerMenu);
 
 	menuWidget_->setStyleSheet(QString("QWidget{background: %1;}").arg(Smitto::scolor(Smitto::SmittoBaseColors::level04)));
@@ -101,7 +101,7 @@ DrawerMenuWidget::DrawerMenuWidget(QWidget* parent)
 	button->setMinimumHeight(this->height()/12);
 	connect(button, &QPushButton::clicked, this, &DrawerMenuWidget::logout);
 
-	button->setStyleSheet(QString("QPushButton{background: %1; border: #666 1 px; padding: 10px; color:white;}")
+	button->setStyleSheet(QString("QPushButton {background: %1; border: #666 1 px; padding: 10px; color:white;}")
 			.arg(Smitto::scolor(Smitto::SmittoBaseColors::level03)));
 	menuWidget_->setMinimumWidth(minValue);
 	menuWidget_->setMaximumWidth(minValue);
@@ -114,9 +114,7 @@ DrawerMenuWidget::~DrawerMenuWidget()
 void DrawerMenuWidget::addMenuButton(qint32 butId, const QString& text)
 {
 	QPushButton* button = new QPushButton(text, this);
-
 	button->setMinimumHeight(this->height()/12);
-
 	buttonLayout_->addWidget(button);
 	button->setStyleSheet(QString("QPushButton{background: %1; border: #666 1 px; padding: 10px; color:white;}")
 						  .arg(Smitto::scolor(Smitto::SmittoBaseColors::level08)));
@@ -127,9 +125,7 @@ void DrawerMenuWidget::addMenuButton(qint32 butId, const QString& text)
 void DrawerMenuWidget::addBottomMenu(qint32 butId, const QString &text)
 {
 	QPushButton* button = new QPushButton(text, this);
-
 	button->setMinimumHeight(this->height()/12);
-
 	buttomLayout_->addWidget(button);
 	button->setStyleSheet(QString("QPushButton{background: %1; border: #666 1 px; padding: 10px; color:white;}")
 						  .arg(Smitto::scolor(Smitto::SmittoBaseColors::level03)));
@@ -231,11 +227,10 @@ void DrawerMenuWidget::cliarAnimations()
 
 void DrawerMenuWidget::showEvent(QShowEvent* event)
 {
-	QWidget::showEvent(event);
-
 	for (int i = 0; i < buttonLayout_->count(); i++)
 		if (auto* button = dynamic_cast<QPushButton*>(buttonLayout_->itemAt(i)->widget()))
 			button->setMinimumHeight(this->height()/12);
+	QWidget::showEvent(event);
 }
 
 } // Ui ::

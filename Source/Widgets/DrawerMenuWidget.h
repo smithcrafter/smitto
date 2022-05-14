@@ -29,7 +29,7 @@ namespace Ui {
 class BlowWidget : public QWidget
 {
 	Q_OBJECT
-	Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity )
+	Q_PROPERTY(qreal op READ opacity WRITE setOpacity )
 public:
 	explicit BlowWidget(qreal opacity = 0.0, QWidget* parent = Q_NULLPTR);
 	~BlowWidget() Q_DECL_OVERRIDE;
