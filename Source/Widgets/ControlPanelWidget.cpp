@@ -79,7 +79,7 @@ void ControlPanelWidget::setSection(int sectionId, const QString& name, SubButto
 {
 	label_->setText(H3(name));
 	section_ = sectionId;
-	addButton_->setHidden(!(button & SubButtons::Add));
+	addButton_->setHidden(!(quint8(button) & quint8(SubButtons::Add)));
 	mainButton_->setHidden(mbuttom != MainPanellButton::Home);
 	backButton_->setHidden(mbuttom != MainPanellButton::Back);
 }
