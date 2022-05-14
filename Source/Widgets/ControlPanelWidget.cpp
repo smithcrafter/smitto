@@ -43,6 +43,10 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	mainButton_->setStyleSheet("border:0px;");
 	mainButton_->setIconSize(Smitto::Ui::iconSize());
 
+	layout->addWidget(backButton_ = new QPushButton(QIcon(":/files/icons/back-button.png"), QString()));
+	backButton_->setStyleSheet("border:0px;");
+	backButton_->setIconSize(Smitto::Ui::iconSize());
+
 	layout->addWidget(label_ = new QLabel(this));
 	label_->setStyleSheet("QLabel {font-weight: bold;font-size: 120%;}");
 	label_->installEventFilter(this);
@@ -67,13 +71,17 @@ void ControlPanelWidget::home()
 	label_->setText(H3(basename_));
 	section_ = -1;
 	addButton_->setHidden(true);
+	mainButton_->setHidden(false);
+	backButton_->setHidden(true);
 }
 
-void ControlPanelWidget::setSection(int sectionId, const QString& name, SubButtons button)
+void ControlPanelWidget::setSection(int sectionId, const QString& name, SubButtons button, MainPanellButton mbuttom)
 {
 	label_->setText(H3(name));
 	section_ = sectionId;
 	addButton_->setHidden(!(button & SubButtons::Add));
+	mainButton_->setHidden(mbuttom != MainPanellButton::Home);
+	backButton_->setHidden(mbuttom != MainPanellButton::Back);
 }
 
 void ControlPanelWidget::paintEvent(QPaintEvent*)

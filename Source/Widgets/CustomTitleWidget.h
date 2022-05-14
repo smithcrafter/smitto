@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <smitto.h>
 #include <QtWidgets/QWidget>
 #include <QtCore/QMap>
 class QHBoxLayout;
@@ -40,7 +41,7 @@ enum class TiltleButton
 Q_DECLARE_FLAGS(TiltleButtons, TiltleButton)
 Q_DECLARE_OPERATORS_FOR_FLAGS(TiltleButtons)
 
-class CustomTitleWidget : public QWidget
+class SMITTO_LIB_EXPORT CustomTitleWidget : public QWidget
 {
 public:
 	CustomTitleWidget(QWidget* parent = Q_NULLPTR) : QWidget(parent) {}

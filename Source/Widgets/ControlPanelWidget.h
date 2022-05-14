@@ -18,19 +18,27 @@
 
 #pragma once
 
+#include <smitto.h>
 #include <QtWidgets/QWidget>
 class QLabel; class QPushButton;
 
 namespace Smitto {
 namespace Ui {
 
-enum SubButtons
+enum class SubButtons : quint8
 {
 	None,
 	Add = 1
 };
 
-class ControlPanelWidget : public QWidget
+enum class MainPanellButton : quint8
+{
+	None,
+	Home,
+	Back
+};
+
+class SMITTO_LIB_EXPORT ControlPanelWidget : public QWidget
 {
 	Q_OBJECT
 public:
@@ -40,7 +48,8 @@ public:
 	int section() const {return section_;}
 
 	void home();
-	void setSection(int sectionId, const QString& name, SubButtons button = SubButtons::None);
+	void setSection(int sectionId, const QString& name, SubButtons button = SubButtons::None,
+					MainPanellButton mbuttom = MainPanellButton::Home);
 
 signals:
 	void menuRequested();
@@ -55,7 +64,7 @@ private:
 	const QString basename_;
 	int section_ = -1;
 	QLabel* label_;
-	QPushButton *mainButton_, *addButton_;
+	QPushButton *mainButton_, *backButton_, *addButton_;
 };
 
 } // Ui ::
