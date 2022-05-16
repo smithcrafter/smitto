@@ -56,8 +56,15 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	addButton_->setStyleSheet("border:0px;");
 	addButton_->setIconSize(Smitto::Ui::iconSize());
 
+	layout->addWidget(saveButton_ = new QPushButton(QIcon(":/files/icons/save-button.png"), QString()));
+	saveButton_->setStyleSheet("border:0px;");
+	saveButton_->setIconSize(Smitto::Ui::iconSize());
+
 	connect(mainButton_, &QPushButton::clicked, this, &ControlPanelWidget::menuRequested);
+	connect(backButton_, &QPushButton::clicked, this, &ControlPanelWidget::backRequested);
+
 	connect(addButton_, &QPushButton::clicked, this, &ControlPanelWidget::addButtonClicked);
+	connect(saveButton_, &QPushButton::clicked, this, &ControlPanelWidget::saveButtonClicked);
 
 	home();
 }
@@ -73,6 +80,7 @@ void ControlPanelWidget::home()
 	addButton_->setHidden(true);
 	mainButton_->setHidden(false);
 	backButton_->setHidden(true);
+	saveButton_->setHidden(true);
 }
 
 void ControlPanelWidget::setSection(int sectionId, const QString& name, SubButtons button, MainPanellButton mbuttom)
@@ -80,6 +88,7 @@ void ControlPanelWidget::setSection(int sectionId, const QString& name, SubButto
 	label_->setText(H3(name));
 	section_ = sectionId;
 	addButton_->setHidden(!(quint8(button) & quint8(SubButtons::Add)));
+	saveButton_->setHidden(!(quint8(button) & quint8(SubButtons::Save)));
 	mainButton_->setHidden(mbuttom != MainPanellButton::Home);
 	backButton_->setHidden(mbuttom != MainPanellButton::Back);
 }

@@ -28,7 +28,8 @@ namespace Ui {
 enum class SubButtons : quint8
 {
 	None,
-	Add = 1
+	Add = 1,
+	Save = 2
 };
 
 enum class MainPanellButton : quint8
@@ -53,8 +54,11 @@ public:
 
 signals:
 	void menuRequested();
+	void backRequested();
+
 	void labelClicked();
 	void addButtonClicked();
+	void saveButtonClicked();
 
 private:
 	void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
@@ -64,7 +68,8 @@ private:
 	const QString basename_;
 	int section_ = -1;
 	QLabel* label_;
-	QPushButton *mainButton_, *backButton_, *addButton_;
+	QPushButton *mainButton_, *backButton_;
+	QPushButton *addButton_, *saveButton_;
 };
 
 } // Ui ::

@@ -41,8 +41,8 @@ signals:
 	void clicked();
 
 private:
-	void mousePressEvent(QMouseEvent* event);
-	void paintEvent(QPaintEvent* event);
+	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+	void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 
 private:
 	qreal opacity_ = 0.0;
@@ -62,7 +62,7 @@ class SMITTO_LIB_EXPORT DrawerMenuWidget : public QWidget
 	Q_OBJECT
 public:
 	explicit DrawerMenuWidget(QWidget* parent = Q_NULLPTR);
-	~DrawerMenuWidget();
+	~DrawerMenuWidget() Q_DECL_OVERRIDE;
 
 	void addMenuButton(qint32 butId, const QString& text);
 
@@ -81,7 +81,7 @@ private:
 	void hideDrawlerMenuFinished();
 	void cliarAnimations();
 
-	void showEvent(QShowEvent* event);
+	void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
 private:
 	QWidget* menuWidget_;
