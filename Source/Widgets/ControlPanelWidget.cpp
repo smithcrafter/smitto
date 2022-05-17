@@ -23,6 +23,7 @@
 #include <QtWidgets/QPushButton>
 #include <QPainter>
 #include <QStyleOption>
+#include <QKeyEvent>
 #include <QEvent>
 
 namespace Smitto {
@@ -109,6 +110,17 @@ bool ControlPanelWidget::eventFilter(QObject* watched, QEvent* event)
 		return QWidget::eventFilter(watched, event);
 	event->accept();
 	return true;
+}
+
+void ControlPanelWidget::keyPressEvent(QKeyEvent* event)
+{
+	if (event->key() == Qt::Key_Back && !backButton_->isHidden())
+	{
+		event->accept();
+		emit backRequested();
+	}
+	else
+		QWidget::keyPressEvent(event);
 }
 
 } // Ui ::

@@ -63,6 +63,7 @@ signals:
 private:
 	void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
 	bool eventFilter(QObject* watched, QEvent* event) Q_DECL_OVERRIDE;
+	void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 
 private:
 	const QString basename_;
