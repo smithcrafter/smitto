@@ -11,7 +11,9 @@ SOURCES += \
 contains(QT, gui){
 HEADERS += \
 	$$PWD/../Source/Base/BaseQtApp.h \
+	$$PWD/../Source/Base/LibLoaderWidget.h \
 
 SOURCES += \
 	$$PWD/../Source/Base/BaseQtApp.cpp \
+	$$PWD/../Source/Base/LibLoaderWidget.cpp \
 }
