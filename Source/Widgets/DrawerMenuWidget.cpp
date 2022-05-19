@@ -64,7 +64,7 @@ void BlowWidget::paintEvent(QPaintEvent* event)
 }
 
 
-DrawerMenuWidget::DrawerMenuWidget(QWidget* parent)
+DrawerMenuWidget::DrawerMenuWidget(const QString& title, QWidget* parent)
 	: QWidget(parent)
 {
 	UI_CREATE_HLAYOUT_ZERO_MARGINSPACING(layout)
@@ -84,7 +84,7 @@ DrawerMenuWidget::DrawerMenuWidget(QWidget* parent)
 	button->setIconSize(Smitto::Ui::iconSize());
 
 	QLabel* label;
-	hlayout->addWidget(label = new QLabel("<h3>LifeStreamer</h3>"));
+	hlayout->addWidget(label = new QLabel(H3(title)));
 	label->setStyleSheet("QLabel{margin: 5px; font-weight: bold;font-size: 160%; color:white;}");
 	hlayout->addStretch();
 	connect(button, &QPushButton::clicked, this, &DrawerMenuWidget::hideDrawlerMenu);

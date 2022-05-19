@@ -29,9 +29,10 @@ MobileScrollArea::MobileScrollArea(QWidget* parent)
 	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
-void MobileScrollArea::mousePressEvent(QMouseEvent *event)
+void MobileScrollArea::mousePressEvent(QMouseEvent* event)
 {
 	startScroll_ = event->pos();
+	QScrollArea::mousePressEvent(event);
 }
 
 void MobileScrollArea::mouseMoveEvent(QMouseEvent *event)
@@ -40,6 +41,7 @@ void MobileScrollArea::mouseMoveEvent(QMouseEvent *event)
 	int y = pos.y() - startScroll_.y();
 	this->verticalScrollBar()->setValue(this->verticalScrollBar()->value()-y);
 	startScroll_ = event->pos();
+	QScrollArea::mouseMoveEvent(event);
 }
 
 } // Smitto::

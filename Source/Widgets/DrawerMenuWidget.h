@@ -61,7 +61,7 @@ class SMITTO_LIB_EXPORT DrawerMenuWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit DrawerMenuWidget(QWidget* parent = Q_NULLPTR);
+	explicit DrawerMenuWidget(const QString& title, QWidget* parent = Q_NULLPTR);
 	~DrawerMenuWidget() Q_DECL_OVERRIDE;
 
 	void addMenuButton(qint32 butId, const QString& text);
