@@ -114,7 +114,7 @@ bool ControlPanelWidget::eventFilter(QObject* watched, QEvent* event)
 
 void ControlPanelWidget::keyPressEvent(QKeyEvent* event)
 {
-	if (event->key() == Qt::Key_Back && !backButton_->isHidden())
+	if ((event->key() == Qt::Key_Back || event->key() == Qt::Key_Escape) && !backButton_->isHidden())
 	{
 		event->accept();
 		emit backRequested();
