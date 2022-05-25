@@ -26,7 +26,7 @@ namespace Smitto {
 BaseQtApp::BaseQtApp(int& argc, char** argv, int af)
 	: QApplication(argc, argv, af)
 {
-	Ramio::initLogFromArguments();
+	Ramio::initAppFromArguments();
 	new Smitto::ExitHelper(*this);
 }
 
