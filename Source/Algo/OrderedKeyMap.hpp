@@ -160,6 +160,7 @@ public:
 
 #ifdef QSTRING_H
 	QString name;
+	OrderedKeyMap(const QString& nameArg, int size = BASESIZE) : OrderedKeyMap(size) {name = nameArg;}
 #endif
 
 private:
