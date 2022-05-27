@@ -24,15 +24,15 @@ namespace Smitto {
 
 const QString emptyss;
 const QString l01ss = QString("QWidget {background: %1; color: %2;}")
-					  .arg(scolor(SmittoBaseColors::level01), scolor(SmittoBaseColors::level07));
+					  .arg(scolor(SmittoBaseColors::level01), scolor(SmittoBaseColors::level09));
 const QString l02ss = QString("QWidget {background: %1; color: %2;}")
-					  .arg(scolor(SmittoBaseColors::level02), scolor(SmittoBaseColors::level08));
+					  .arg(scolor(SmittoBaseColors::level02), scolor(SmittoBaseColors::level10));
 const QString l03ss = QString("QWidget {background: %1; color: %2;}")
-					  .arg(scolor(SmittoBaseColors::level03), scolor(SmittoBaseColors::level09));
+					  .arg(scolor(SmittoBaseColors::level03), scolor(SmittoBaseColors::level11));
 const QString l04ss = QString("QWidget {background: %1; color: %2;}")
-					  .arg(scolor(SmittoBaseColors::level04), scolor(SmittoBaseColors::level10));
+					  .arg(scolor(SmittoBaseColors::level04), scolor(SmittoBaseColors::level12));
 const QString l05ss = QString("QWidget {background: %1; color: %2;}")
-					  .arg(scolor(SmittoBaseColors::level05), scolor(SmittoBaseColors::level11));
+					  .arg(scolor(SmittoBaseColors::level05), scolor(SmittoBaseColors::level12));
 const QString l06ss = QString("QWidget {background: %1; color: %2;}")
 					  .arg(scolor(SmittoBaseColors::level06), scolor(SmittoBaseColors::level12));
 const QString l07ss = QString("QWidget {background: %1;}").arg(scolor(SmittoBaseColors::level07));
