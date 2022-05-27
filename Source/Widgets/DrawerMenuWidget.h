@@ -64,8 +64,9 @@ public:
 	explicit DrawerMenuWidget(const QString& title, QWidget* parent = Q_NULLPTR);
 	~DrawerMenuWidget() Q_DECL_OVERRIDE;
 
-	void addMenuButton(qint32 butId, const QString& text);
+	QVBoxLayout* topLayout() {return topLayout_;}
 
+	void addMenuButton(qint32 butId, const QString& text);
 	void addBottomMenu(qint32 butId, const QString& text);
 
 	void showDrawlerMenu();
@@ -90,7 +91,7 @@ private:
 	QPointer<QPropertyAnimation> animation1_;
 	QPointer<QPropertyAnimation> animation2_;
 	QPointer<QPropertyAnimation> animation3_;
-	QVBoxLayout* buttonLayout_, *buttomLayout_;
+	QVBoxLayout *topLayout_, *buttonLayout_, *buttomLayout_;
 };
 
 } // Ui ::

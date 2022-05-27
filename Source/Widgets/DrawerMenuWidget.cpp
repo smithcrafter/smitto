@@ -91,7 +91,7 @@ DrawerMenuWidget::DrawerMenuWidget(const QString& title, QWidget* parent)
 	menulayout->addLayout(hlayout);
 	button->setStyleSheet("QPushButton{border:0px;}");
 
-
+	menulayout->addLayout(topLayout_ = new QVBoxLayout);
 	menulayout->addLayout(buttonLayout_ = new QVBoxLayout);
 	menulayout->addStretch(6);
 	menulayout->addLayout(buttomLayout_ = new QVBoxLayout);
