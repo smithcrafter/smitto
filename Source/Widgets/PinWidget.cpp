@@ -17,6 +17,7 @@
 
 #include "PinWidget.h"
 #include <ramio/gui/global.h>
+#include <Gui/PlatformSpecification.h>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QPushButton>
 #include <QtGui/QPainter>
@@ -137,9 +138,13 @@ void PinWidget::keyPressEvent(QKeyEvent* event)
 
 void PinWidget::updatePinButtonSize()
 {
-	int size = this->width()/3.14;
+	int maxsize = Ui::iconSize().width()*4;
+	int size = qMin(maxsize, int(this->width()/3.14));
 	for (quint8 i = 0; i <= 10; ++i)
+	{
 		numbuttons_[i]->setMinimumSize(size, size);
+		numbuttons_[i]->setMaximumSize(maxsize, maxsize);
+	}
 }
 
 PointCircleWidget::PointCircleWidget(const QColor& color, qint8 size, QWidget* parent)
