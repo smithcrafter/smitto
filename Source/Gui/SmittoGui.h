@@ -15,20 +15,17 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "InterfaceHelpers.h"
-// Qt5
-#include <QtGui/QClipboard>
-#include <QtGui/QGuiApplication>
+#pragma once
+
+#include "PlatformSpecification.h"
+#include "SmittoTheme.h"
+#include "SmittoStyleSheets.h"
+#include "SmittoColors.h"
 
 namespace Smitto {
 namespace Ui {
 
-QString clipboardText()
-{
-	if (auto* clipboard = QGuiApplication::clipboard())
-		return clipboard->text();
-	return QString();
-}
+QString clipboardText();
 
 } // Ui ::
 } // Smitto ::
