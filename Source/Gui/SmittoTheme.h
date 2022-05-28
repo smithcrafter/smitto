@@ -20,11 +20,19 @@
 #include <smitto.h>
 #include <QtGui/QPalette>
 
+#ifndef POINTSIZE
+#ifdef Q_OS_ANDROID
+#define POINTSIZE 2
+#else
+#define POINTSIZE 1
+#endif
+#endif
+
 namespace Smitto {
 
 enum class Themes : int
 {
-	Ligth = 0,
+	Light = 0,
 	Dark
 };
 

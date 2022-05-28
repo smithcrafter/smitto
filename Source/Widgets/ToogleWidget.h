@@ -15,7 +15,6 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 
 #include <QtWidgets/QAbstractButton>
@@ -23,11 +22,7 @@ class QLabel;
 
 namespace Smitto {
 
-enum class Theme : quint8
-{
-	Light,
-	Dark
-};
+enum class Themes : int;
 
 class ToogleWidget : public QAbstractButton
 {
@@ -37,7 +32,7 @@ public:
 	ToogleWidget(const QString& text, bool checked, QWidget* parent = Q_NULLPTR);
 	ToogleWidget(const QString& text, QWidget* parent = Q_NULLPTR) : ToogleWidget (text, false, parent) {}
 
-	void setTheme(Theme theme) {theme_ = theme; update();}
+	void setTheme(Themes theme) {theme_ = theme; update();}
 
 protected:
 	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
@@ -45,7 +40,7 @@ protected:
 	QSize sizeHint() const Q_DECL_OVERRIDE;
 
 private:
-	Theme theme_ = Theme::Light;
+	Themes theme_ = Themes(0);
 	quint8 pos = 0;
 	QTimer* timer_;
 	QLabel* label_ = Q_NULLPTR;

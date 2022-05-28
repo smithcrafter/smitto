@@ -16,9 +16,10 @@
  */
 
 #include "ToogleWidget.h"
+#include <Gui/SmittoTheme.h>
 #include <QtWidgets/QStyleOption>
-#include <QHBoxLayout>
-#include <QLabel>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPainter>
 #include <QtCore/QTimer>
@@ -77,12 +78,7 @@ void ToogleWidget::paintEvent(QPaintEvent* event)
 
 	QPainter p(this);
 	QPen pen;
-
-#ifdef Q_OS_ANDROID
-	pen.setWidth(2);
-#else
-	pen.setWidth(1);
-#endif
+	pen.setWidth(POINTSIZE);
 
 	if (!timer_->isActive())
 		pos = isChecked() ? 10 : 0;
@@ -94,7 +90,7 @@ void ToogleWidget::paintEvent(QPaintEvent* event)
 		dx = size().width()-96;
 	QRect rect(event->rect().x()+4+dx, event->rect().y()+4, size().width()-8-dx, size().height()-8);
 
-	if (theme_ == Theme::Light)
+	if (theme_ == Themes::Light)
 	{
 		pen.setColor(QColor(250*pos/10,250*pos/10,250*pos/10));
 		p.setBrush(QBrush(QColor(127+127*(10-pos)/10,127+127*(10-pos)/10,127+127*(10-pos)/10)));
@@ -110,7 +106,7 @@ void ToogleWidget::paintEvent(QPaintEvent* event)
 
 	p.drawRoundedRect(rect, rect.height()/2-1, rect.height()/2-1);
 
-	if (theme_ == Theme::Light)
+	if (theme_ == Themes::Light)
 		p.setBrush(QBrush(QColor(127+127*pos/10,127+127*pos/10,127+127*pos/10)));
 	else
 		p.setBrush(QBrush(QColor(255*pos/10,255*pos/10,255*pos/10)));
@@ -121,11 +117,7 @@ void ToogleWidget::paintEvent(QPaintEvent* event)
 
 QSize ToogleWidget::sizeHint() const
 {
-#ifdef Q_OS_ANDROID
-	return QSize(96+(label_?label_->sizeHint().width():0), 48);
-#else
-	return QSize(48+(label_?label_->sizeHint().width():0), 24);
-#endif
+	return QSize(48*POINTSIZE+(label_?label_->sizeHint().width():0), 24*POINTSIZE);
 }
 
 } // Smitto::

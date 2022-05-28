@@ -22,7 +22,7 @@ namespace Smitto {
 QString themeName(Themes theme)
 {
 	switch (theme) {
-		case Themes::Ligth : return QObject::tr("Ligth");
+		case Themes::Light : return QObject::tr("Ligth");
 		case Themes::Dark : return QObject::tr("Dark");
 	}
 	return QString();
@@ -30,7 +30,7 @@ QString themeName(Themes theme)
 
 QList<Themes> themes()
 {
-	return {Themes::Ligth, Themes::Dark};
+	return {Themes::Light, Themes::Dark};
 }
 
 } // Smitto::
