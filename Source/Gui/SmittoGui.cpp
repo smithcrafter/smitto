@@ -16,9 +16,10 @@
  */
 
 #include "SmittoGui.h"
-// Qt5
+#include <QtWidgets/QWidget>
 #include <QtGui/QClipboard>
 #include <QtGui/QGuiApplication>
+#include <QGraphicsDropShadowEffect>
 
 namespace Smitto {
 namespace Ui {
@@ -28,6 +29,18 @@ QString clipboardText()
 	if (auto* clipboard = QGuiApplication::clipboard())
 		return clipboard->text();
 	return QString();
+}
+
+QGraphicsDropShadowEffect* addDropShadowEffect(QWidget& widget, const QColor& color, qreal BlurRadius,
+											   qreal xOffset, qreal yOffset)
+{
+	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(&widget);
+	effect->setBlurRadius(BlurRadius);
+	effect->setXOffset(xOffset);
+	effect->setYOffset(yOffset);
+	effect->setColor(color);
+	widget.setGraphicsEffect(effect);
+	return effect;
 }
 
 } // Ui ::

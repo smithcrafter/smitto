@@ -21,11 +21,15 @@
 #include "SmittoTheme.h"
 #include "SmittoStyleSheets.h"
 #include "SmittoColors.h"
+class QGraphicsDropShadowEffect;
 
 namespace Smitto {
 namespace Ui {
 
 QString clipboardText();
+
+QGraphicsDropShadowEffect* addDropShadowEffect(QWidget& widget, const QColor& color, qreal BlurRadius,
+											   qreal xOffset, qreal yOffset);
 
 } // Ui ::
 } // Smitto ::
