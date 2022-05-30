@@ -22,7 +22,7 @@
 #include <ramio/settings/config.h>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QToolButton>
-#include <QDebug>
+
 namespace Smitto {
 
 ServiceStatusWidget::ServiceStatusWidget(Service& service, QWidget* parent)

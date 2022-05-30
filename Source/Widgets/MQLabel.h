@@ -15,32 +15,25 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "MobileScrollArea.h"
-#include <QtWidgets/QScrollBar>
+#pragma once
+
+#include <smitto.h>
+#include <QtWidgets/QLabel>
 #include <QtGui/QMouseEvent>
 
 namespace Smitto {
 
-MobileScrollArea::MobileScrollArea(QWidget* parent)
-	: QScrollArea(parent)
+class MQLabel : public QLabel
 {
-	this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-}
+public:
+	MQLabel(QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags())
+		: QLabel (parent, f) {}
+	MQLabel(const QString& text, QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags())
+		: QLabel (text, parent, f) {}
 
-void MobileScrollArea::mousePressEvent(QMouseEvent* event)
-{
-	startScroll_ = event->pos();
-	QScrollArea::mousePressEvent(event);
-}
-
-void MobileScrollArea::mouseMoveEvent(QMouseEvent *event)
-{
-	auto pos = event->pos();
-	int y = pos.y() - startScroll_.y();
-	this->verticalScrollBar()->setValue(this->verticalScrollBar()->value()-y);
-	startScroll_ = event->pos();
-	QScrollArea::mouseMoveEvent(event);
-}
+	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE {QLabel::mousePressEvent(event); event->ignore();}
+	void mouseReleaseEvent(QMouseEvent* event) Q_DECL_OVERRIDE {QLabel::mouseReleaseEvent(event); event->ignore();}
+	void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE {QLabel::mouseMoveEvent(event); event->ignore();}
+};
 
 } // Smitto::

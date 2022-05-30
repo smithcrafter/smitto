@@ -15,32 +15,8 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "MobileScrollArea.h"
-#include <QtWidgets/QScrollBar>
-#include <QtGui/QMouseEvent>
+#include "MQLabel.h"
 
 namespace Smitto {
-
-MobileScrollArea::MobileScrollArea(QWidget* parent)
-	: QScrollArea(parent)
-{
-	this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-}
-
-void MobileScrollArea::mousePressEvent(QMouseEvent* event)
-{
-	startScroll_ = event->pos();
-	QScrollArea::mousePressEvent(event);
-}
-
-void MobileScrollArea::mouseMoveEvent(QMouseEvent *event)
-{
-	auto pos = event->pos();
-	int y = pos.y() - startScroll_.y();
-	this->verticalScrollBar()->setValue(this->verticalScrollBar()->value()-y);
-	startScroll_ = event->pos();
-	QScrollArea::mouseMoveEvent(event);
-}
 
 } // Smitto::
