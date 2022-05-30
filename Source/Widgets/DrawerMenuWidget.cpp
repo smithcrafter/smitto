@@ -80,7 +80,7 @@ DrawerMenuWidget::DrawerMenuWidget(const QString& title, QWidget* parent)
 	hlayout->setMargin(5);
 	hlayout->setSpacing(5);
 	QPushButton* button;
-	hlayout->addWidget(button = new QPushButton(QIcon(":/files/icons/go-back-left-arrow.png"), QString()));
+	hlayout->addWidget(button = new QPushButton(QIcon(":/files/icons/menu-back-button.png"), QString()));
 	button->setIconSize(Smitto::Ui::iconSize());
 
 	QLabel* label;

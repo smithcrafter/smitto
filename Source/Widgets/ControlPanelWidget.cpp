@@ -40,11 +40,11 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	this->setFixedHeight(Smitto::Ui::panelSize());
 	this->setMinimumWidth(100);
 
-	layout->addWidget(mainButton_ = new QPushButton(QIcon(":/files/icons/menu-button.png"), QString()));
+	layout->addWidget(mainButton_ = new QPushButton(QIcon(":/files/icons/menu-hamburger-button.png"), QString()));
 	mainButton_->setStyleSheet("border:0px;");
 	mainButton_->setIconSize(Smitto::Ui::iconSize());
 
-	layout->addWidget(backButton_ = new QPushButton(QIcon(":/files/icons/back-button.png"), QString()));
+	layout->addWidget(backButton_ = new QPushButton(QIcon(":/files/icons/menu-back-button.png"), QString()));
 	backButton_->setStyleSheet("border:0px;");
 	backButton_->setIconSize(Smitto::Ui::iconSize());
 
@@ -53,11 +53,11 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	label_->installEventFilter(this);
 	layout->addStretch();
 
-	layout->addWidget(addButton_ = new QPushButton(QIcon(":/files/icons/add-button.png"), QString()));
+	layout->addWidget(addButton_ = new QPushButton(QIcon(":/files/icons/menu-add-button.png"), QString()));
 	addButton_->setStyleSheet("border:0px;");
 	addButton_->setIconSize(Smitto::Ui::iconSize());
 
-	layout->addWidget(saveButton_ = new QPushButton(QIcon(":/files/icons/save-button.png"), QString()));
+	layout->addWidget(saveButton_ = new QPushButton(QIcon(":/files/icons/menu-save-button.png"), QString()));
 	saveButton_->setStyleSheet("border:0px;");
 	saveButton_->setIconSize(Smitto::Ui::iconSize());
 
