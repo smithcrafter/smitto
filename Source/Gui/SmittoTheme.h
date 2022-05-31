@@ -40,6 +40,8 @@ QList<Themes> themes();
 
 QString themeName(Themes theme);
 
+Themes nextTheme(Themes current);
+
 struct Theme
 {
 	Themes theme;

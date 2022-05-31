@@ -33,4 +33,9 @@ QList<Themes> themes()
 	return {Themes::Light, Themes::Dark};
 }
 
+Themes nextTheme(Themes current)
+{
+	return current == Smitto::Themes::Light ? Smitto::Themes::Dark : Smitto::Themes::Light;
+}
+
 } // Smitto::
