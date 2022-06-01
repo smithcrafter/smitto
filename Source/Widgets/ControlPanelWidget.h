@@ -29,7 +29,8 @@ enum class SubButtons : quint8
 {
 	None,
 	Add = 1,
-	Save = 2
+	Save = 2,
+	Menu = 4
 };
 
 enum class MainPanellButton : quint8
@@ -59,6 +60,7 @@ signals:
 	void labelClicked();
 	void addButtonClicked();
 	void saveButtonClicked();
+	void menuButtonClicked();
 
 private:
 	void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
@@ -70,7 +72,7 @@ private:
 	int section_ = -1;
 	QLabel* label_;
 	QPushButton *mainButton_, *backButton_;
-	QPushButton *addButton_, *saveButton_;
+	QPushButton *addButton_, *saveButton_, *menuButton_;
 };
 
 } // Ui ::

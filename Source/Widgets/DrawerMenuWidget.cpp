@@ -75,9 +75,9 @@ DrawerMenuWidget::DrawerMenuWidget(const QString& title, QWidget* parent)
 
 	menuWidget_->setStyleSheet(QString("QWidget{background: %1;}").arg(Smitto::scolor(Smitto::SmittoBaseColors::level04)));
 	QVBoxLayout* menulayout = new QVBoxLayout(menuWidget_);
-	menulayout->setMargin(0);
+	menulayout->setContentsMargins(0, 0, 0, 0);
 	QHBoxLayout* hlayout = new QHBoxLayout();
-	hlayout->setMargin(5);
+	hlayout->setContentsMargins(5, 5, 5, 5);
 	hlayout->setSpacing(5);
 	QPushButton* button;
 	hlayout->addWidget(button = new QPushButton(QIcon(":/files/icons/menu-back-button.png"), QString()));
