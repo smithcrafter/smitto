@@ -32,6 +32,7 @@ public:
 	~MenuStackedWidget() Q_DECL_OVERRIDE;
 
 	void selectMenuItem(QWidget* watched);
+	void selectWidgetItem(QWidget* watched);
 	void selectFirstMenuItem();
 
 	QWidget* insertMenuWidget(const QString& menutext, QWidget* content, int pos = -1);
@@ -46,6 +47,8 @@ public:
 	QVBoxLayout* bottomStackedLayout() {return bottomStackedLayout_;}
 
 	const QMap<QWidget*, QWidget*>& widgets() const {return widgets_;}
+
+	QWidget* currentWidget() const;
 
 protected:
 	bool eventFilter(QObject* watched, QEvent* event) Q_DECL_OVERRIDE;

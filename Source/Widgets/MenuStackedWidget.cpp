@@ -51,7 +51,9 @@ MenuStackedWidget::~MenuStackedWidget() = default;
 
 void MenuStackedWidget::selectMenuItem(QWidget* watched)
 {
-	QWidget* content = widgets_[static_cast<QWidget*>(watched)];
+	if (!widgets_.contains(watched))
+		return;
+	QWidget* content = widgets_[watched];
 	int index = stackedWidget_->indexOf(content);
 	if (index == -1)
 	{
@@ -65,6 +67,16 @@ void MenuStackedWidget::selectMenuItem(QWidget* watched)
 		lastActiveMenu_->setStyleSheet(emptyss);
 	lastActiveMenu_ = static_cast<QWidget*>(watched);
 	lastActiveMenu_ ->setStyleSheet(activeStyleSheet_);
+}
+
+void MenuStackedWidget::selectWidgetItem(QWidget* watched)
+{
+	for (auto it = widgets().begin(); it != widgets().end(); ++it)
+		if (it.value() == watched)
+		{
+			selectMenuItem(it.key());
+			return;
+		}
 }
 
 void MenuStackedWidget::selectFirstMenuItem()
@@ -96,6 +108,11 @@ void MenuStackedWidget::insertMenuWidget(QWidget* menu, QWidget* content, int po
 void MenuStackedWidget::insertMenuStretch()
 {
 	menuLayout_->addStretch();
+}
+
+QWidget* MenuStackedWidget::currentWidget() const
+{
+	return stackedWidget_->currentWidget();
 }
 
 bool MenuStackedWidget::eventFilter(QObject* watched, QEvent* event)
