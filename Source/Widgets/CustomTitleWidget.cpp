@@ -63,12 +63,11 @@ CustomTitleWidget::CustomTitleWidget(const QString& title, TiltleButtons butons,
 		tb->setText("☐");
 		tb->setFixedSize(iconSize());
 		connect(tb, &QToolButton::clicked, this, [this](){
-			if (this->maxParent()->isMaximized()) {
-				this->maxParent()->showMinimized();
-				this->maxParent()->showNormal();
-			}
-			else
-				this->maxParent()->showMaximized();
+			auto maxParent = this->maxParent();
+			maxParent->showMinimized();
+			bool isMax = maxParent->isMaximized() || maxParent->property("isMaximized").toBool();
+			(isMax) ? maxParent->showNormal() : maxParent->showMaximized();
+			maxParent->setProperty("isMaximized", !isMax);
 		});
 		buttons_.insert(TiltleButton::NormMax, tb);
 	}
