@@ -157,6 +157,7 @@ public:
 		res.count_ = count;
 		return res;
 	}
+	bool insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other);
 
 #ifdef QSTRING_H
 	QString name;
@@ -205,10 +206,12 @@ typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE
 	auto it = lowerBound(key);
 	if (it.key() == key)
 	{
+#ifdef DEBUG
 		if (it.pos() != count_-1)
 		{
 			DWLOG(name + QString(" OKM: Вставка в середину %1 из %2").arg(it.pos()).arg(count_));
 		}
+#endif
 		Pair* pair = (Pair*)((char*)data_+it.pos()*sizeof(Pair));
 		pair->value = value;
 		return it;
@@ -245,6 +248,21 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertBefore(int pos, KTYPE key, TYPE
 		firstKey_ = key;
 	count_++;
 	return pair->value;
+}
+
+template <typename KTYPE, typename TYPE, int ALTFIND>
+bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other)
+{
+	if (other.lastKey() > firstKey())
+		return false;
+	void *ldata = data_;
+	reserve((other.count_ + count_ + BASESIZE)*sizeof(Pair));
+	memcpy((char*)data_, other.data_, other.count_*sizeof(Pair));
+	memcpy((char*)data_+other.count_*sizeof(Pair), ldata, count_*sizeof(Pair));
+	count_ = other.count_ + count_;
+	firstKey_ = other.firstKey();
+	free(ldata);
+	return true;
 }
 
 template <typename KTYPE, typename TYPE, int ALTFIND>
