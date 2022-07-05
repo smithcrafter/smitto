@@ -109,6 +109,7 @@ public:
 	typedef iterator ConstIterator;
 	inline iterator begin() const {return constBegin();}
 	inline iterator end() const {return constEnd();}
+	inline iterator at(int pos) const {return iterator(this, pos < count_ ? pos : count_);}
 	inline iterator constBegin() const {return iterator(this, 0);}
 	inline iterator constEnd() const {return iterator(this, count_);}
 	iterator find(KTYPE key);
@@ -120,9 +121,9 @@ public:
 	iterator upperBoundAlt(KTYPE key) const;
 
 // constructors
-	OrderedKeyMap(int size = BASESIZE) {if (size > 0) reserve(size*sizeof(Pair));}
+	OrderedKeyMap(int size = BASESIZE) {if (size > 0) reserveData(size*sizeof(Pair));}
 	OrderedKeyMap(const OrderedKeyMap& o) {
-		reserve(o.dataSize_); memcpy(data_, o.data_, dataSize_); count_ = o.count_;
+		reserveData(o.dataSize_); memcpy(data_, o.data_, dataSize_); count_ = o.count_;
 		lastKey_ = o.lastKey_; firstKey_ = o.firstKey_; }
 	OrderedKeyMap(OrderedKeyMap&& o) {
 		dataSize_= o.dataSize_; data_ = o.data_; lastKey_ = o.lastKey_; firstKey_ = o.firstKey_; count_ = o.count_;
@@ -135,7 +136,7 @@ public:
 		lastKey_ = o.lastKey_; firstKey_ = o.firstKey_;  count_ = o.count_;
 		o.data_ = nullptr; o.dataSize_ = 0; o.lastKey_ = 0; o.firstKey_ = 0; o.count_ = 0; return *this;}
 	OrderedKeyMap& operator = (const OrderedKeyMap& o) {
-		if (dataSize_ < o.dataSize_)  {dealoc(); reserve(o.dataSize_); }
+		if (dataSize_ < o.dataSize_)  {dealoc(); reserveData(o.dataSize_); }
 		memcpy(data_, o.data_, o.dataSize_); count_ = o.count_;
 		lastKey_ = o.lastKey_; firstKey_ = o.firstKey_; return *this;}
 	inline bool operator == (const OrderedKeyMap& o) const {return count_ == o.count_ && firstKey_ == o.firstKey_ && lastKey_ == o.lastKey_
@@ -158,15 +159,18 @@ public:
 		return res;
 	}
 	bool insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other);
+	bool insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other);
 
 #ifdef QSTRING_H
 	QString name;
 	OrderedKeyMap(const QString& nameArg, int size = BASESIZE) : OrderedKeyMap(size) {name = nameArg;}
 #endif
 
+	void reserve(int k) {if (k*sizeof(Pair) > dataSize_) realoc(k-dataSize_/sizeof(Pair));}
+
 private:
-	void reserve(int k) {if (k > 0) data_ = malloc(dataSize_ = k);}
-	void realoc(int addk) {void *ldata = data_; reserve(dataSize_+addk); memcpy(data_, ldata, dataSize_-addk); free(ldata);}
+	void reserveData(int k) {if (k > 0) data_ = malloc(dataSize_ = k);}
+	void realoc(int addk) {void *ldata = data_; reserveData(dataSize_+addk); memcpy(data_, ldata, dataSize_-addk); free(ldata);}
 	void dealoc() {clear(); if (data_) free(data_); data_ = nullptr; dataSize_ = 0;}
 	TYPE& insertBefore(int pos, KTYPE key, TYPE&& value);
 
@@ -183,7 +187,7 @@ template <typename KTYPE, typename TYPE, int ALTFIND>
 typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insert(KTYPE key, TYPE value)
 {
 	if (!dataSize_)
-		reserve(BASESIZE*sizeof(Pair));
+		reserveData(BASESIZE*sizeof(Pair));
 	if (!count_)
 	{
 		Pair* pair = (Pair*)((char*)data_);
@@ -226,7 +230,7 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertBefore(int pos, KTYPE key, TYPE
 	if (int((count_+1)*sizeof(Pair)) > dataSize_)
 	{
 		void *ldata = data_;
-		reserve(2*dataSize_);
+		reserveData(2*dataSize_);
 		if (pos > 0)
 			memcpy((char*)data_, ldata, pos*sizeof(Pair));
 		DWLOG(name + (pos > 0 ? QString("OKM: Inserting element %1 in the middle and increasing the size").arg(key) :
@@ -253,15 +257,33 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertBefore(int pos, KTYPE key, TYPE
 template <typename KTYPE, typename TYPE, int ALTFIND>
 bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other)
 {
-	if (other.lastKey() > firstKey())
+	if (other.lastKey() >= firstKey())
 		return false;
 	void *ldata = data_;
-	reserve((other.count_ + count_ + BASESIZE)*sizeof(Pair));
+	reserveData((other.count_ + count_ + BASESIZE)*sizeof(Pair));
 	memcpy((char*)data_, other.data_, other.count_*sizeof(Pair));
-	memcpy((char*)data_+other.count_*sizeof(Pair), ldata, count_*sizeof(Pair));
+	if (!count_)
+		lastKey_ = other.lastKey_;
+	else
+		memcpy((char*)data_+other.count_*sizeof(Pair), ldata, count_*sizeof(Pair));
 	count_ = other.count_ + count_;
-	firstKey_ = other.firstKey();
+	firstKey_ = other.firstKey_;
 	free(ldata);
+	return true;
+}
+
+template <typename KTYPE, typename TYPE, int ALTFIND>
+bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other)
+{
+	if (other.firstKey() <= lastKey())
+		return false;
+	if ((other.count_ + count_)*int(sizeof(Pair)) > dataSize_)
+		realoc((other.count_ + count_ + BASESIZE)*sizeof(Pair));
+	memcpy((char*)data_+count_*sizeof(Pair), other.data_, other.count_*sizeof(Pair));
+	if (!count_)
+		firstKey_ = other.firstKey_;
+	count_ = other.count_ + count_;
+	lastKey_ = other.lastKey_;
 	return true;
 }
 
