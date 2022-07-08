@@ -33,13 +33,13 @@ namespace Smitto {
 template <typename KTYPE, typename TYPE, int ALTFIND = 0>
 class OrderedKeyMap
 {
+public:
 	struct Pair
 	{
 		KTYPE key;
 		TYPE value;
 		Pair(KTYPE pkey, TYPE pvalue) : key(pkey), value(std::move(pvalue)) {}
 	};
-public:
 	struct iterator
 	{
 		iterator() : container_(nullptr), pos_(0) {}
@@ -128,7 +128,15 @@ public:
 	OrderedKeyMap(OrderedKeyMap&& o) {
 		dataSize_= o.dataSize_; data_ = o.data_; lastKey_ = o.lastKey_; firstKey_ = o.firstKey_; count_ = o.count_;
 		o.data_ = nullptr; o.dataSize_ = 0; o.lastKey_ = 0; o.firstKey_ = 0; o.count_ = 0; }
+	OrderedKeyMap(const void* data, int dataSize) {
+		reserveData(dataSize); memcpy(data_, data, dataSize_ = dataSize); count_ = dataSize/sizeof(Pair);
+		if (count_) {firstKey_ = at(0).key(); lastKey_ = at(count_-1).key();} }
 	~OrderedKeyMap() {dealoc();}
+
+
+	static OrderedKeyMap fromRawData(const void* data, int dataSize) { OrderedKeyMap res(0);
+		res.dataSize_ = 0; res.data_ = const_cast<void*>(data); res.count_ = dataSize/sizeof(Pair);
+		if (res.count_) {res.firstKey_ = res.at(0).key(); res.lastKey_ = res.at(res.count_-1).key();} return res;}
 
 // operators
 	OrderedKeyMap& operator = (OrderedKeyMap&& o) {
@@ -166,12 +174,14 @@ public:
 	OrderedKeyMap(const QString& nameArg, int size = BASESIZE) : OrderedKeyMap(size) {name = nameArg;}
 #endif
 
-	void reserve(int k) {if (k*sizeof(Pair) > dataSize_) realoc(k-dataSize_/sizeof(Pair));}
+	int dataSize() const {return dataSize_;}
+	const void* data() const {return data_;}
+	void reserve(int k) {if (k*int(sizeof(Pair)) > dataSize_) realoc(k-dataSize_/sizeof(Pair));}
 
 private:
 	void reserveData(int k) {if (k > 0) data_ = malloc(dataSize_ = k);}
 	void realoc(int addk) {void *ldata = data_; reserveData(dataSize_+addk); memcpy(data_, ldata, dataSize_-addk); free(ldata);}
-	void dealoc() {clear(); if (data_) free(data_); data_ = nullptr; dataSize_ = 0;}
+	void dealoc() {clear(); if (data_ && dataSize_) free(data_); data_ = nullptr; dataSize_ = 0;}
 	TYPE& insertBefore(int pos, KTYPE key, TYPE&& value);
 
 private:
