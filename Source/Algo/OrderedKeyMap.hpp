@@ -173,8 +173,11 @@ public:
 	QString name;
 	OrderedKeyMap(const QString& nameArg, int size = BASESIZE) : OrderedKeyMap(size) {name = nameArg;}
 #endif
-
-	int dataSize() const {return dataSize_;}
+#ifdef QBYTEARRAY_H
+	explicit OrderedKeyMap(const QByteArray& ba) : OrderedKeyMap(ba.data(), ba.size()) {}
+	QByteArray toRawDataByteArray() const {return QByteArray::fromRawData((const char*)data(), dataSize());}
+#endif
+	int dataSize() const {return count_*sizeof(Pair);}
 	const void* data() const {return data_;}
 	void reserve(int k) {if (k*int(sizeof(Pair)) > dataSize_) realoc(k-dataSize_/sizeof(Pair));}
 
