@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QFile>
+#include <QFileInfo>
 #include <QTimer>
 #include <QProcess>
 #include <QPainter>
@@ -58,6 +59,12 @@ LibLoaderWidget::LibLoaderWidget(const QString& libPath, const QString& libUrl, 
 	vlayout = new QVBoxLayout(updateWidget_);
 	vlayout->addWidget(new QLabel("Обвноление версии.."), 0, Qt::AlignCenter);
 
+	stackedWidget_->addWidget(errorWidget_ = new QWidget());
+	vlayout = new QVBoxLayout(errorWidget_);
+	vlayout->addWidget(errorLabel_ = new QLabel(errorWidget_), 0, Qt::AlignCenter);
+	connect(errorLabel_, &QLabel::linkActivated, this, &LibLoaderWidget::check, Qt::QueuedConnection);
+
+
 	QProcess::execute("rm", {QString( "%1.*").arg(libPath_)});
 	QProcess::execute("cp", {libPath_, QString( "%1.%2").arg(libPath_).arg(ver)});
 }
@@ -81,7 +88,7 @@ void LibLoaderWidget::saveSettings()
 void LibLoaderWidget::check()
 {
 	QString path = libPath_ + QString(".%1").arg(ver);
-	qDebug()<<"check"<<path;
+	DLOG(QString("start check %1 %2").arg(path).arg(QFileInfo(path).size()));
 #ifdef USE_QLIB
 	library_.setFileName(path);
 	if (library_.load())
@@ -121,8 +128,9 @@ void LibLoaderWidget::check()
 		qDebug()<<path<<"exists"<<QFile(QString( "%1.%2").arg(libPath_).arg(ver)).exists();
 #else
 		qDebug()<<path<<"exists"<<QFile(QString( "%1.%2").arg(libPath_).arg(ver)).exists();
-		qDebug()<<path<<"dlerror"<<dlerror();
-		checkLabel_->setText(QString("dlopen err dlerror=%1").arg(dlerror()));
+		QString errStr(dlerror());
+		qDebug()<<path<<"dlerror"<<errStr;
+		checkLabel_->setText(QString("dlopen err dlerror=%1").arg(errStr));
 #endif
 		QTimer::singleShot(1000, this, &LibLoaderWidget::downoad);
 	}
@@ -130,7 +138,7 @@ void LibLoaderWidget::check()
 
 void LibLoaderWidget::downoad()
 {
-	qDebug()<<"downoad";
+	qDebug()<<"start downoad";
 	donwloadLabel_->clear();
 	stackedWidget_->setCurrentWidget(donwloadWidget_);
 	if (!manager_)
@@ -179,14 +187,22 @@ void LibLoaderWidget::onFinished()
 	}
 
 	QFile file(libPath_);
-	qDebug()<<"open file"<<file.open(QIODevice::WriteOnly);
-	file.write(ba);
-	file.flush();
-	file.close();
-	ver++;
-	QProcess::execute("cp", {libPath_, QString( "%1.%2").arg(libPath_).arg(ver)});
-	qDebug()<<QString( "%1.%2").arg(libPath_).arg(ver)<<"exists"<<QFile(QString( "%1.%2").arg(libPath_).arg(ver)).exists();
-	QTimer::singleShot(1000, this, &LibLoaderWidget::check);
+	if (file.open(QIODevice::WriteOnly))
+	{
+		file.write(ba);
+		file.flush();
+		file.close();
+		QString ln = QString("%1.%2").arg(libPath_).arg(++ver);
+		QProcess::execute("cp", {libPath_, ln});
+		DLOG(QString( "File: %1 exists %2").arg(ln).arg(QFile(ln).exists()));
+		QTimer::singleShot(1000, this, &LibLoaderWidget::check);
+	}
+	else
+	{
+		errorLabel_->setText(QString("<h1>Ошибка</h1><p>Ошибка записи новой версии в файл %1.</p>"
+									 "<center><a href=\"check\">повторить</a></center>").arg(libPath_));
+		stackedWidget_->setCurrentWidget(errorWidget_);
+	}
 }
 
 void LibLoaderWidget::unload()

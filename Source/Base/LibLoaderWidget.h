@@ -63,11 +63,8 @@ private:
 #endif
 	QNetworkAccessManager* manager_ = Q_NULLPTR;
 	QStackedWidget* stackedWidget_;
-	QWidget* checkWidget_;
-	QLabel* checkLabel_;
-	QWidget* donwloadWidget_;
-	QLabel* donwloadLabel_;
-	QWidget* updateWidget_;
+	QWidget *checkWidget_, *donwloadWidget_, *updateWidget_, *errorWidget_;
+	QLabel *checkLabel_, *donwloadLabel_, *errorLabel_;
 	QObject* engine_;
 	QWidget* widget_;
 	int ver = 0;
