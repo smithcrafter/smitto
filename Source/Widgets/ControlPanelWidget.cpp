@@ -65,12 +65,17 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	menuButton_->setStyleSheet("border:0px;");
 	menuButton_->setIconSize(Smitto::Ui::iconSize());
 
+	layout->addWidget(refreshButton_ = new QPushButton(QIcon(":/files/icons/menu-regresh-button.png"), QString()));
+	refreshButton_->setStyleSheet("border:0px;");
+	refreshButton_->setIconSize(Smitto::Ui::iconSize());
+
 	connect(mainButton_, &QPushButton::clicked, this, &ControlPanelWidget::menuRequested);
 	connect(backButton_, &QPushButton::clicked, this, &ControlPanelWidget::backRequested);
 
 	connect(addButton_, &QPushButton::clicked, this, &ControlPanelWidget::addButtonClicked);
 	connect(saveButton_, &QPushButton::clicked, this, &ControlPanelWidget::saveButtonClicked);
 	connect(menuButton_, &QPushButton::clicked, this, &ControlPanelWidget::menuButtonClicked);
+	connect(refreshButton_, &QPushButton::clicked, this, &ControlPanelWidget::refreshButtonClicked);
 
 	home();
 }
@@ -88,6 +93,7 @@ void ControlPanelWidget::home()
 	backButton_->setHidden(true);
 	saveButton_->setHidden(true);
 	menuButton_->setHidden(true);
+	refreshButton_->setHidden(true);
 }
 
 void ControlPanelWidget::setSection(int sectionId, const QString& name, SubButtons button, MainPanellButton mbuttom)
@@ -97,6 +103,7 @@ void ControlPanelWidget::setSection(int sectionId, const QString& name, SubButto
 	addButton_->setHidden(!(quint8(button) & quint8(SubButtons::Add)));
 	saveButton_->setHidden(!(quint8(button) & quint8(SubButtons::Save)));
 	menuButton_->setHidden(!(quint8(button) & quint8(SubButtons::Menu)));
+	refreshButton_->setHidden(!(quint8(button) & quint8(SubButtons::Refresh)));
 	mainButton_->setHidden(mbuttom != MainPanellButton::Home);
 	backButton_->setHidden(mbuttom != MainPanellButton::Back);
 }
