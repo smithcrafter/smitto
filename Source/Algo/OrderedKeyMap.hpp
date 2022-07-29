@@ -30,7 +30,7 @@
 
 namespace Smitto {
 
-template <typename KTYPE, typename TYPE, int ALTFIND = 0>
+template <typename KTYPE, typename TYPE, int FINDALG = 0>
 class OrderedKeyMap
 {
 public:
@@ -125,7 +125,7 @@ public:
 	OrderedKeyMap(const OrderedKeyMap& o) {
 		reserveData(o.dataSize_); memcpy(data_, o.data_, dataSize_); count_ = o.count_;
 		lastKey_ = o.lastKey_; firstKey_ = o.firstKey_; }
-	OrderedKeyMap(OrderedKeyMap&& o) {
+	OrderedKeyMap(OrderedKeyMap&& o) noexcept {
 		dataSize_= o.dataSize_; data_ = o.data_; lastKey_ = o.lastKey_; firstKey_ = o.firstKey_; count_ = o.count_;
 		o.data_ = nullptr; o.dataSize_ = 0; o.lastKey_ = 0; o.firstKey_ = 0; o.count_ = 0; }
 	OrderedKeyMap(const void* data, int dataSize) {
@@ -139,7 +139,7 @@ public:
 		if (res.count_) {res.firstKey_ = res.at(0).key(); res.lastKey_ = res.at(res.count_-1).key();} return res;}
 
 // operators
-	OrderedKeyMap& operator = (OrderedKeyMap&& o) {
+	OrderedKeyMap& operator = (OrderedKeyMap&& o) noexcept {
 		dealoc(); dataSize_= o.dataSize_; data_ = o.data_;
 		lastKey_ = o.lastKey_; firstKey_ = o.firstKey_;  count_ = o.count_;
 		o.data_ = nullptr; o.dataSize_ = 0; o.lastKey_ = 0; o.firstKey_ = 0; o.count_ = 0; return *this;}
@@ -147,7 +147,8 @@ public:
 		if (dataSize_ < o.dataSize_)  {dealoc(); reserveData(o.dataSize_); }
 		memcpy(data_, o.data_, o.dataSize_); count_ = o.count_;
 		lastKey_ = o.lastKey_; firstKey_ = o.firstKey_; return *this;}
-	inline bool operator == (const OrderedKeyMap& o) const {return count_ == o.count_ && firstKey_ == o.firstKey_ && lastKey_ == o.lastKey_
+	inline bool operator == (const OrderedKeyMap& o) const {return count_ == o.count_
+				&& firstKey_ == o.firstKey_ && lastKey_ == o.lastKey_
 				&& memcmp(data_, o.data_, count_*sizeof(Pair)) == 0;}
 
 
@@ -166,8 +167,8 @@ public:
 		res.count_ = count;
 		return res;
 	}
-	bool insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other);
-	bool insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other);
+	bool insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, FINDALG>& other);
+	bool insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, FINDALG>& other);
 
 #ifdef QSTRING_H
 	QString name;
@@ -196,12 +197,12 @@ private:
 	TYPE emptyVal = TYPE(); // 0
 };
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insert(KTYPE key, TYPE value)
+template <typename KTYPE, typename TYPE, int FINDALG>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::insert(KTYPE key, TYPE value)
 {
 	if (!dataSize_)
 		reserveData(BASESIZE*sizeof(Pair));
-	if (!count_)
+	if (empty())
 	{
 		Pair* pair = (Pair*)((char*)data_);
 		*pair = Pair(key, std::move(value));
@@ -237,8 +238,8 @@ typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE
 	return it;
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertBefore(int pos, KTYPE key, TYPE&& value)
+template <typename KTYPE, typename TYPE, int FINDALG>
+TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALG>::insertBefore(int pos, KTYPE key, TYPE&& value)
 {
 	if (int((count_+1)*sizeof(Pair)) > dataSize_)
 	{
@@ -267,15 +268,15 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertBefore(int pos, KTYPE key, TYPE
 	return pair->value;
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other)
+template <typename KTYPE, typename TYPE, int FINDALG>
+bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, FINDALG>& other)
 {
 	if (other.lastKey() >= firstKey())
 		return false;
 	void *ldata = data_;
 	reserveData((other.count_ + count_ + BASESIZE)*sizeof(Pair));
 	memcpy((char*)data_, other.data_, other.count_*sizeof(Pair));
-	if (!count_)
+	if (empty())
 		lastKey_ = other.lastKey_;
 	else
 		memcpy((char*)data_+other.count_*sizeof(Pair), ldata, count_*sizeof(Pair));
@@ -285,23 +286,23 @@ bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertAtBegining(const OrderedKeyMap<K
 	return true;
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, ALTFIND>& other)
+template <typename KTYPE, typename TYPE, int FINDALG>
+bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, FINDALG>& other)
 {
 	if (other.firstKey() <= lastKey())
 		return false;
 	if ((other.count_ + count_)*int(sizeof(Pair)) > dataSize_)
 		realoc((other.count_ + count_ + BASESIZE)*sizeof(Pair));
 	memcpy((char*)data_+count_*sizeof(Pair), other.data_, other.count_*sizeof(Pair));
-	if (!count_)
+	if (empty())
 		firstKey_ = other.firstKey_;
 	count_ = other.count_ + count_;
 	lastKey_ = other.lastKey_;
 	return true;
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-void OrderedKeyMap<KTYPE, TYPE, ALTFIND>::remove(KTYPE key)
+template <typename KTYPE, typename TYPE, int FINDALG>
+void OrderedKeyMap<KTYPE, TYPE, FINDALG>::remove(KTYPE key)
 {
 	if (key == lastKey_)
 	{
@@ -322,8 +323,8 @@ void OrderedKeyMap<KTYPE, TYPE, ALTFIND>::remove(KTYPE key)
 	count_--;
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::equal(const OrderedKeyMap& o) const
+template <typename KTYPE, typename TYPE, int FINDALG>
+bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::equal(const OrderedKeyMap& o) const
 {
 	if (count_ != o.count() || firstKey_ != o.firstKey_ || lastKey_ != o.lastKey_)
 		return false;
@@ -337,8 +338,8 @@ bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::equal(const OrderedKeyMap& o) const
 }
 
 #ifdef QMAP_H
-template <typename KTYPE, typename TYPE, int ALTFIND>
-bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::equal(const QMap<KTYPE, TYPE>& o) const
+template <typename KTYPE, typename TYPE, int FINDALG>
+bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::equal(const QMap<KTYPE, TYPE>& o) const
 {
 	if (count_ != o.count() || firstKey_ != o.firstKey() || lastKey_ != o.lastKey())
 		return false;
@@ -350,8 +351,8 @@ bool OrderedKeyMap<KTYPE, TYPE, ALTFIND>::equal(const QMap<KTYPE, TYPE>& o) cons
 }
 #endif
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::valueNearPos(KTYPE key, int pos)
+template <typename KTYPE, typename TYPE, int FINDALG>
+TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALG>::valueNearPos(KTYPE key, int pos)
 {
 	if (pos < count_ && pos >= 0)
 	{
@@ -372,7 +373,7 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::valueNearPos(KTYPE key, int pos)
 			else if (p*(data2.key - key) > 0)
 				break;
 
-		} while(pos2 >=0 && pos2 < count_);
+		} while(pos2 >= 0 && pos2 < count_);
 	}
 	DWLOG(name + "OKM: Miss - valueNearPos");
 	return emptyVal;
@@ -385,7 +386,7 @@ enum class SearchType
 	Find
 };
 
-template <typename KTYPE, typename TYPE, int ALTFIND = 0>
+template <typename KTYPE, typename TYPE, int FINDALG = 0>
 typename OrderedKeyMap<KTYPE, TYPE, 0>::iterator internalSearch(const OrderedKeyMap<KTYPE, TYPE, 0>& container,
 																 KTYPE key, SearchType stype)
 {
@@ -408,7 +409,7 @@ typename OrderedKeyMap<KTYPE, TYPE, 0>::iterator internalSearch(const OrderedKey
 	return container.constEnd();
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND = 1>
+template <typename KTYPE, typename TYPE, int FINDALG = 1>
 typename OrderedKeyMap<KTYPE, TYPE, 1>::iterator internalSearch(const OrderedKeyMap<KTYPE, TYPE, 1>& container,
 																 KTYPE key, SearchType stype)
 {
@@ -445,33 +446,33 @@ typename OrderedKeyMap<KTYPE, TYPE, 1>::iterator internalSearch(const OrderedKey
 	return container.constEnd();
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE, ALTFIND>::lowerBound(KTYPE key) const
+template <typename KTYPE, typename TYPE, int FINDALG>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::lowerBound(KTYPE key) const
 {
-	if (!count_ || key > lastKey_)
+	if (empty() || key > lastKey_)
 		return constEnd();
 	if (key == lastKey_)
 		return iterator(this, count_-1);
 	if (key <= firstKey_)
 		return iterator(this, 0);
-	return internalSearch<KTYPE, TYPE, ALTFIND>(*this, key, SearchType::LowerBound);
+	return internalSearch<KTYPE, TYPE, FINDALG>(*this, key, SearchType::LowerBound);
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE, ALTFIND>::upperBoundAlt(KTYPE key) const
+template <typename KTYPE, typename TYPE, int FINDALG>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::upperBoundAlt(KTYPE key) const
 {
-	if (!count_ || key >= lastKey_)
+	if (empty() || key >= lastKey_)
 		return constEnd();
 	if (key == firstKey_)
 		return iterator(this, 1);
 	if (key < firstKey_)
 		return iterator(this, 0);
-	return internalSearch<KTYPE, TYPE, ALTFIND>(*this, key, SearchType::UpperBound);
+	return internalSearch<KTYPE, TYPE, FINDALG>(*this, key, SearchType::UpperBound);
 }
 
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::operator [](KTYPE key)
+template <typename KTYPE, typename TYPE, int FINDALG>
+TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALG>::operator [](KTYPE key)
 {
 	if (key == lastKey_)
 		return last();
@@ -483,8 +484,8 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, ALTFIND>::operator [](KTYPE key)
 	return it.value();
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE, ALTFIND>::find(KTYPE key)
+template <typename KTYPE, typename TYPE, int FINDALG>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::find(KTYPE key)
 {
 	auto it = lowerBound(key);
 	if (it == constEnd() || it.key() == key)
@@ -492,29 +493,29 @@ typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE
 	return constEnd();
 }
 
-template <typename KTYPE, typename TYPE, int ALTFIND>
-typename OrderedKeyMap<KTYPE, TYPE, ALTFIND>::iterator OrderedKeyMap<KTYPE, TYPE, ALTFIND>::findAlt(KTYPE key)
+template <typename KTYPE, typename TYPE, int FINDALG>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::findAlt(KTYPE key)
 {
-	if (!count_ || key > lastKey_ || key < firstKey_)
+	if (empty() || key > lastKey_ || key < firstKey_)
 		return constEnd();
 	if (key == lastKey_)
 		return iterator(this, count_-1);
 	if (key == firstKey_)
 		return iterator(this, 0);
-	return internalSearch<KTYPE, TYPE, ALTFIND>(*this, key, SearchType::Find);
+	return internalSearch<KTYPE, TYPE, FINDALG>(*this, key, SearchType::Find);
 }
 
 #ifdef QLIST_H
-template <typename KTYPE, typename TYPE, int ALTFIND>
-QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, ALTFIND>::keys() const
+template <typename KTYPE, typename TYPE, int FINDALG>
+QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, FINDALG>::keys() const
 {
 	QList<KTYPE> res;
 	for (auto it = constBegin(); it != constEnd(); ++it)
 		res.append(it.key());
 	return res;
 }
-template <typename KTYPE, typename TYPE, int ALTFIND>
-QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, ALTFIND>::keys(KTYPE min, KTYPE max) const
+template <typename KTYPE, typename TYPE, int FINDALG>
+QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, FINDALG>::keys(KTYPE min, KTYPE max) const
 {
 	QList<KTYPE> res;
 	auto itEnd = max ? upperBound(max) : constEnd();
@@ -522,8 +523,8 @@ QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, ALTFIND>::keys(KTYPE min, KTYPE max) con
 		res.append(it.key());
 	return res;
 }
-template <typename KTYPE, typename TYPE, int ALTFIND>
-QList<TYPE> OrderedKeyMap<KTYPE, TYPE, ALTFIND>::values() const
+template <typename KTYPE, typename TYPE, int FINDALG>
+QList<TYPE> OrderedKeyMap<KTYPE, TYPE, FINDALG>::values() const
 {
 	QList<TYPE> res;
 	for (auto it = constBegin(); it != constEnd(); ++it)
