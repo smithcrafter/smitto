@@ -38,12 +38,17 @@ public:
 	{
 		KTYPE key;
 		TYPE value;
-		Pair(KTYPE pkey, TYPE pvalue) : key(pkey), value(std::move(pvalue)) {}
+		Pair(KTYPE pkey, TYPE&& pvalue) : key(pkey), value(std::move(pvalue)) {}
+		Pair(KTYPE pkey, const TYPE& pvalue) : key(pkey), value(pvalue) {}
 	};
 	struct iterator
 	{
 		iterator() : container_(nullptr), pos_(0) {}
 		iterator(const OrderedKeyMap* container, int ppos) : container_(container), pos_(ppos) {}
+		inline KTYPE key() const {if (pos_ >= container_->size() || pos_ < 0) return -1; return container_->dataAt(pos_).key;}
+		inline TYPE& value() {return container_->dataAt(pos_).value;}
+		inline TYPE value() const {return container_->dataAt(pos_).value;}
+		inline int pos() const {return pos_;}
 		inline bool operator != (const iterator& other) const {return pos_ != other.pos_;}
 		inline bool operator == (const iterator& other) const {return pos_ == other.pos_;}
 		inline iterator& operator ++ () {pos_++; return *this;}
@@ -52,12 +57,10 @@ public:
 		inline iterator operator --(int) {iterator r = *this; pos_--; return r;}
 		inline iterator operator + (int n) const {return iterator(container_, pos_+n);}
 		inline iterator operator - (int n) const {return iterator(container_, pos_-n);}
-		inline KTYPE key() const {if (pos_ >= container_->size() || pos_ < 0) return -1; return container_->dataAt(pos_).key;}
-		inline TYPE& value() {return container_->dataAt(pos_).value;}
-		inline TYPE value() const {return container_->dataAt(pos_).value;}
-		inline int pos() const {return pos_;}
 		inline TYPE& operator*() {return value();}
 		inline TYPE* operator->() {return &value();}
+		inline operator bool() const  {return pos_ >= 0 && pos_ < container_->count();}
+		bool isEnd() const {return pos_ == container_->count();}
 	private:
 		const OrderedKeyMap* container_ = nullptr;
 		int pos_ = 0;
@@ -204,8 +207,7 @@ typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE
 		reserveData(BASESIZE*sizeof(Pair));
 	if (empty())
 	{
-		Pair* pair = (Pair*)((char*)data_);
-		*pair = Pair(key, std::move(value));
+		new ((Pair*)((char*)data_)) Pair(key, std::move(value));
 		count_++;
 		firstKey_ = key;
 		lastKey_ = key;
@@ -215,8 +217,7 @@ typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE
 	{
 		if (int((count_+1)*sizeof(Pair)) > dataSize_)
 			realoc(dataSize_);
-		Pair* pair = (Pair*)((char*)data_+count_*sizeof(Pair));
-		*pair = Pair(key, std::move(value));
+		new ((Pair*)((char*)data_+count_*sizeof(Pair))) Pair(key, std::move(value));
 		count_++;
 		lastKey_ = key;
 		return iterator(this, count_-1);
@@ -230,8 +231,7 @@ typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE
 			DWLOG(name + QString(" OKM: Вставка в середину %1 из %2").arg(it.pos()).arg(count_));
 		}
 #endif
-		Pair* pair = (Pair*)((char*)data_+it.pos()*sizeof(Pair));
-		pair->value = value;
+		((Pair*)((char*)data_+it.pos()*sizeof(Pair)))->value = value;
 		return it;
 	}
 	insertBefore(it.pos(), key, std::move(value));
