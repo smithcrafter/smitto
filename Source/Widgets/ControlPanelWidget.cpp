@@ -65,7 +65,7 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	menuButton_->setStyleSheet("border:0px;");
 	menuButton_->setIconSize(Smitto::Ui::iconSize());
 
-	layout->addWidget(refreshButton_ = new QPushButton(QIcon(":/files/icons/menu-regresh-button.png"), QString()));
+	layout->addWidget(refreshButton_ = new QPushButton(QIcon(":/files/icons/menu-refresh-button.png"), QString()));
 	refreshButton_->setStyleSheet("border:0px;");
 	refreshButton_->setIconSize(Smitto::Ui::iconSize());
 
