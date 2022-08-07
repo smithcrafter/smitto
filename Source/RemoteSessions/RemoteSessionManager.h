@@ -19,7 +19,7 @@
 
 #include "RemoteSession.h"
 namespace Ramio {class ConnectionHandler; class Components; struct ConnectionInfo;
-namespace Proto { struct QueryPacket; enum class Queries;
+namespace Proto { struct QueryPacket; enum class Queries : quint8;
 struct QPGetDataObject; struct APGetDataObject;
 struct QPGetDataSet; struct APGetDataSet; struct QPCreateDataObject; struct APCreateDataObject;
 struct QPSaveDataObject; struct APSaveDataObject; struct QPDeleteDataObject; struct APDeleteDataObject;
