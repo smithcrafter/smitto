@@ -38,6 +38,14 @@ int panelSize()
 	return 32+10;
 }
 
+QSize panelIconSize()
+{
+#ifdef Q_OS_ANDROID
+	return QSize(96, 96);
+#endif
+	return QSize(24, 24);
+}
+
 int panelMargin()
 {
 #ifdef Q_OS_ANDROID

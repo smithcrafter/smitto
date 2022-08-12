@@ -31,7 +31,9 @@ enum class SubButtons : quint8
 	Add = 1,
 	Save = 2,
 	Menu = 4,
-	Refresh = 8
+	Refresh = 8,
+	Clear = 16,
+	Delete = 32
 };
 
 enum class MainPanellButton : quint8

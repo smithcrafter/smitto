@@ -27,6 +27,9 @@ SMITTO_LIB_EXPORT
 int panelSize();
 
 SMITTO_LIB_EXPORT
+QSize panelIconSize();
+
+SMITTO_LIB_EXPORT
 int panelMargin();
 
 SMITTO_LIB_EXPORT

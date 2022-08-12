@@ -44,7 +44,7 @@ Themes nextTheme(Themes current);
 
 struct Theme
 {
-	Themes theme;
+	Themes theme = Themes::Light;
 	QPalette pallete;
 
 	QString name() const {return themeName(theme);}

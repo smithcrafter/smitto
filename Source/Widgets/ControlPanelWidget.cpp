@@ -42,11 +42,11 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 
 	layout->addWidget(mainButton_ = new QPushButton(QIcon(":/files/icons/menu-hamburger-button.png"), QString()));
 	mainButton_->setStyleSheet("border:0px;");
-	mainButton_->setIconSize(Smitto::Ui::iconSize());
+	mainButton_->setIconSize(Smitto::Ui::panelIconSize());
 
 	layout->addWidget(backButton_ = new QPushButton(QIcon(":/files/icons/menu-back-button.png"), QString()));
 	backButton_->setStyleSheet("border:0px;");
-	backButton_->setIconSize(Smitto::Ui::iconSize());
+	backButton_->setIconSize(Smitto::Ui::panelIconSize());
 
 	layout->addWidget(label_ = new QLabel(this));
 	label_->setStyleSheet("QLabel {font-weight: bold;font-size: 120%;}");
@@ -55,19 +55,19 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 
 	layout->addWidget(addButton_ = new QPushButton(QIcon(":/files/icons/menu-add-button.png"), QString()));
 	addButton_->setStyleSheet("border:0px;");
-	addButton_->setIconSize(Smitto::Ui::iconSize());
+	addButton_->setIconSize(Smitto::Ui::panelIconSize());
 
 	layout->addWidget(saveButton_ = new QPushButton(QIcon(":/files/icons/menu-save-button.png"), QString()));
 	saveButton_->setStyleSheet("border:0px;");
-	saveButton_->setIconSize(Smitto::Ui::iconSize());
+	saveButton_->setIconSize(Smitto::Ui::panelIconSize());
 
 	layout->addWidget(menuButton_ = new QPushButton(QIcon(":/files/icons/menu-more-button.png"), QString()));
 	menuButton_->setStyleSheet("border:0px;");
-	menuButton_->setIconSize(Smitto::Ui::iconSize());
+	menuButton_->setIconSize(Smitto::Ui::panelIconSize());
 
 	layout->addWidget(refreshButton_ = new QPushButton(QIcon(":/files/icons/menu-refresh-button.png"), QString()));
 	refreshButton_->setStyleSheet("border:0px;");
-	refreshButton_->setIconSize(Smitto::Ui::iconSize());
+	refreshButton_->setIconSize(Smitto::Ui::panelIconSize());
 
 	connect(mainButton_, &QPushButton::clicked, this, &ControlPanelWidget::menuRequested);
 	connect(backButton_, &QPushButton::clicked, this, &ControlPanelWidget::backRequested);
