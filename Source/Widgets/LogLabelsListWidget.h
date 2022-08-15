@@ -36,6 +36,7 @@ signals:
 	void linkActivated(const QString& link);
 
 public slots:
+	void addMessageFromConsoleFormat(const QString& msg);
 	void addMessage(const QString& msg);
 
 private:

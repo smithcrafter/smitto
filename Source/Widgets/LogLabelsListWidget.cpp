@@ -16,7 +16,8 @@
  */
 
 #include "LogLabelsListWidget.h"
-// Qt5
+#include <ramio/global/text.h>
+#include <ramio/log/log.h>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QVBoxLayout>
@@ -45,6 +46,15 @@ LogLabelsListWidget::LogLabelsListWidget(QWidget* parent)
 
 LogLabelsListWidget::~LogLabelsListWidget()
 {
+}
+
+void LogLabelsListWidget::addMessageFromConsoleFormat(const QString& msg)
+{
+	QString text = msg;
+	text.replace(RC_GREEN, txt_colorStartStr % txt_color_greenStr % txt_colorMiddleStr);
+	text.replace(RC_RED, txt_colorStartStr % txt_color_redStr % txt_colorMiddleStr);
+	text.replace(RC_NC, txt_colorEndStr);
+	addMessage(text);
 }
 
 void LogLabelsListWidget::addMessage(const QString& msg)
