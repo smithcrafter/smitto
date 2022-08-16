@@ -25,14 +25,11 @@ namespace Smitto {
 
 MenuStackedWidget::MenuStackedWidget(const QString& activeStyleSheet, const QString& backgroundStyleSheet,
 									 Qt::Orientation orientation, QWidget* parent)
-	: QWidget(parent),
-	  activeStyleSheet_(activeStyleSheet),
-	  backgroundStyleSheet_(backgroundStyleSheet)
+	: QWidget(parent)
 {
 	QBoxLayout* layout = orientation == Qt::Horizontal ? static_cast<QBoxLayout*>(new QHBoxLayout(this)) :  static_cast<QBoxLayout*>(new QVBoxLayout(this));
 	UI_SET_ZERO_MARGINSPACING(layout);
 	baseMenuWidget_ = new QWidget(this);
-	baseMenuWidget_->setStyleSheet(backgroundStyleSheet_);
 	menuLayout_ = orientation == Qt::Horizontal ? static_cast<QBoxLayout*>(new QVBoxLayout(baseMenuWidget_)) : static_cast<QBoxLayout*>(new QHBoxLayout(baseMenuWidget_));
 	UI_SET_ZERO_MARGINSPACING(menuLayout_);
 	layout->addWidget(baseMenuWidget_);
@@ -45,6 +42,7 @@ MenuStackedWidget::MenuStackedWidget(const QString& activeStyleSheet, const QStr
 	hlayout->addWidget(stackedWidget_ = new QStackedWidget(this));
 	hlayout->addLayout(rigthStackedLayout_ = new QVBoxLayout);
 	stackedLayout->addLayout(bottomStackedLayout_ = new QVBoxLayout);
+	setStyleSheets(activeStyleSheet, backgroundStyleSheet);
 }
 
 MenuStackedWidget::~MenuStackedWidget() = default;
@@ -113,6 +111,16 @@ void MenuStackedWidget::insertMenuStretch()
 QWidget* MenuStackedWidget::currentWidget() const
 {
 	return stackedWidget_->currentWidget();
+}
+
+void MenuStackedWidget::setStyleSheets(const QString& activeStyleSheet, const QString& backgroundStyleSheet)
+{
+	activeStyleSheet_ = activeStyleSheet;
+	backgroundStyleSheet_ = backgroundStyleSheet;
+
+	baseMenuWidget_->setStyleSheet(backgroundStyleSheet_);
+	if (lastActiveMenu_)
+		lastActiveMenu_ ->setStyleSheet(activeStyleSheet_);
 }
 
 bool MenuStackedWidget::eventFilter(QObject* watched, QEvent* event)

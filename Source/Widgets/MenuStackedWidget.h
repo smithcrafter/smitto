@@ -50,12 +50,14 @@ public:
 
 	QWidget* currentWidget() const;
 
+	void setStyleSheets(const QString& activeStyleSheet, const QString& backgroundStyleSheet);
+
 protected:
 	bool eventFilter(QObject* watched, QEvent* event) Q_DECL_OVERRIDE;
 
 private:
-	const QString& activeStyleSheet_;
-	const QString& backgroundStyleSheet_;
+	QString activeStyleSheet_;
+	QString backgroundStyleSheet_;
 	QMap<QWidget*, QWidget*> widgets_;
 	QStackedWidget* stackedWidget_;
 	QBoxLayout* menuLayout_;
