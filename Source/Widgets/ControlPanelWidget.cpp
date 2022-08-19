@@ -53,30 +53,23 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	label_->installEventFilter(this);
 	layout->addStretch();
 
-	layout->addWidget(addButton_ = new QPushButton(QIcon(":/files/icons/menu-add-button.png"), QString()));
-	addButton_->setStyleSheet("border:0px;");
-	addButton_->setIconSize(Smitto::Ui::panelIconSize());
-
-	layout->addWidget(saveButton_ = new QPushButton(QIcon(":/files/icons/menu-save-button.png"), QString()));
-	saveButton_->setStyleSheet("border:0px;");
-	saveButton_->setIconSize(Smitto::Ui::panelIconSize());
-
-	layout->addWidget(menuButton_ = new QPushButton(QIcon(":/files/icons/menu-more-button.png"), QString()));
-	menuButton_->setStyleSheet("border:0px;");
-	menuButton_->setIconSize(Smitto::Ui::panelIconSize());
-
-	layout->addWidget(refreshButton_ = new QPushButton(QIcon(":/files/icons/menu-refresh-button.png"), QString()));
-	refreshButton_->setStyleSheet("border:0px;");
-	refreshButton_->setIconSize(Smitto::Ui::panelIconSize());
+	layout->addWidget(subButtons_[SubButtons::Add] = new QPushButton(QIcon(":/files/icons/menu-add-button.png"), QString()));
+	layout->addWidget(subButtons_[SubButtons::Save] = new QPushButton(QIcon(":/files/icons/menu-save-button.png"), QString()));
+	layout->addWidget(subButtons_[SubButtons::Menu] = new QPushButton(QIcon(":/files/icons/menu-more-button.png"), QString()));
+	layout->addWidget(subButtons_[SubButtons::Refresh] = new QPushButton(QIcon(":/files/icons/menu-refresh-button.png"), QString()));
+	layout->addWidget(subButtons_[SubButtons::Clear] = new QPushButton(QIcon(":/files/icons/menu-clear-button.png"), QString()));
+	layout->addWidget(subButtons_[SubButtons::Delete] = new QPushButton(QIcon(":/files/icons/menu-delete-button.png"), QString()));
+	layout->addWidget(subButtons_[SubButtons::Edit] = new QPushButton(QIcon(":/files/icons/menu-edit-button.png"), QString()));
 
 	connect(mainButton_, &QPushButton::clicked, this, &ControlPanelWidget::menuRequested);
 	connect(backButton_, &QPushButton::clicked, this, &ControlPanelWidget::backRequested);
 
-	connect(addButton_, &QPushButton::clicked, this, &ControlPanelWidget::addButtonClicked);
-	connect(saveButton_, &QPushButton::clicked, this, &ControlPanelWidget::saveButtonClicked);
-	connect(menuButton_, &QPushButton::clicked, this, &ControlPanelWidget::menuButtonClicked);
-	connect(refreshButton_, &QPushButton::clicked, this, &ControlPanelWidget::refreshButtonClicked);
-
+	for (quint8 bt = quint8(SubButtons::Add); quint8(bt) <= quint8(SubButtons::LastEnmnItem); bt = bt<<1)
+	{
+		subButtons_[SubButtons(bt)]->setStyleSheet("border:0px;");
+		subButtons_[SubButtons(bt)]->setIconSize(Smitto::Ui::panelIconSize());
+		connect(subButtons_[SubButtons(bt)], &QPushButton::clicked, this, [this, bt](){emit buttonClicked(SubButtons(bt));});
+	}
 	home();
 }
 
@@ -88,22 +81,18 @@ void ControlPanelWidget::home()
 {
 	label_->setText(H3(basename_));
 	section_ = -1;
-	addButton_->setHidden(true);
+	for (quint8 bt = quint8(SubButtons::Add); quint8(bt) <= quint8(SubButtons::LastEnmnItem); bt = bt<<1)
+		subButtons_[SubButtons(bt)]->setHidden(true);
 	mainButton_->setHidden(false);
 	backButton_->setHidden(true);
-	saveButton_->setHidden(true);
-	menuButton_->setHidden(true);
-	refreshButton_->setHidden(true);
 }
 
 void ControlPanelWidget::setSection(int sectionId, const QString& name, SubButtons button, MainPanellButton mbuttom)
 {
 	label_->setText(H3(name));
 	section_ = sectionId;
-	addButton_->setHidden(!(quint8(button) & quint8(SubButtons::Add)));
-	saveButton_->setHidden(!(quint8(button) & quint8(SubButtons::Save)));
-	menuButton_->setHidden(!(quint8(button) & quint8(SubButtons::Menu)));
-	refreshButton_->setHidden(!(quint8(button) & quint8(SubButtons::Refresh)));
+	for (quint8 bt = quint8(SubButtons::Add); quint8(bt) <= quint8(SubButtons::LastEnmnItem); bt = bt<<1)
+		subButtons_[SubButtons(bt)]->setHidden(!(quint8(button) & bt));
 	mainButton_->setHidden(mbuttom != MainPanellButton::Home);
 	backButton_->setHidden(mbuttom != MainPanellButton::Back);
 }

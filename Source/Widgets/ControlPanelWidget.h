@@ -20,6 +20,7 @@
 
 #include <smitto.h>
 #include <QtWidgets/QWidget>
+#include <QtCore/QMap>
 class QLabel; class QPushButton;
 
 namespace Smitto {
@@ -33,7 +34,9 @@ enum class SubButtons : quint8
 	Menu = 4,
 	Refresh = 8,
 	Clear = 16,
-	Delete = 32
+	Delete = 32,
+	Edit = 64,
+	LastEnmnItem = Edit
 };
 
 enum class MainPanellButton : quint8
@@ -59,12 +62,8 @@ public:
 signals:
 	void menuRequested();
 	void backRequested();
-
 	void labelClicked();
-	void addButtonClicked();
-	void saveButtonClicked();
-	void menuButtonClicked();
-	void refreshButtonClicked();
+	void buttonClicked(SubButtons button);
 
 private:
 	void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
@@ -76,7 +75,7 @@ private:
 	int section_ = -1;
 	QLabel* label_;
 	QPushButton *mainButton_, *backButton_;
-	QPushButton *addButton_, *saveButton_, *menuButton_, *refreshButton_;
+	QMap<SubButtons, QPushButton*> subButtons_;
 };
 
 } // Ui ::
