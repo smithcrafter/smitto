@@ -19,6 +19,7 @@
 
 #include <smitto.h>
 #include <Items/MetaItems.h>
+#include <Protocol/ProtocolEnums.h>
 #include <Network/NetGlobal.h>
 #include <QtCore/QDateTime>
 
@@ -40,7 +41,7 @@ struct SMITTO_LIB_EXPORT RemoteSessionRecord : Ramio::MetaStandardItemData
 class SMITTO_LIB_EXPORT RemoteSession;
 GENERATE_HEADER_METACLASS_START(RemoteSession, RemoteSessionRecord)
 public:
-	QList<const Ramio::AbstractMetaSet*> notificationSets;
+	QMap<const Ramio::AbstractMetaSet*, Ramio::Proto::DataSetChangeNotifications> notificationSets;
 };
 
 class SMITTO_LIB_EXPORT RemoteSessionSet;

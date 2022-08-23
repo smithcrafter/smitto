@@ -60,6 +60,7 @@ protected:
 private:
 	void onQueryReceived(Ramio::Proto::Queries query, const Ramio::Proto::QueryPacket& packet, const Ramio::ConnectionInfo& from);
 	void onClientDisconnected(const Ramio::ConnectionInfo& client);
+	void sendAllCache();
 
 protected:
 	void onItemCreated(const Ramio::AbstractMetaSet& set, const Ramio::Item& item);
@@ -72,6 +73,7 @@ private:
 	Smitto::MetaUserSet& users_;
 	Smitto::RemoteSessionSet sessions_;
 	qint64 epid_ = 0;
+	QMap<const Ramio::AbstractMetaSet*, QSet<const Ramio::Item*>> itemsCreated_, itemsChanged_, itemsDeleted_;
 };
 
 } // Smitto::
