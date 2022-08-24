@@ -21,7 +21,6 @@
 #include <RamioProtocol>
 #include <ramio/log/log.h>
 #include <ramio/items/components.h>
-#include <Items/Components.h>
 #include <QtCore/QTimer>
 
 namespace Smitto {
@@ -40,6 +39,7 @@ RemoteSessionManager::RemoteSessionManager(Ramio::ConnectionHandler& server, Ram
 	connect(&components, &Ramio::Components::itemDeleted, this, &RemoteSessionManager::onItemDeleted);
 	auto timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, this, &RemoteSessionManager::sendAllCache);
+	timer->start(5000);
 }
 
 RemoteSessionManager::~RemoteSessionManager()
@@ -117,7 +117,7 @@ void RemoteSessionManager::onQueryReceived(Ramio::Proto::Queries query, const Ra
 		{
 			answerPacket.dataSetName = queryPacket.dataSetName;
 			answerPacket.set = set;
-			if (queryPacket.dataSetChangeNotification)
+			if (!(queryPacket.dataSetChangeNotification & Ramio::Proto::DataSetChangeNotification::NotUseThisFlag))
 				session->notificationSets.insert(set, queryPacket.dataSetChangeNotification);
 		}
 		else if (specialGetDataSet(queryPacket, answerPacket, session))
@@ -189,17 +189,13 @@ void RemoteSessionManager::sendAllCache()
 	{
 		for (auto it = itemsCreated_.begin(); it != itemsCreated_.end(); ++it)
 		{
-			// TODO через общий пакет
 			auto& set = *it.key();
+			Ramio::Proto::EPDataObjectsCreated eventPacket(set.meta().setName, set.meta().itemName, epid_++);
 			for (auto itemPtr : it.value())
-			{
-				auto& item = *itemPtr;
-				Ramio::Proto::EPDataObjectCreated eventPacket(set.meta().setName, set.meta().itemName, epid_++);
-				eventPacket.createFromData(set.meta(), item.data());
-				for (auto* session: sessions_)
-					if (session->notificationSets[&set] & Ramio::Proto::DataSetChangeNotification::AddCache)
-						server_.sendEvent(Ramio::Proto::Events::DataObjectCreated, eventPacket, session->data().netInfo);
-			}
+				eventPacket.appendFromData(set.meta(), itemPtr->data());
+			for (auto* session: sessions_)
+				if (session->notificationSets[&set] & Ramio::Proto::DataSetChangeNotification::AddCache)
+					server_.sendEvent(Ramio::Proto::Events::DataObjectsCreated, eventPacket, session->data().netInfo);
 		}
 		for (auto it = itemsChanged_.begin(); it != itemsChanged_.end(); ++it)
 		{
@@ -211,22 +207,21 @@ void RemoteSessionManager::sendAllCache()
 				if (session->notificationSets[&set] & Ramio::Proto::DataSetChangeNotification::ChangeCache)
 					server_.sendEvent(Ramio::Proto::Events::DataObjectsChanged, eventPacket, session->data().netInfo);
 		}
-		for (auto it = itemsDeleted_.begin(); it != itemsCreated_.end(); ++it)
+		for (auto it = itemsDeleted_.begin(); it != itemsDeleted_.end(); ++it)
 		{
-			// TODO через общий пакет
 			auto& set = *it.key();
+			Ramio::Proto::EPDataObjectsDeleted eventPacket(set.meta().setName, set.meta().itemName, epid_++);
 			for (auto itemPtr : it.value())
 			{
-				auto& item = *itemPtr;
 				QString itemUuid;
 				if (auto uuiddiff = set.meta().fieldDiff("uuid", Ramio::Meta::Type::Uuid))
-					itemUuid = item.data().field<RMUuid>(uuiddiff).toString();
-				Ramio::Proto::EPDataObjectDeleted eventPacket(set.meta().setName, set.meta().itemName, QString::number(item.id()),
-															  itemUuid, epid_++);
-				for (auto* session: sessions_)
-					if (session->notificationSets[&set] & Ramio::Proto::DataSetChangeNotification::DelCache)
-						server_.sendEvent(Ramio::Proto::Events::DataObjectDeleted, eventPacket, session->data().netInfo);
+					itemUuid = itemPtr->data().field<RMUuid>(uuiddiff).toString();
+				eventPacket.itemIdUUid.append(QPair<QString, QString>(itemPtr->idStr(), itemUuid));
+
 			}
+			for (auto* session: sessions_)
+				if (session->notificationSets[&set] & Ramio::Proto::DataSetChangeNotification::DelCache)
+					server_.sendEvent(Ramio::Proto::Events::DataObjectsDeleted, eventPacket, session->data().netInfo);
 		}
 	}
 	itemsCreated_.clear();
@@ -275,6 +270,9 @@ void RemoteSessionManager::onItemDeleted(const Ramio::AbstractMetaSet& set, cons
 		itemUuid = item.data().field<RMUuid>(uuiddiff).toString();
 	Ramio::Proto::EPDataObjectDeleted eventPacket(set.meta().setName, set.meta().itemName, QString::number(item.id()),
 												  itemUuid, epid_++);
+
+	itemsCreated_[&set].remove(&item);
+	itemsChanged_[&set].remove(&item);
 	for (auto* session: sessions_.items())
 	{
 		auto flag = session->notificationSets[&set];
