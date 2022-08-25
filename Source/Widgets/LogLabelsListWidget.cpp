@@ -21,7 +21,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QPushButton>
 
 namespace Smitto {
 
@@ -35,17 +34,19 @@ LogLabelsListWidget::LogLabelsListWidget(QWidget* parent)
 
 	labelsPallete_ = this->palette();
 	labelsPallete_.setColor(QPalette::ColorRole::Text, QColor(Qt::gray));
-	connect(listWidget_, &QListWidget::doubleClicked, [this](){
+	connect(listWidget_, &QListWidget::doubleClicked, this, [this](){
 		for (int i = 0; i < listWidget_->model()->rowCount(); ++i)
 			listWidget_->itemWidget(listWidget_->item(i))->setPalette(labelsPallete_);
 	});
-	auto* button = new QPushButton(tr("Очистить"), this);
-	layout->addWidget(button);
-	connect(button, &QPushButton::clicked, listWidget_, &QListWidget::clear);
 }
 
 LogLabelsListWidget::~LogLabelsListWidget()
 {
+}
+
+void LogLabelsListWidget::clear()
+{
+	listWidget_->clear();
 }
 
 void LogLabelsListWidget::addMessageFromConsoleFormat(const QString& msg)

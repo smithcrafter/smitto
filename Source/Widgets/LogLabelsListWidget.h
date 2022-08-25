@@ -31,6 +31,7 @@ public:
 	~LogLabelsListWidget() Q_DECL_OVERRIDE;
 
 	QListWidget* listWidget() {return listWidget_;}
+	void clear();
 
 signals:
 	void linkActivated(const QString& link);
