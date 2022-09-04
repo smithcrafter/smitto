@@ -68,7 +68,8 @@ public:
 
 // standard
 	inline TYPE operator [](KTYPE key) const {auto it = find(key); if (it != constEnd()) return it.value();
-		DWLOG(name + " OKM: Miss - key"); return emptyVal;}
+		DWLOG(name + QString(" OKM: Miss - key %1. Range %2-%3 count %4").arg(key).arg(firstKey_).arg(lastKey_).arg(count_));
+		return emptyVal;}
 	TYPE& operator [](KTYPE key);
 	inline TYPE value(KTYPE key) const {return const_cast<OrderedKeyMap*>(this)->operator[] (key);}
 	inline TYPE& first() {if (count_) return (*(Pair*)((char*)data_)).value;
