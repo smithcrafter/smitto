@@ -30,7 +30,14 @@
 
 namespace Smitto {
 
-template <typename KTYPE, typename TYPE, int FINDALG = 0>
+enum class FindAlgorithm
+{
+	BinarySeparation,
+	RelativePrediction
+};
+
+
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM = FindAlgorithm::BinarySeparation>
 class OrderedKeyMap
 {
 public:
@@ -171,8 +178,8 @@ public:
 		res.count_ = count;
 		return res;
 	}
-	bool insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, FINDALG>& other);
-	bool insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, FINDALG>& other);
+	bool insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>& other);
+	bool insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>& other);
 
 #ifdef QSTRING_H
 	QString name;
@@ -201,8 +208,8 @@ private:
 	TYPE emptyVal = TYPE(); // 0
 };
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::insert(KTYPE key, TYPE value)
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::insert(KTYPE key, TYPE value)
 {
 	if (!dataSize_)
 		reserveData(BASESIZE*sizeof(Pair));
@@ -239,8 +246,8 @@ typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE
 	return it;
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALG>::insertBefore(int pos, KTYPE key, TYPE&& value)
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::insertBefore(int pos, KTYPE key, TYPE&& value)
 {
 	if (int((count_+1)*sizeof(Pair)) > dataSize_)
 	{
@@ -269,8 +276,8 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALG>::insertBefore(int pos, KTYPE key, TYPE
 	return pair->value;
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, FINDALG>& other)
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+bool OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::insertAtBegining(const OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>& other)
 {
 	if (other.lastKey() >= firstKey())
 		return false;
@@ -287,8 +294,8 @@ bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::insertAtBegining(const OrderedKeyMap<K
 	return true;
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, FINDALG>& other)
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+bool OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::insertAfterEnd(const OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>& other)
 {
 	if (other.firstKey() <= lastKey())
 		return false;
@@ -302,8 +309,8 @@ bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::insertAfterEnd(const OrderedKeyMap<KTY
 	return true;
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-void OrderedKeyMap<KTYPE, TYPE, FINDALG>::remove(KTYPE key)
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+void OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::remove(KTYPE key)
 {
 	if (key == lastKey_)
 	{
@@ -324,8 +331,8 @@ void OrderedKeyMap<KTYPE, TYPE, FINDALG>::remove(KTYPE key)
 	count_--;
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::equal(const OrderedKeyMap& o) const
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+bool OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::equal(const OrderedKeyMap& o) const
 {
 	if (count_ != o.count() || firstKey_ != o.firstKey_ || lastKey_ != o.lastKey_)
 		return false;
@@ -339,8 +346,8 @@ bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::equal(const OrderedKeyMap& o) const
 }
 
 #ifdef QMAP_H
-template <typename KTYPE, typename TYPE, int FINDALG>
-bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::equal(const QMap<KTYPE, TYPE>& o) const
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+bool OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::equal(const QMap<KTYPE, TYPE>& o) const
 {
 	if (count_ != o.count() || firstKey_ != o.firstKey() || lastKey_ != o.lastKey())
 		return false;
@@ -352,8 +359,8 @@ bool OrderedKeyMap<KTYPE, TYPE, FINDALG>::equal(const QMap<KTYPE, TYPE>& o) cons
 }
 #endif
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALG>::valueNearPos(KTYPE key, int pos)
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::valueNearPos(KTYPE key, int pos)
 {
 	if (pos < count_ && pos >= 0)
 	{
@@ -387,8 +394,8 @@ enum class SearchType
 	Find
 };
 
-template <typename KTYPE, typename TYPE, int FINDALG = 0>
-typename OrderedKeyMap<KTYPE, TYPE, 0>::iterator internalSearch(const OrderedKeyMap<KTYPE, TYPE, 0>& container,
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM = FindAlgorithm::BinarySeparation>
+typename OrderedKeyMap<KTYPE, TYPE, FindAlgorithm::BinarySeparation>::iterator internalSearch(const OrderedKeyMap<KTYPE, TYPE, FindAlgorithm::BinarySeparation>& container,
 																 KTYPE key, SearchType stype)
 {
 	int begin = 0;
@@ -401,17 +408,17 @@ typename OrderedKeyMap<KTYPE, TYPE, 0>::iterator internalSearch(const OrderedKey
 		{
 			if (stype == SearchType::UpperBound)
 				pos++;
-			return typename OrderedKeyMap<KTYPE, TYPE, false>::iterator(&container, pos);
+			return typename OrderedKeyMap<KTYPE, TYPE, FindAlgorithm::BinarySeparation>::iterator(&container, pos);
 		}
 		key > atval.key ? begin = pos : end = pos;
 	}
 	if (stype == SearchType::LowerBound || stype == SearchType::UpperBound)
-		return typename OrderedKeyMap<KTYPE, TYPE, false>::iterator(&container, end);
+		return typename OrderedKeyMap<KTYPE, TYPE, FindAlgorithm::BinarySeparation>::iterator(&container, end);
 	return container.constEnd();
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG = 1>
-typename OrderedKeyMap<KTYPE, TYPE, 1>::iterator internalSearch(const OrderedKeyMap<KTYPE, TYPE, 1>& container,
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM = FindAlgorithm::RelativePrediction>
+typename OrderedKeyMap<KTYPE, TYPE, FindAlgorithm::RelativePrediction>::iterator internalSearch(const OrderedKeyMap<KTYPE, TYPE, FindAlgorithm::RelativePrediction>& container,
 																 KTYPE key, SearchType stype)
 {
 	int begin = 0;
@@ -429,7 +436,7 @@ typename OrderedKeyMap<KTYPE, TYPE, 1>::iterator internalSearch(const OrderedKey
 		{
 			if (stype == SearchType::UpperBound)
 				pos++;
-			return typename OrderedKeyMap<KTYPE, TYPE, true>::iterator(&container, pos);
+			return typename OrderedKeyMap<KTYPE, TYPE, FindAlgorithm::RelativePrediction>::iterator(&container, pos);
 		}
 		if (key > atval.key)
 		{
@@ -443,12 +450,12 @@ typename OrderedKeyMap<KTYPE, TYPE, 1>::iterator internalSearch(const OrderedKey
 		}
 	}
 	if (stype == SearchType::LowerBound || stype == SearchType::UpperBound)
-		return typename OrderedKeyMap<KTYPE, TYPE, true>::iterator(&container, end);
+		return typename OrderedKeyMap<KTYPE, TYPE, FindAlgorithm::RelativePrediction>::iterator(&container, end);
 	return container.constEnd();
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::lowerBound(KTYPE key) const
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::lowerBound(KTYPE key) const
 {
 	if (empty() || key > lastKey_)
 		return constEnd();
@@ -456,11 +463,11 @@ typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE
 		return iterator(this, count_-1);
 	if (key <= firstKey_)
 		return iterator(this, 0);
-	return internalSearch<KTYPE, TYPE, FINDALG>(*this, key, SearchType::LowerBound);
+	return internalSearch<KTYPE, TYPE, FINDALGORITHM>(*this, key, SearchType::LowerBound);
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::upperBoundAlt(KTYPE key) const
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::upperBoundAlt(KTYPE key) const
 {
 	if (empty() || key >= lastKey_)
 		return constEnd();
@@ -468,12 +475,12 @@ typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE
 		return iterator(this, 1);
 	if (key < firstKey_)
 		return iterator(this, 0);
-	return internalSearch<KTYPE, TYPE, FINDALG>(*this, key, SearchType::UpperBound);
+	return internalSearch<KTYPE, TYPE, FINDALGORITHM>(*this, key, SearchType::UpperBound);
 }
 
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALG>::operator [](KTYPE key)
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::operator [](KTYPE key)
 {
 	if (key == lastKey_)
 		return last();
@@ -485,8 +492,8 @@ TYPE& OrderedKeyMap<KTYPE, TYPE, FINDALG>::operator [](KTYPE key)
 	return it.value();
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::find(KTYPE key)
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::find(KTYPE key)
 {
 	auto it = lowerBound(key);
 	if (it == constEnd() || it.key() == key)
@@ -494,8 +501,8 @@ typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE
 	return constEnd();
 }
 
-template <typename KTYPE, typename TYPE, int FINDALG>
-typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALG>::findAlt(KTYPE key)
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+typename OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::iterator OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::findAlt(KTYPE key)
 {
 	if (empty() || key > lastKey_ || key < firstKey_)
 		return constEnd();
@@ -503,20 +510,20 @@ typename OrderedKeyMap<KTYPE, TYPE, FINDALG>::iterator OrderedKeyMap<KTYPE, TYPE
 		return iterator(this, count_-1);
 	if (key == firstKey_)
 		return iterator(this, 0);
-	return internalSearch<KTYPE, TYPE, FINDALG>(*this, key, SearchType::Find);
+	return internalSearch<KTYPE, TYPE, FINDALGORITHM>(*this, key, SearchType::Find);
 }
 
 #ifdef QLIST_H
-template <typename KTYPE, typename TYPE, int FINDALG>
-QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, FINDALG>::keys() const
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::keys() const
 {
 	QList<KTYPE> res;
 	for (auto it = constBegin(); it != constEnd(); ++it)
 		res.append(it.key());
 	return res;
 }
-template <typename KTYPE, typename TYPE, int FINDALG>
-QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, FINDALG>::keys(KTYPE min, KTYPE max) const
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::keys(KTYPE min, KTYPE max) const
 {
 	QList<KTYPE> res;
 	auto itEnd = max ? upperBound(max) : constEnd();
@@ -524,8 +531,8 @@ QList<KTYPE> OrderedKeyMap<KTYPE, TYPE, FINDALG>::keys(KTYPE min, KTYPE max) con
 		res.append(it.key());
 	return res;
 }
-template <typename KTYPE, typename TYPE, int FINDALG>
-QList<TYPE> OrderedKeyMap<KTYPE, TYPE, FINDALG>::values() const
+template <typename KTYPE, typename TYPE, FindAlgorithm FINDALGORITHM>
+QList<TYPE> OrderedKeyMap<KTYPE, TYPE, FINDALGORITHM>::values() const
 {
 	QList<TYPE> res;
 	for (auto it = constBegin(); it != constEnd(); ++it)
