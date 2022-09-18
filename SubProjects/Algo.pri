@@ -1,4 +1,4 @@
 #Algo.pro.pri
 
-HEADERS += \ \
-    $$PWD/../Source/Algo/OrderedKeyMap.hpp
+HEADERS += \
+    $$PWD/../Source/Algo/SIMDFloatInnerProduct.h
