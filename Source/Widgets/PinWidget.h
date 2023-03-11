@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2022 Vladimir Kuznetsov <smithcoder@yandex.ru> https://smithcoder.ru/
+ * Copyright (C) 2020-2023 Vladimir Kuznetsov <smithcoder@yandex.ru> https://smithcoder.ru/
  *
  * This file is part of the Smitto.
  *
