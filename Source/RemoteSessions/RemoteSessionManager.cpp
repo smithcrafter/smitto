@@ -164,10 +164,22 @@ void RemoteSessionManager::onQueryReceived(Ramio::Proto::Queries query, const Ra
 			answerPacket.setResDesc(RD_DATA_ERROR, tr("Обработчик не установлен"));
 		server_.sendAnswer(query, answerPacket, from);
 	}
+	else if (query == Ramio::Proto::Queries::RunAction)
+	{
+		auto& queryPacket = reinterpret_cast<const Ramio::Proto::QPRunAction&>(packet);
+		Ramio::Proto::APRunAction answerPacket(packet.pid);
+		if (specialRunAction(queryPacket, answerPacket, session))
+		{
+			// empty block
+		}
+		else
+			answerPacket.setResDesc(RD_DATA_ERROR, tr("Обработчик не установлен"));
+		server_.sendAnswer(query, answerPacket, from);
+	}
 	else
 	{
 		Ramio::Proto::AnswerPacket answerPacket(Ramio::Proto::PacketType::Query, int(query), packet.pid);
-		answerPacket.setResDesc(RD_NOT_SUPPOT, "Команда не реализована");
+		answerPacket.setResDesc(RD_NOT_SUPPORT, "Команда не реализована");
 		server_.sendAnswer(query, answerPacket, from);
 		return;
 	}

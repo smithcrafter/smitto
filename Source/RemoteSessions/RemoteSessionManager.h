@@ -23,6 +23,7 @@ namespace Proto { struct QueryPacket; enum class Queries : quint8;
 struct QPGetDataObject; struct APGetDataObject;
 struct QPGetDataSet; struct APGetDataSet; struct QPCreateDataObject; struct APCreateDataObject;
 struct QPSaveDataObject; struct APSaveDataObject; struct QPDeleteDataObject; struct APDeleteDataObject;
+struct QPRunAction; struct APRunAction;
 }}
 
 namespace Smitto {
@@ -52,6 +53,9 @@ protected:
 								   RemoteSession* session) {
 				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}
 	virtual bool specialDeleteDataObject(const Ramio::Proto::QPDeleteDataObject& query, Ramio::Proto::APDeleteDataObject& answer,
+								   RemoteSession* session) {
+				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}
+	virtual bool specialRunAction(const Ramio::Proto::QPRunAction& query, Ramio::Proto::APRunAction& answer,
 								   RemoteSession* session) {
 				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}
 
