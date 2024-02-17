@@ -36,7 +36,8 @@ enum class SubButtons : quint8
 	Clear = 16,
 	Delete = 32,
 	Edit = 64,
-	LastEnmnItem = Edit
+	Apply = 128,
+	LastEnmnItem = Apply
 };
 
 enum class MainPanellButton : quint8

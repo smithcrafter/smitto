@@ -15,7 +15,6 @@
  * along with Smitto; see the file LICENSE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "ControlPanelWidget.h"
 #include <Gui/Global.h>
 #include <Gui/PlatformSpecification.h>
@@ -39,7 +38,6 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	layout->setSpacing(Smitto::Ui::panelSpacing());
 	this->setFixedHeight(Smitto::Ui::panelSize());
 	this->setMinimumWidth(100);
-
 	layout->addWidget(mainButton_ = new QPushButton(QIcon(":/files/icons/menu-hamburger-button.png"), QString()));
 	mainButton_->setStyleSheet("border:0px;");
 	mainButton_->setIconSize(Smitto::Ui::panelIconSize());
@@ -60,15 +58,17 @@ ControlPanelWidget::ControlPanelWidget(const QString& basename, QWidget* parent)
 	layout->addWidget(subButtons_[SubButtons::Clear] = new QPushButton(QIcon(":/files/icons/menu-clear-button.png"), QString()));
 	layout->addWidget(subButtons_[SubButtons::Delete] = new QPushButton(QIcon(":/files/icons/menu-delete-button.png"), QString()));
 	layout->addWidget(subButtons_[SubButtons::Edit] = new QPushButton(QIcon(":/files/icons/menu-edit-button.png"), QString()));
+	layout->addWidget(subButtons_[SubButtons::Apply] = new QPushButton(QIcon(":/files/icons/menu-apply-button.png"), QString()));
 
 	connect(mainButton_, &QPushButton::clicked, this, &ControlPanelWidget::menuRequested);
 	connect(backButton_, &QPushButton::clicked, this, &ControlPanelWidget::backRequested);
 
-	for (quint8 bt = quint8(SubButtons::Add); quint8(bt) <= quint8(SubButtons::LastEnmnItem); bt = bt<<1)
+	for (auto it = subButtons_.begin(); it != subButtons_.end(); ++it)
 	{
-		subButtons_[SubButtons(bt)]->setStyleSheet("border:0px;");
-		subButtons_[SubButtons(bt)]->setIconSize(Smitto::Ui::panelIconSize());
-		connect(subButtons_[SubButtons(bt)], &QPushButton::clicked, this, [this, bt](){emit buttonClicked(SubButtons(bt));});
+		it.value()->setStyleSheet("border:0px;");
+		it.value()->setIconSize(Smitto::Ui::panelIconSize());
+		auto key = it.key();
+		connect(it.value(), &QPushButton::clicked, this, [this, key](){emit buttonClicked(key);});
 	}
 	home();
 }
@@ -81,8 +81,8 @@ void ControlPanelWidget::home()
 {
 	label_->setText(H3(basename_));
 	section_ = -1;
-	for (quint8 bt = quint8(SubButtons::Add); quint8(bt) <= quint8(SubButtons::LastEnmnItem); bt = bt<<1)
-		subButtons_[SubButtons(bt)]->setHidden(true);
+	for (auto it = subButtons_.begin(); it != subButtons_.end(); ++it)
+		it.value()->setHidden(true);
 	mainButton_->setHidden(false);
 	backButton_->setHidden(true);
 }
@@ -91,8 +91,8 @@ void ControlPanelWidget::setSection(int sectionId, const QString& name, SubButto
 {
 	label_->setText(H3(name));
 	section_ = sectionId;
-	for (quint8 bt = quint8(SubButtons::Add); quint8(bt) <= quint8(SubButtons::LastEnmnItem); bt = bt<<1)
-		subButtons_[SubButtons(bt)]->setHidden(!(quint8(button) & bt));
+	for (auto it = subButtons_.begin(); it != subButtons_.end(); ++it)
+		it.value()->setHidden(!(quint16(button) & quint16(it.key())));
 	mainButton_->setHidden(mbuttom != MainPanellButton::Home);
 	backButton_->setHidden(mbuttom != MainPanellButton::Back);
 }
