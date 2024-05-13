@@ -40,6 +40,9 @@ enum class SubButtons : quint8
 	LastEnmnItem = Apply
 };
 
+inline SubButtons operator | (SubButtons b1, SubButtons b2) {return SubButtons(quint8(b1) | quint8(b2));}
+inline SubButtons operator & (SubButtons b1, SubButtons b2) {return SubButtons(quint8(b1) & quint8(b2));}
+
 enum class MainPanellButton : quint8
 {
 	None,
@@ -64,7 +67,7 @@ signals:
 	void menuRequested();
 	void backRequested();
 	void labelClicked();
-	void buttonClicked(SubButtons button);
+	void buttonClicked(Smitto::Ui::SubButtons button);
 
 private:
 	void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
