@@ -59,7 +59,8 @@ protected:
 								   RemoteSession* session) {
 				Q_UNUSED(query); Q_UNUSED(answer); Q_UNUSED(session); return false;}
 
-
+	virtual bool canSendToSession(const Ramio::AbstractMetaSet& set, const Ramio::Item& item, const RemoteSession& session) const {
+		Q_UNUSED(set); Q_UNUSED(item); Q_UNUSED(session); return true;}
 
 private:
 	void onQueryReceived(Ramio::Proto::Queries query, const Ramio::Proto::QueryPacket& packet, const Ramio::ConnectionInfo& from);

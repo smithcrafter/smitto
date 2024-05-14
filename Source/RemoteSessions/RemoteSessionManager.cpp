@@ -248,13 +248,14 @@ void RemoteSessionManager::onItemCreated(const Ramio::AbstractMetaSet& set, cons
 	Ramio::Proto::EPDataObjectCreated eventPacket(set.meta().setName, set.meta().itemName, epid_++);
 	eventPacket.createFromData(set.meta(), item.data());
 	for (auto* session: sessions_.items())
-	{
-		auto flag = session->notificationSets[&set];
-		if (flag & Ramio::Proto::DataSetChangeNotification::AddImmediately)
-			server_.sendEvent(Ramio::Proto::Events::DataObjectCreated, eventPacket, session->data().netInfo);
-		else if (flag & Ramio::Proto::DataSetChangeNotification::AddCache)
-			itemsCreated_[&set].insert(&item);
-	}
+		if (canSendToSession(set, item, *session))
+		{
+			auto flag = session->notificationSets[&set];
+			if (flag & Ramio::Proto::DataSetChangeNotification::AddImmediately)
+				server_.sendEvent(Ramio::Proto::Events::DataObjectCreated, eventPacket, session->data().netInfo);
+			else if (flag & Ramio::Proto::DataSetChangeNotification::AddCache)
+				itemsCreated_[&set].insert(&item);
+		}
 }
 
 void RemoteSessionManager::onItemChanged(const Ramio::AbstractMetaSet& set, const Ramio::Item& item)
@@ -264,13 +265,14 @@ void RemoteSessionManager::onItemChanged(const Ramio::AbstractMetaSet& set, cons
 	Ramio::Proto::EPDataObjectChanged eventPacket(set.meta().setName, set.meta().itemName, epid_++);
 	eventPacket.createFromData(set.meta(), item.data());
 	for (auto* session: sessions_.items())
-	{
-		auto flag = session->notificationSets[&set];
-		if (flag & Ramio::Proto::DataSetChangeNotification::ChangeImmediately)
-			server_.sendEvent(Ramio::Proto::Events::DataObjectChanged, eventPacket, session->data().netInfo);
-		else if (flag & Ramio::Proto::DataSetChangeNotification::ChangeCache)
-			itemsChanged_[&set].insert(&item);
-	}
+		if (canSendToSession(set, item, *session))
+		{
+			auto flag = session->notificationSets[&set];
+			if (flag & Ramio::Proto::DataSetChangeNotification::ChangeImmediately)
+				server_.sendEvent(Ramio::Proto::Events::DataObjectChanged, eventPacket, session->data().netInfo);
+			else if (flag & Ramio::Proto::DataSetChangeNotification::ChangeCache)
+				itemsChanged_[&set].insert(&item);
+		}
 }
 
 void RemoteSessionManager::onItemDeleted(const Ramio::AbstractMetaSet& set, const Ramio::Item& item)
@@ -286,13 +288,14 @@ void RemoteSessionManager::onItemDeleted(const Ramio::AbstractMetaSet& set, cons
 	itemsCreated_[&set].remove(&item);
 	itemsChanged_[&set].remove(&item);
 	for (auto* session: sessions_.items())
-	{
-		auto flag = session->notificationSets[&set];
-		if (flag & Ramio::Proto::DataSetChangeNotification::DelImmediately)
-			server_.sendEvent(Ramio::Proto::Events::DataObjectDeleted, eventPacket, session->data().netInfo);
-		else if (flag & Ramio::Proto::DataSetChangeNotification::DelCache)
-			itemsDeleted_[&set].insert(&item);
-	}
+		if (canSendToSession(set, item, *session))
+		{
+			auto flag = session->notificationSets[&set];
+			if (flag & Ramio::Proto::DataSetChangeNotification::DelImmediately)
+				server_.sendEvent(Ramio::Proto::Events::DataObjectDeleted, eventPacket, session->data().netInfo);
+			else if (flag & Ramio::Proto::DataSetChangeNotification::DelCache)
+				itemsDeleted_[&set].insert(&item);
+		}
 }
 
 } // Smitto::
