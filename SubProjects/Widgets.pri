@@ -14,6 +14,7 @@ HEADERS += \
 	$$PWD/../Source/Widgets/ControlPanelWidget.h \
 	$$PWD/../Source/Widgets/DrawerMenuWidget.h \
 	$$PWD/../Source/Widgets/MaterialButton.h \
+	$$PWD/../Source/Widgets/MaterialButtonsMenu.h \
 
 SOURCES += \
 	$$PWD/../Source/Widgets/LogLabelsListWidget.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
 	$$PWD/../Source/Widgets/ControlPanelWidget.cpp \
 	$$PWD/../Source/Widgets/DrawerMenuWidget.cpp \
 	$$PWD/../Source/Widgets/MaterialButton.cpp \
+	$$PWD/../Source/Widgets/MaterialButtonsMenu.cpp \
 
 # ItemDelegate
 
