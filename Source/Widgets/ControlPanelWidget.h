@@ -37,7 +37,7 @@ enum class SubButtons : quint8
 	Delete = 32,
 	Edit = 64,
 	Apply = 128,
-	LastEnmnItem = Apply
+	LastEnumItem = Apply
 };
 
 inline SubButtons operator | (SubButtons b1, SubButtons b2) {return SubButtons(quint8(b1) | quint8(b2));}
